@@ -399,3 +399,10 @@ Cypress.Commands.add("fillMongoDatasourceFormWithURI", () => {
 Cypress.Commands.add("ReconnectDatasource", (datasource) => {
   cy.xpath(`//span[text()='${datasource}']`).click();
 });
+
+Cypress.Commands.add("CreateAPIFromDatasource", (datasourceName) => {
+  cy.get(`${datasourceEditor.datasourceCard}:contains('${datasourceName}')`)
+      .find(datasourceEditor.createQuerty)
+      .should("be.visible")
+      .click({ force: true });
+});
