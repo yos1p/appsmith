@@ -406,3 +406,10 @@ Cypress.Commands.add("CreateAPIFromDatasource", (datasourceName) => {
       .should("be.visible")
       .click({ force: true });
 });
+
+Cypress.Commands.add("SelectDatasource", (datasourceName, openSidebar = true) => {
+  if (openSidebar) {
+    cy.get(`.t--entity.datasources .t--entity-name:contains('DATASOURCES')`).click({ force: true });
+  }
+  cy.get(`.t--entity-name:contains('${datasourceName}')`).click({ force: true });
+});

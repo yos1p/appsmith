@@ -61,7 +61,7 @@ function TooltipComponent(props: TooltipProps) {
     <TooltipWrapper
       autoFocus={props.autoFocus}
       boundary={props.boundary || "scrollParent"}
-      className={props.className}
+      className={`${props.className} t--tooltip-wrapper`}
       content={props.content}
       disabled={props.disabled}
       hoverOpenDelay={props.hoverOpenDelay}

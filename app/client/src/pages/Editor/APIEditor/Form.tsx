@@ -582,7 +582,7 @@ function ApiEditorForm(props: Props) {
   return (
     <>
       <CloseEditor />
-      <Form onSubmit={handleSubmit}>
+      <Form className="t--api-editor-form" onSubmit={handleSubmit}>
         <MainConfiguration>
           <FormRow className="form-row-header">
             <NameWrapper className="t--nameOfApi">

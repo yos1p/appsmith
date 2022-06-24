@@ -62,4 +62,13 @@
   "confirmBeforeExecute": "[name=confirmBeforeExecute]",
   "runQueryButton": ".t--apiFormRunBtn",
   "editApiNameIcon": ".t--action-name-edit-icon",
+  "apiActionListContainer": ".ads-dropdown-options-wrapper",
+  "fetchDetailsActionOption": ".t--dropdown-option:contains('Fetch Details')",
+  "insertOneActionOption": ".t--dropdown-option:contains('Insert One')",
+  "updateOneActionOption": ".t--dropdown-option:contains('Update One')",
+  "deleteOneActionOption": ".t--dropdown-option:contains('Delete One')",
+  "fetchManyActionOption": ".t--dropdown-option:contains('Fetch Many')",
+  "insertManyActionOption": ".t--dropdown-option:contains('Insert Many')",
+  "updateManyActionOption": ".t--dropdown-option:contains('Update Many')",
+  "deleteManyActionOption": ".t--dropdown-option:contains('Delete Many')"
 }

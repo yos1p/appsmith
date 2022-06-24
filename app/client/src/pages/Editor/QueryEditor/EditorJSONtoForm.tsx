@@ -850,7 +850,10 @@ export function EditorJSONtoForm(props: Props) {
     <>
       {!guidedTourEnabled && <CloseEditor />}
       {guidedTourEnabled && <Guide className="query-page" />}
-      <QueryFormContainer onSubmit={handleSubmit}>
+      <QueryFormContainer
+        className="t--api-editor-form"
+        onSubmit={handleSubmit}
+      >
         <StyledFormRow>
           <NameWrapper>
             <ActionNameEditor />

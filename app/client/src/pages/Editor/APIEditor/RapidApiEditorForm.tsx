@@ -146,6 +146,7 @@ function RapidApiEditorForm(props: Props) {
 
   return (
     <Form
+      className="t--api-editor-form"
       onSubmit={handleSubmit}
       style={{
         height: "100%",
