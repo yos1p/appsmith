@@ -70,5 +70,6 @@
   "fetchManyActionOption": ".t--dropdown-option:contains('Fetch Many')",
   "insertManyActionOption": ".t--dropdown-option:contains('Insert Many')",
   "updateManyActionOption": ".t--dropdown-option:contains('Update Many')",
-  "deleteManyActionOption": ".t--dropdown-option:contains('Delete Many')"
+  "deleteManyActionOption": ".t--dropdown-option:contains('Delete Many')",
+  "gsheetOperationDropdown": "[data-cy='actionConfiguration.formData.command.data']"
 }

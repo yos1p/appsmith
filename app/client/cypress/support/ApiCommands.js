@@ -467,3 +467,46 @@ Cypress.Commands.add("checkIfApiPaneIsVisible", () => {
   cy.get(ApiEditor.datasourcesRightPane).should("exist");
   cy.get(ApiEditor.datasourcesRightPane).should("be.visible");
 });
+
+Cypress.Commands.add("selectApiEntity", (apiName, openSidebar = true) => {
+  if (openSidebar) {
+    cy.get(`.t--entity.group.files .t--entity-name:contains('QUERIES/JS')`).click({ force: true });
+  }
+  cy.get(`.t--entity-name:contains('${apiName}')`).click({ force: true });
+  cy.get(ApiEditor.apiEditorFormWrapper).should("exist");
+});
+
+Cypress.Commands.add("selectDropdownOption", (dataCy, optionIndex = 0) => {
+  cy.get(dataCy)
+    .find(".remixicon-icon")
+    .click({ force: true });
+  cy.get(apiwidget.apiActionListContainer)
+    .should("be.visible");
+
+  // select a option with index
+  if (optionIndex > -1) {
+    cy.get(".t--dropdown-option")
+      .eq(optionIndex)
+      .click({ force: true });
+    cy.get(apiwidget.apiActionListContainer)
+      .should("be.hidden");
+  }
+});
+
+Cypress.Commands.add("toggleJsEditor", (jsIconIndex, revertFlag = true) => {
+  cy.get(ApiEditor.toggleJsButton)
+    .eq(jsIconIndex)
+    .click({ force: true });
+  
+  cy.get(ApiEditor.jsCodeEditor)
+    .should("be.visible");
+
+  if (revertFlag) {
+    cy.get(ApiEditor.toggleJsButton)
+    .eq(jsIconIndex)
+    .click({ force: true });
+
+    cy.get(ApiEditor.jsCodeEditor)
+      .should("not.exist");
+  }
+});

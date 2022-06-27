@@ -31,4 +31,6 @@ export default {
   datasourcesRightPane: "[data-cy=t--tab-datasources]",
   connectionsRightPane: "[data-cy=t--tab-Connections]",
   apiEditorFormWrapper: ".t--api-editor-form",
+  toggleJsButton: "button.t--js-toggle",
+  jsCodeEditor: ".t--code-editor-wrapper",
 };

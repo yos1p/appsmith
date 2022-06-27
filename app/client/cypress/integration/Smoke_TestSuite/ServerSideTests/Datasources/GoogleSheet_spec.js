@@ -6,6 +6,7 @@ const ApiEditor = require("../../../../locators/ApiEditor");
 const uuid = () => Cypress._.random(0, 1e6);
 
 let datasourceName, apiName, orgDatasourceName;
+const fetchManyApiName = "FetchMany";
 
 describe("Google sheet UQI test cases", function() {
   before(() => {
@@ -26,27 +27,19 @@ describe("Google sheet UQI test cases", function() {
 
   it("Clicking on Add API the user must be navigate to API page ", function() {
     cy.SelectDatasource(orgDatasourceName);
+
     // check Add API button on selected datasource
-    cy.CreateAPIFromDatasource(orgDatasourceName);
-    cy.wait("@createNewApi");
+    cy.CreateAPIFromDatasource(orgDatasourceName, fetchManyApiName);
 
     // check API editor page is open and Edit, API name with edit Icon
-    cy.get(apiwidget.apiTxt)
-      .should("be.visible")
-      .blur();
-
-    cy.get(apiwidget.editApiNameIcon)
-      .should("be.visible");
-
-    // cy.DeleteAPI();
+    cy.get(ApiEditor.apiEditorFormWrapper).should("exist");
   });
 
   it("User must be able to choose from the list of command ", function() {
-    cy.get("[data-cy='actionConfiguration.formData.command.data']")
-      .find(".remixicon-icon")
-      .click({ force: true });
-    cy.get(apiwidget.apiActionListContainer)
-      .should("be.visible");
+    // select a api entity
+    cy.selectApiEntity(fetchManyApiName);
+    // open operation dropdown
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.command.data']", -1);
     
     //"List of commands are dispalyed as follows 
     // 1) Fetch Details
@@ -96,15 +89,57 @@ describe("Google sheet UQI test cases", function() {
     cy.get(`${ApiEditor.apiEditorFormWrapper} .react-tabs__tab-panel .t--tooltip-wrapper`).each(($el) => {
       cy.wrap($el)
         .trigger("mouseover");
-      
+      cy.wait(500);
+
       cy.get(".bp3-popover-content")
         .should("be.visible")
-        .first()
-        .trigger("mouseover");
+      
+      cy.wrap($el)
+        .trigger("mouseout");
+      cy.wait(1000);
     });
   });
 
+  it("Fetch Many: User should be able to select data from the dropdown ", function() {
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.command.data']", 4);
+    cy.wait(500);
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.entityType.data']", 0);
+    cy.wait(500);
+  });
+
+  it("Spreadsheet: test cases", function() {
+    // User should be able to select data from the dropdown 
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.sheetUrl.data']", 0);
+    cy.wait(500);
+
+    // User should be able to convert the field into JS 
+    cy.toggleJsEditor(0);
+
+    cy.get("[data-cy='actionConfiguration.formData.sheetUrl.data']")
+      .should("be.visible");
+  });
+
+  it("Sheetname: test cases", function() {
+    // User should be able to select data from the dropdown
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.sheetName.data']", 0);
+    cy.wait(1000);
+
+    // User should be able to convert the field into JS and not reverting
+    cy.toggleJsEditor(1, false);
+
+    //User should be able to add Sheet name into field on JS convertion 
+    cy.get(`${ApiEditor.toggleJsButton}.is-active`)
+      .parent()
+      .parent()
+      .find('[data-testid="code-editor-target"]')
+      .click()
+      .type("Hello, world", 1000);
+
+    // cy.get("[data-cy='actionConfiguration.formData.sheetName.data']")
+    //   .should("be.visible");
+  });
+
   after(() => {
-    cy.DeleteAPI();
+    // cy.DeleteAPI();
   });
 });

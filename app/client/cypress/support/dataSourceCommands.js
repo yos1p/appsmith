@@ -400,11 +400,18 @@ Cypress.Commands.add("ReconnectDatasource", (datasource) => {
   cy.xpath(`//span[text()='${datasource}']`).click();
 });
 
-Cypress.Commands.add("CreateAPIFromDatasource", (datasourceName) => {
+Cypress.Commands.add("CreateAPIFromDatasource", (datasourceName, apiName) => {
   cy.get(`${datasourceEditor.datasourceCard}:contains('${datasourceName}')`)
       .find(datasourceEditor.createQuerty)
       .should("be.visible")
       .click({ force: true });
+  cy.wait("@createNewApi");
+  cy.renameWithInPane(apiName);
+  cy.WaitAutoSave();
+  // Added because api name edit takes some time to
+  // reflect in api sidebar after the call passes.
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(2000);
 });
 
 Cypress.Commands.add("SelectDatasource", (datasourceName, openSidebar = true) => {
