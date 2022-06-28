@@ -224,6 +224,7 @@ function ConditionComponent(props: any, index: number) {
       />
       {/* Component to render the delete icon */}
       <CenteredIcon
+        className="t--where-class-remove-icon"
         name="cross"
         onClick={(e) => {
           e.stopPropagation();
@@ -356,6 +357,7 @@ function ConditionBlock(props: any) {
 
       <ActionBox marginLeft={`${DropdownWidth + Margin}px`}>
         <AddMoreAction
+          className="t--where-class-add-more"
           onClick={
             () =>
               props.fields.push({
@@ -381,6 +383,7 @@ function ConditionBlock(props: any) {
           position="bottom"
         >
           <AddMoreAction
+            className="t--where-class-add-group"
             isDisabled={!(props.currentNestingLevel < props.nestedLevels)}
             onClick={() => {
               if (props.currentNestingLevel < props.nestedLevels) {

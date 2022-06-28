@@ -189,11 +189,26 @@ describe("Google sheet UQI test cases", function() {
 
   });
 
-  it("Fetch Many: User should be able to select data from the dropdown ", function() {
+  it("Fetch Many: test cases ", function() {
+    // User should be able to select data from the dropdown
     cy.selectDropdownOption("[data-cy='actionConfiguration.formData.command.data']", 4);
     cy.wait(500);
     cy.selectDropdownOption("[data-cy='actionConfiguration.formData.entityType.data']", 0);
     cy.wait(500);
+
+    // User should be able to delete the selected filters 
+    cy.get(ApiEditor.addMoreWhereClassIcon)
+      .click({ force: true });
+    cy.wait(100);
+    cy.get(ApiEditor.removeWhereClassIcon)
+      .should("have.length", 2);
+
+    cy.get(ApiEditor.removeWhereClassIcon)
+      .last()
+      .click({ force: true });
+    
+    cy.get(ApiEditor.removeWhereClassIcon)
+      .should("have.length", 1);
   });
 
   it("Spreadsheet: test cases", function() {

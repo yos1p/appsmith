@@ -33,4 +33,6 @@ export default {
   apiEditorFormWrapper: ".t--api-editor-form",
   toggleJsButton: "button.t--js-toggle",
   jsCodeEditor: ".t--code-editor-wrapper",
+  removeWhereClassIcon: ".t--where-class-remove-icon",
+  addMoreWhereClassIcon: ".t--where-class-add-more",
 };
