@@ -505,8 +505,5 @@ Cypress.Commands.add("toggleJsEditor", (jsIconIndex, revertFlag = true) => {
     cy.get(ApiEditor.toggleJsButton)
     .eq(jsIconIndex)
     .click({ force: true });
-
-    cy.get(ApiEditor.jsCodeEditor)
-      .should("not.exist");
   }
 });

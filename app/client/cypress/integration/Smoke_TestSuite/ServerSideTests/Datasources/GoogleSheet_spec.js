@@ -100,6 +100,95 @@ describe("Google sheet UQI test cases", function() {
     });
   });
 
+  it("Ensure on selecting the command respective page is displayed to user ", function() {
+    // Fetch Details page validation
+    cy.selectApiEntity(fetchManyApiName);
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.command.data']", 0);
+    cy.wait(500);    
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.entityType.data']", 1);
+    cy.wait(500);
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Spreadsheet");
+    cy.get("[data-cy='actionConfiguration.formData.sheetUrl.data']")
+      .should("be.visible");
+
+    // Insert One page validation
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.command.data']", 1);
+    cy.wait(500);    
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.entityType.data']", 0);
+    cy.wait(500);
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.sheetUrl.data']", 0);
+    cy.wait(500);
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.sheetName.data']", 0);
+    cy.wait(500);
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Table Heading Row Index"); 
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Row Object");
+
+    // Update One page validation
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.command.data']", 2);
+    cy.wait(500);    
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.entityType.data']", 0);
+    cy.wait(500);
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.sheetUrl.data']", 0);
+    cy.wait(500);
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.sheetName.data']", 0);
+    cy.wait(500);
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Table Heading Row Index"); 
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Update Row Object");
+
+    // Delete One page validation
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.command.data']", 3);
+    cy.wait(500);    
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.entityType.data']", 0);
+    cy.wait(500);
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.sheetUrl.data']", 0);
+    cy.wait(500);
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.sheetName.data']", 0);
+    cy.wait(500);
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Table Heading Row Index"); 
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Row Index");
+
+    // Fetch Many page validation
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.command.data']", 4);
+    cy.wait(500);    
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.entityType.data']", 0);
+    cy.wait(500);
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.sheetUrl.data']", 0);
+    cy.wait(500);
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.sheetName.data']", 0);
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Table Heading Row Index"); 
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Columns");
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Filter Format");
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Filter By");
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Sort By");
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Pagination Limit");
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Pagination Offset");
+
+    // Insert Many page validation
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.command.data']", 5);
+    cy.wait(500);    
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.entityType.data']", 0);
+    cy.wait(500);
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.sheetUrl.data']", 0);
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Sheet Name");
+    cy.get("[data-cy='actionConfiguration.formData.sheetName.data']")
+      .should("be.visible");
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Table Heading Row Index"); 
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Row Object(s)");
+
+    // Update Many page validation
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.command.data']", 6);
+    cy.wait(500);    
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.entityType.data']", 0);
+    cy.wait(500);
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.sheetUrl.data']", 0);
+    cy.wait(500);
+    cy.selectDropdownOption("[data-cy='actionConfiguration.formData.sheetName.data']", 0);
+    cy.wait(500);
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Table Heading Row Index"); 
+    cy.get(ApiEditor.apiEditorFormWrapper).should("contain.text", "Update Row Object(s)");
+
+  });
+
   it("Fetch Many: User should be able to select data from the dropdown ", function() {
     cy.selectDropdownOption("[data-cy='actionConfiguration.formData.command.data']", 4);
     cy.wait(500);
