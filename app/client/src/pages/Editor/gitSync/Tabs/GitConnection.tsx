@@ -56,7 +56,6 @@ import {
   getIsFetchingLocalGitConfig,
   getIsImportingApplicationViaGit,
   getLocalGitConfig,
-  getRemoteUrlDocUrl,
   getTempRemoteUrl,
   getUseGlobalProfile,
 } from "selectors/gitSyncSelectors";
@@ -70,7 +69,7 @@ import Link from "../components/Link";
 import { TooltipComponent } from "design-system";
 import Icon, { IconSize } from "components/ads/Icon";
 import AnalyticsUtil from "utils/AnalyticsUtil";
-import { isValidGitRemoteUrl } from "../utils";
+import { GIT_DOC_URLs, isValidGitRemoteUrl } from "../utils";
 import { useGitConnect, useSSHKeyPair } from "../hooks";
 
 export const UrlOptionContainer = styled.div`
@@ -166,7 +165,9 @@ function GitConnection({ isImport }: Props) {
   const isFetchingLocalGitConfig = useSelector(getIsFetchingLocalGitConfig);
   const { remoteUrl: remoteUrlInStore = "" } =
     useSelector(getCurrentAppGitMetaData) || ({} as any);
-  const RepoUrlDocumentUrl = useSelector(getRemoteUrlDocUrl);
+  const RepoUrlDocumentUrl = isImport
+    ? GIT_DOC_URLs.import
+    : GIT_DOC_URLs.connect;
   const isImportingApplicationViaGit = useSelector(
     getIsImportingApplicationViaGit,
   );
@@ -414,7 +415,7 @@ function GitConnection({ isImport }: Props) {
               className="t--learn-more-ssh-url"
               color={Colors.PRIMARY_ORANGE}
               hasIcon={false}
-              link={RepoUrlDocumentUrl || ""}
+              link={RepoUrlDocumentUrl}
               onClick={() => {
                 AnalyticsUtil.logEvent("GS_GIT_DOCUMENTATION_LINK_CLICK", {
                   source: "REMOTE_URL_ON_GIT_CONNECTION_MODAL",

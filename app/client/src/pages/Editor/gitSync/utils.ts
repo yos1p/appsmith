@@ -83,3 +83,11 @@ export function changeInfoSinceLastCommit(
   const changeReasonText = createMessage(changeReason);
   return { isAutoUpdate, isManualUpdate, changeReasonText };
 }
+
+export const GIT_DOC_URLs = {
+  base: "https://docs.appsmith.com/core-concepts/version-control-with-git",
+  import:
+    "https://docs.appsmith.com/core-concepts/version-control-with-git/connecting-to-git-repository#importing-from-a-repository",
+  connect:
+    "https://docs.appsmith.com/core-concepts/version-control-with-git/connecting-to-git-repository",
+};
