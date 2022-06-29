@@ -122,3 +122,9 @@ describe("Fetch dynamic values", () => {
     expect(extractQueueOfValuesToBeFetched(testInput)).toEqual(testOutput);
   });
 });
+
+describe("Eval state functions", () => {
+  it("Generate init eval state test", () => {
+    const input = {};
+  });
+});
