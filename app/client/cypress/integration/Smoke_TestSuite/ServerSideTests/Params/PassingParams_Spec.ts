@@ -8,7 +8,8 @@ let agHelper = ObjectsRegistry.AggregateHelper,
   ee = ObjectsRegistry.EntityExplorer,
   table = ObjectsRegistry.Table,
   apiPage = ObjectsRegistry.ApiPage,
-  deployMode = ObjectsRegistry.DeployMode;
+  deployMode = ObjectsRegistry.DeployMode,
+  propPane = ObjectsRegistry.PropertyPane;
 
 describe("[Bug] - 10784 - Passing params from JS to SQL query should not break", () => {
   before(() => {
@@ -54,10 +55,10 @@ describe("[Bug] - 10784 - Passing params from JS to SQL query should not break",
       );
     });
     ee.SelectEntityByName("Table1");
-    jsEditor.EnterJSContext("Table Data", "{{ParamsTest.data}}");
+    propPane.UpdatePropertyFieldValue("Table Data", "{{ParamsTest.data}}");
 
     ee.SelectEntityByName("ParamsTest", "QUERIES/JS");
-    apiPage.OnPageLoadRun(false); //Bug 12476
+    apiPage.ToggleOnPageLoadRun(false); //Bug 12476
 
     deployMode.DeployApp(locator._spanButton("Submit"));
     agHelper.SelectDropDown("7");
@@ -224,7 +225,7 @@ describe("[Bug] - 10784 - Passing params from JS to SQL query should not break",
   });
 
   it("12. Delete all entities - Query, JSObjects, Datasource + Bug 12532", () => {
-    ee.expandCollapseEntity("QUERIES/JS");
+    ee.ExpandCollapseEntity("QUERIES/JS");
     ee.ActionContextMenuByEntityName("ParamsTest", "Delete", "Are you sure?");
     agHelper.ValidateNetworkStatus("@deleteAction", 200);
     ee.ActionContextMenuByEntityName(
