@@ -39,8 +39,6 @@ module.exports = class Perf {
       this.launchOptions.devtools = true;
       this.launchOptions.headless = false;
     }
-    this.launchOptions.headless = false;
-    this.launchOptions.devtools = true;
 
     this.traces = [];
     this.currentTrace = null;
