@@ -26,12 +26,11 @@ async function testTableWidget() {
     await page.waitForSelector(SEL.select_button);
     await perf.startTrace(actions.SELECT_TABLE_ROW);
     await delay(500);
-    await page.click(SEL.table_row_item(1));
-    await page.click(".t--widget-tablewidget .tr:nth-child(3)");
-    await delay(2000);
-    // await page.waitForFunction(
-    //   `document.querySelector(${SEL.task_form_key}).innerText == "Create a query fetch_users with the Mock DB`,
-    // );
+    await page.click(SEL.table_row_item(3));
+    await delay(500);
+    await page.waitForFunction(
+      `document.querySelector(${SEL.task_form_key}).innerText == "Create a query fetch_users with the Mock DB`,
+    );
     await perf.stopTrace();
 
     await perf.generateReport();
