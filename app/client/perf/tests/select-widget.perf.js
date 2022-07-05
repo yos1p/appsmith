@@ -40,9 +40,9 @@ async function testSelectOptionsRender() {
 
 async function runTests() {
   await testSelectOptionsRender();
-  await testSelectOptionsRender();
-  await testSelectOptionsRender();
-  await testSelectOptionsRender();
-  await testSelectOptionsRender();
+  // await testSelectOptionsRender();
+  // await testSelectOptionsRender();
+  // await testSelectOptionsRender();
+  // await testSelectOptionsRender();
 }
 runTests();

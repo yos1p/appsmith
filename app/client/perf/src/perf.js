@@ -33,13 +33,14 @@ module.exports = class Perf {
       ignoreHTTPSErrors: true, // @todo Remove it after initial testing
       ...launchOptions,
     };
-
     if (process.env.PERF_TEST_ENV === "dev") {
       this.launchOptions.executablePath =
         "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
       this.launchOptions.devtools = true;
       this.launchOptions.headless = false;
     }
+    this.launchOptions.headless = false;
+    this.launchOptions.devtools = true;
 
     this.traces = [];
     this.currentTrace = null;
