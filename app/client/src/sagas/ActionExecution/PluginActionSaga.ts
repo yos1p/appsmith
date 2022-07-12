@@ -185,6 +185,12 @@ function* readBlob(blobUrl: string): any {
     };
   });
 }
+function trueTypeOf(obj: any) {
+  return Object.prototype.toString
+    .call(obj)
+    .slice(8, -1)
+    .toLowerCase();
+}
 
 /**
  * This function resolves :
@@ -196,6 +202,7 @@ function* readBlob(blobUrl: string): any {
  */
 
 function* resolvingBlobUrls(value: any) {
+  const dataType = trueTypeOf(value);
   if (isTrueObject(value)) {
     const blobUrlPaths: string[] = [];
     Object.keys(value).forEach((propertyName) => {
@@ -209,7 +216,13 @@ function* resolvingBlobUrls(value: any) {
       const resolvedBlobValue: unknown = yield call(readBlob, blobUrl);
       set(value, blobUrlPath, resolvedBlobValue);
     }
-  } else if (isBlobUrl(value)) {
+  } else {
+    const tmpJSON: any = {};
+    tmpJSON[dataType] = value;
+    value = tmpJSON;
+  }
+
+  if (isBlobUrl(value)) {
     // @ts-expect-error: Values can take many types
     value = yield call(readBlob, value);
   }
