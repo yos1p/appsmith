@@ -12,7 +12,7 @@ import { TextSize } from "constants/WidgetConstants";
 
 // TODO(abstraction-issue): this needs to be a common import from somewhere in the platform
 // Alternatively, they need to be replicated.
-import { StyledCheckbox } from "widgets/CheckboxWidget/component";
+import { Checkbox } from "components/wds/Checkbox";
 import { OptionProps, SelectAllState, SelectAllStates } from "../constants";
 import LabelWithTooltip, {
   labelLayoutStyles,
@@ -101,16 +101,13 @@ function SelectAll(props: SelectAllProps) {
     rowSpace,
   } = props;
   return (
-    <StyledCheckbox
+    <Checkbox
       accentColor={accentColor}
       checked={checked}
       className="select-all"
       disabled={disabled}
       indeterminate={indeterminate}
-      inline={inline}
-      label="Select All"
       onChange={onChange}
-      rowSpace={rowSpace}
     />
   );
 }
@@ -222,17 +219,14 @@ function CheckboxGroupComponent(props: CheckboxGroupComponentProps) {
         {options &&
           options.length > 0 &&
           [...options].map((option: OptionProps) => (
-            <StyledCheckbox
+            <Checkbox
               accentColor={accentColor}
-              borderRadius={borderRadius}
               checked={(selectedValues || []).includes(option.value)}
               disabled={isDisabled}
               indeterminate={isDisabled ? true : undefined}
-              inline={isInline}
               key={generateReactKey()}
-              label={option.label}
               onChange={onChange(option.value)}
-              rowSpace={rowSpace}
+              radii={borderRadius}
             />
           ))}
       </InputContainer>

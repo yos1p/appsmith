@@ -1,13 +1,14 @@
-.label {
+/**
+ * ----------------------------------------------------------------------------
+ * BASE
+ *-----------------------------------------------------------------------------
+ */
+.container {
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   vertical-align: top;
   position: relative
-}
-
-.label[disabled], .label[aria-disabled="true"], .label[data-disabled] {
-  cursor: not-allowed;
 }
 
 .input {
@@ -45,11 +46,35 @@
   border-color: var(--wds-color-border-hover);
 }
 
-.input:checked + .icon {
+/**
+ * ----------------------------------------------------------------------------
+ * CHECKED AND INDETERMINATE
+ *-----------------------------------------------------------------------------
+ */
+.input:checked + .icon, .input:indeterminate + .icon {
   background-color: var(--wds-color-accent);
   border-color: var(--wds-color-accent);
 }
 
-.input:checked:hover + .icon {
+.input:checked + .icon:hover, .input:indeterminate + .icon:hover {
+  border-color: var(--wds-color-accent-hover);
   background-color: var(--wds-color-accent-hover);
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * DISABLED
+ *-----------------------------------------------------------------------------
+ */
+.input:disabled + .icon {
+  cursor: not-allowed;
+}
+
+.input:checked:disabled + .icon {
+  background-color: var(--wds-color-disabled);
+  border-color: var(--wds-color-disabled);
+}
+
+.input:disabled + .icon:hover {
+  border-color: var(--wds-color-disabled);
 }

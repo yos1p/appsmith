@@ -1,18 +1,18 @@
 import React, {
-  createContext,
+  useMemo,
   forwardRef,
-  useContext,
-  ChangeEventHandler,
-  InputHTMLAttributes,
+  useCallback,
   useLayoutEffect,
+  InputHTMLAttributes,
 } from "react";
-import styles from "./checkbox.module.css";
 import CheckIcon from "remixicon-react/CheckLineIcon";
 import SubtractIcon from "remixicon-react/SubtractLineIcon";
 
 import { darkenColor } from "widgets/WidgetUtils";
 import { useProvidedRefOrCreate } from "../hooks/useProvidedRefOrCreate";
 import { useProvidedStateOrCreate } from "../hooks/useProvidedStateOrCreate";
+
+import styles from "./checkbox.module.css";
 
 type CheckboxProps = {
   checked?: boolean;
@@ -27,11 +27,6 @@ type CheckboxProps = {
   onCheckedChange?(checked?: boolean): void;
 } & Exclude<InputHTMLAttributes<HTMLInputElement>, "value">;
 
-export const CheckboxGroupContext = createContext<{
-  disabled?: boolean;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
-}>({});
-
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (
     {
@@ -41,7 +36,6 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       disabled,
       hasError,
       indeterminate,
-      onChange,
       onCheckedChange,
       radii,
       value,
@@ -57,43 +51,53 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       onCheckedChange,
       defaultChecked,
     );
-    const checkboxGroupContext = useContext(CheckboxGroupContext);
-    const handleOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-      checkboxGroupContext.onChange && checkboxGroupContext.onChange(e);
-      onChange && onChange(e);
-      setChecked(!checked);
-    };
 
+    /**
+     * indeterminate state can be state with javascript, so here we are
+     * setting the state with useLayoutEffect
+     */
     useLayoutEffect(() => {
       if (checkboxRef.current) {
         checkboxRef.current.indeterminate = indeterminate || false;
       }
     }, [indeterminate, checked, checkboxRef]);
 
-    const iconStyle: any = {
-      "--wds-color-accent": accentColor,
-      "--wds-color-accent-hover": darkenColor(accentColor),
-    };
+    const onClickCheckbox = useCallback(() => setChecked(!checked), [
+      checked,
+      setChecked,
+    ]);
+
+    const iconStyles: any = useMemo(
+      () => ({
+        "--wds-color-accent": accentColor,
+        "--wds-color-accent-hover": darkenColor(accentColor),
+        "--wds-radii": radii,
+      }),
+      [radii, accentColor],
+    );
 
     return (
-      <>
+      <div className={styles.container}>
         <input
           aria-disabled={disabled ? "true" : "false"}
           aria-invalid={hasError ? "true" : "false"}
-          checked={checked}
+          checked={indeterminate ? false : checked}
           className={styles.input}
           disabled={disabled}
-          onChange={handleOnChange}
+          name={value}
           ref={checkboxRef}
           type="checkbox"
           value={value}
           {...rest}
         />
-        <button className={styles.icon} style={iconStyle}>
-          {checked && <CheckIcon />}
-          {indeterminate && <SubtractIcon />}
+        <button
+          className={styles.icon}
+          onClick={onClickCheckbox}
+          style={iconStyles}
+        >
+          {indeterminate ? <SubtractIcon /> : checked ? <CheckIcon /> : null}
         </button>
-      </>
+      </div>
     );
   },
 );

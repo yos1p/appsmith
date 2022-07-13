@@ -4,7 +4,7 @@
 @import "~design-system/build/css/design-system.css";
 @import "theme/colors.css";
 @import "theme/defaultTheme.css";
-@import "components/wds/styles/colors.css";
+@import "components/wds/styles.css";
 
 body {
   margin: 0;
