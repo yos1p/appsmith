@@ -122,7 +122,7 @@ function CheckboxField({
         />
       </StyledCheckboxWrapper>
     ),
-    [schemaItem, inputRef, value, isDirty, isValueValid, onCheckChange],
+    [schemaItem, , value, isDirty, isValueValid, onCheckChange],
   );
 
   return (

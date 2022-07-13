@@ -1,0 +1,55 @@
+.label {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: top;
+  position: relative
+}
+
+.label[disabled], .label[aria-disabled="true"], .label[data-disabled] {
+  cursor: not-allowed;
+}
+
+.input {
+  border: 0px;
+  clip: rect(0px, 0px, 0px, 0px);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0px;
+  overflow: hidden;
+  white-space: nowrap;
+  position: absolute;
+}
+
+.icon {
+  width: theme('spacing.4');
+  border-width: 1px;
+  border-style: solid;
+  border-image: initial;
+  border-radius: var(--wds-radii);
+  border-color: var(--wds-color-border, #e1e1e1);
+  color: theme('colors.white');
+  height: theme('spacing.4');
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  vertical-align: top;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.icon:hover {
+  border-color: var(--wds-color-border-hover);
+}
+
+.input:checked + .icon {
+  background-color: var(--wds-color-accent);
+  border-color: var(--wds-color-accent);
+}
+
+.input:checked:hover + .icon {
+  background-color: var(--wds-color-accent-hover);
+}
