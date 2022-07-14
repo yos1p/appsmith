@@ -5,10 +5,12 @@
  */
 .container {
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  vertical-align: top;
-  position: relative
+  display: grid;
+  gap: 0px 10px;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: min-content;
+  grid-template-columns: min-content auto;
+  cursor: default;
 }
 
 .input {
@@ -21,6 +23,11 @@
   overflow: hidden;
   white-space: nowrap;
   position: absolute;
+}
+
+.label {
+  align-self: center;
+  grid-area: 1 / 2 / 2 / 3;
 }
 
 .icon {
@@ -40,6 +47,7 @@
   vertical-align: top;
   user-select: none;
   flex-shrink: 0;
+  margin: 5px 0;
 }
 
 .icon:hover {
@@ -70,7 +78,7 @@
   cursor: not-allowed;
 }
 
-.input:checked:disabled + .icon {
+.input:checked:disabled + .icon, .input:indeterminate:disabled + .icon {
   background-color: var(--wds-color-disabled);
   border-color: var(--wds-color-disabled);
 }
@@ -78,3 +86,5 @@
 .input:disabled + .icon:hover {
   border-color: var(--wds-color-disabled);
 }
+
+

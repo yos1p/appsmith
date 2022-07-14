@@ -80,13 +80,45 @@ function Showcase() {
           <div className="space-y-3">
             <div className="space-y-1">
               <h3 className="text-gray-500">States</h3>
-              <div className="flex space-x-3">
-                <Checkbox checked {...checkboxProps} />
-                <Checkbox checked={false} {...checkboxProps} />
-                <Checkbox checked disabled {...checkboxProps} />
-                <Checkbox checked={false} disabled {...checkboxProps} />
-                <Checkbox indeterminate {...checkboxProps} />
-                <Checkbox defaultChecked {...checkboxProps} />
+              <div className="flex flex-col space-y-3">
+                <Checkbox checked {...checkboxProps}>
+                  Checked
+                </Checkbox>
+                <Checkbox checked={false} {...checkboxProps}>
+                  Unchecked
+                </Checkbox>
+                <Checkbox checked disabled {...checkboxProps}>
+                  Checked + Disabled
+                </Checkbox>
+                <Checkbox checked={false} disabled {...checkboxProps}>
+                  Unchecked + Disabled
+                </Checkbox>
+                <Checkbox indeterminate {...checkboxProps}>
+                  Indeterminate
+                </Checkbox>
+                <Checkbox disabled indeterminate {...checkboxProps}>
+                  Indeterminate + Disabled
+                </Checkbox>
+                <Checkbox defaultChecked {...checkboxProps}>
+                  Default Checked
+                </Checkbox>
+                <Checkbox defaultChecked {...checkboxProps} id="checkbox-id">
+                  With Label
+                </Checkbox>
+                <Checkbox
+                  defaultChecked
+                  {...checkboxProps}
+                  className="w-32"
+                  id="checkbox-id"
+                >
+                  This checkbox contains the multi line label
+                </Checkbox>
+                <Checkbox defaultChecked {...checkboxProps}>
+                  <Checkbox.Indicator>
+                    <CloseLineIcon />
+                  </Checkbox.Indicator>
+                  Custom Icon 2
+                </Checkbox>
               </div>
             </div>
           </div>
