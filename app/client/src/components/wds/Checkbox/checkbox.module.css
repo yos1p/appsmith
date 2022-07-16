@@ -26,19 +26,19 @@
 }
 
 .label {
-  align-self: center;
+  align-self: baseline;
   grid-area: 1 / 2 / 2 / 3;
 }
 
 .icon {
   width: theme('spacing.4');
+  height: theme('spacing.4');
   border-width: 1px;
   border-style: solid;
   border-image: initial;
   border-radius: var(--wds-radii);
   border-color: var(--wds-color-border, #e1e1e1);
   color: theme('colors.white');
-  height: theme('spacing.4');
   display: inline-flex;
   -webkit-box-align: center;
   align-items: center;
@@ -47,24 +47,26 @@
   vertical-align: top;
   user-select: none;
   flex-shrink: 0;
-  margin: 5px 0;
+  margin: 3px 0;
 }
 
-.icon:hover {
+.container:hover .input:not(:disabled) + .icon {
   border-color: var(--wds-color-border-hover);
 }
 
 /**
  * ----------------------------------------------------------------------------
- * CHECKED AND INDETERMINATE
+ * CHECKED  AND INDETERMINATE - BUT NOT DISABLED
  *-----------------------------------------------------------------------------
  */
-.input:checked + .icon, .input:indeterminate + .icon {
+.input:checked:not(:disabled) + .icon,
+.input:indeterminate:not(:disabled) + .icon {
   background-color: var(--wds-color-accent);
   border-color: var(--wds-color-accent);
 }
 
-.input:checked + .icon:hover, .input:indeterminate + .icon:hover {
+.container:hover .input:checked:not(:disabled) + .icon,
+.container:hover .input:indeterminate:not(:disabled) + .icon {
   border-color: var(--wds-color-accent-hover);
   background-color: var(--wds-color-accent-hover);
 }
@@ -78,13 +80,30 @@
   cursor: not-allowed;
 }
 
-.input:checked:disabled + .icon, .input:indeterminate:disabled + .icon {
+.input:checked:disabled + .icon,
+.input:indeterminate:disabled + .icon {
   background-color: var(--wds-color-disabled);
   border-color: var(--wds-color-disabled);
 }
 
-.input:disabled + .icon:hover {
-  border-color: var(--wds-color-disabled);
+.input:checked:disabled + .icon path,
+.input:indeterminate:disabled + .icon path {
+ fill: var(--wds-color-disabled-secondary);
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * ERROR ( INVALID )
+ *-----------------------------------------------------------------------------
+ */
+
+.input:invalid + .icon {
+  background-color: var(--wds-color-bg-danger-tertiary);
+  border-color: var(--wds-color-bg-danger);
+}
+
+.container:hover .input:invalid + .icon {
+  border-color: var(--wds-color-bg-danger-secondary);
 }
 
 

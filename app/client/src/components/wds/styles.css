@@ -3,4 +3,13 @@
   --wds-color-border-hover: #A9A7A7;
 
   --wds-color-disabled: #E0DEDE;
+  --wds-color-disabled-secondary: #1e1e1e;
+
+  --wds-color-bg-danger: #f24822;
+  --wds-color-bg-danger-hover: #dc3412;
+  --wds-color-bg-danger-pressed: #dc3412;
+  --wds-color-bg-danger-secondary: #bd2915;
+  --wds-color-bg-danger-tertiary: #ffe2e0;
+
+  --wds-color-icon-onaccent: #fff;
 }

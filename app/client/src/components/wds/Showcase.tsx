@@ -16,6 +16,7 @@ function Showcase() {
   const checkboxProps = {
     radii: borderRadius,
     accentColor: primaryColor,
+    className: "w-40",
   };
 
   return (
@@ -105,19 +106,21 @@ function Showcase() {
                 <Checkbox defaultChecked {...checkboxProps} id="checkbox-id">
                   With Label
                 </Checkbox>
+                <Checkbox defaultChecked {...checkboxProps} id="checkbox-id">
+                  This checkbox contains the multi line label
+                </Checkbox>
                 <Checkbox
                   defaultChecked
                   {...checkboxProps}
-                  className="w-32"
-                  id="checkbox-id"
+                  icon={<CloseLineIcon />}
                 >
-                  This checkbox contains the multi line label
-                </Checkbox>
-                <Checkbox defaultChecked {...checkboxProps}>
-                  <Checkbox.Indicator>
-                    <CloseLineIcon />
-                  </Checkbox.Indicator>
                   Custom Icon 2
+                </Checkbox>
+                <Checkbox defaultChecked {...checkboxProps} accentColor="green">
+                  Custom accent Color
+                </Checkbox>
+                <Checkbox {...checkboxProps} required>
+                  Invalid State
                 </Checkbox>
               </div>
             </div>

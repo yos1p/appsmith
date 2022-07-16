@@ -4,6 +4,7 @@ import React, {
   useLayoutEffect,
   InputHTMLAttributes,
   ChangeEventHandler,
+  CSSProperties,
 } from "react";
 import CheckIcon from "remixicon-react/CheckLineIcon";
 import SubtractIcon from "remixicon-react/SubtractLineIcon";
@@ -26,9 +27,10 @@ type CheckboxProps = {
   defaultChecked?: boolean;
   onCheckedChange?(checked?: boolean): void;
   children?: React.ReactNode;
+  icon?: React.ReactNode;
 } & Exclude<InputHTMLAttributes<HTMLInputElement>, "value">;
 
-const CheckboxComponent = forwardRef<HTMLInputElement, CheckboxProps>(
+const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (
     {
       accentColor,
@@ -42,6 +44,7 @@ const CheckboxComponent = forwardRef<HTMLInputElement, CheckboxProps>(
       onCheckedChange,
       radii,
       value,
+      icon = <CheckIcon />,
       ...rest
     },
     ref,
@@ -69,30 +72,21 @@ const CheckboxComponent = forwardRef<HTMLInputElement, CheckboxProps>(
       setChecked(e.target.checked);
     };
 
-    const iconStyles: any = useMemo(
-      () => ({
-        "--wds-color-accent": accentColor,
-        "--wds-color-accent-hover": darkenColor(accentColor),
-        "--wds-radii": radii,
-      }),
+    const cssVariables = useMemo(
+      () =>
+        ({
+          "--wds-color-accent": accentColor,
+          "--wds-color-accent-hover": darkenColor(accentColor),
+          "--wds-radii": radii,
+        } as CSSProperties),
       [radii, accentColor],
     );
 
-    let icon: React.ReactNode = <CheckIcon />;
-
-    // 🚨 Hack for good API!
-    // we strip out CheckboxIndicator from children
-    const contents = React.Children.map(children, (child) => {
-      if (React.isValidElement(child) && child.type === CheckboxIndicator) {
-        icon = child;
-
-        return null;
-      }
-      return child;
-    });
-
     return (
-      <label className={`${styles.container} ${className}`}>
+      <label
+        className={`${styles.container} ${className}`}
+        style={cssVariables}
+      >
         <input
           aria-disabled={disabled ? "true" : "false"}
           aria-invalid={hasError ? "true" : "false"}
@@ -106,17 +100,13 @@ const CheckboxComponent = forwardRef<HTMLInputElement, CheckboxProps>(
           value={value}
           {...rest}
         />
-        <span aria-hidden="true" className={styles.icon} style={iconStyles}>
+        <span className={styles.icon} role="presentation">
           {indeterminate ? <SubtractIcon /> : checked ? icon : null}
         </span>
-        {contents && <span className={styles.label}>{contents}</span>}
+        {children && <span className={styles.label}>{children}</span>}
       </label>
     );
   },
 );
 
-const CheckboxIndicator = (props: any) => props.children;
-
-export const Checkbox = Object.assign(CheckboxComponent, {
-  Indicator: CheckboxIndicator,
-});
+export { Checkbox };
