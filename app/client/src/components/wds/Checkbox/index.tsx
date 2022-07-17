@@ -13,7 +13,7 @@ import { darkenColor } from "widgets/WidgetUtils";
 import { useProvidedRefOrCreate } from "../hooks/useProvidedRefOrCreate";
 import { useProvidedStateOrCreate } from "../hooks/useProvidedStateOrCreate";
 
-import styles from "./checkbox.module.css";
+import styles from "./styles.module.css";
 
 type CheckboxProps = {
   checked?: boolean;
@@ -83,10 +83,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     );
 
     return (
-      <label
-        className={`${styles.container} ${className}`}
-        style={cssVariables}
-      >
+      <>
         <input
           aria-disabled={disabled ? "true" : "false"}
           aria-invalid={hasError ? "true" : "false"}
@@ -100,11 +97,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           value={value}
           {...rest}
         />
-        <span className={styles.icon} role="presentation">
+        <span className={styles.icon} role="presentation" style={cssVariables}>
           {indeterminate ? <SubtractIcon /> : checked ? icon : null}
         </span>
-        {children && <span className={styles.label}>{children}</span>}
-      </label>
+      </>
     );
   },
 );

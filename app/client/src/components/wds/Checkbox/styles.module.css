@@ -11,6 +11,7 @@
   grid-auto-rows: min-content;
   grid-template-columns: min-content auto;
   cursor: default;
+  user-select: none
 }
 
 .input {
@@ -82,13 +83,13 @@
 
 .input:checked:disabled + .icon,
 .input:indeterminate:disabled + .icon {
-  background-color: var(--wds-color-disabled);
-  border-color: var(--wds-color-disabled);
+  background-color: var(--wds-color-icon-disabled);
+  border-color: var(--wds-color-icon-disabled);
 }
 
 .input:checked:disabled + .icon path,
 .input:indeterminate:disabled + .icon path {
- fill: var(--wds-color-disabled-secondary);
+ fill: var(--wds-color-icon-disabled-secondary);
 }
 
 /**

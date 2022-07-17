@@ -1,0 +1,29 @@
+
+.fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: var(--layout);
+  gap: theme('spacing.2')
+}
+
+.label {
+  display: block;
+  color: var(--color);
+  font-size: 1rem;
+  font-weight: var(--label-font-weight);
+  min-width: var(--label-min-width);
+  text-align: var(--label-text-align);
+  font-size: var(--label-font-size);
+}
+
+.label span {
+  display: flex;
+  gap: 2rem;
+}
+
+.group {
+  display: grid;
+  grid-auto-columns: auto;
+}

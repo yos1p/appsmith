@@ -1,0 +1,16 @@
+.control {
+  cursor: pointer;
+  display: grid;
+  gap: 0px 10px;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: min-content;
+  grid-template-columns: min-content auto;
+  cursor: default;
+}
+
+.label {
+  align-self: baseline;
+  grid-area: 1 / 2 / 2 / 3;
+  cursor: var(--cursor);
+  text-align: var(--text-align);
+}

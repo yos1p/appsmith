@@ -1,14 +1,13 @@
 import React, { useContext } from "react";
 import { Checkbox } from "..";
 import { useProvidedIdOrCreate } from "../hooks/useProvidedIdOrCreate";
+import FormControlCaption from "./_FormControlCaption";
 import FormControlLabel from "./_FormControlLabel";
 import FormControlValidation from "./_FormControlValidation";
 import { Slots } from "./slots";
-import ValidationAnimationContainer from "../_ValidationAnimationContainer";
-import { get } from "../constants";
-import FormControlLeadingVisual from "./_FormControlLeadingVisual";
-import { SxProp } from "../sx";
 import CheckboxOrRadioGroupContext from "../_CheckboxOrRadioGroup/_CheckboxOrRadioGroupContext";
+import cx from "clsx";
+import styles from "./styles.module.css";
 
 export type FormControlProps = {
   children?: React.ReactNode;
@@ -29,7 +28,7 @@ export type FormControlProps = {
    * Vertical layout is used by default, and horizontal layout is used for checkbox and radio inputs.
    */
   layout?: "horizontal" | "vertical";
-} & SxProp;
+};
 
 export interface FormControlContext
   extends Pick<FormControlProps, "disabled" | "id" | "required"> {
@@ -38,10 +37,7 @@ export interface FormControlContext
 }
 
 const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
-  (
-    { children, disabled: disabledProp, id: idProp, layout, required, sx },
-    ref,
-  ) => {
+  ({ children, disabled: disabledProp, id: idProp, layout, required }, ref) => {
     const expectedInputComponents = [Checkbox];
     const choiceGroupContext = useContext(CheckboxOrRadioGroupContext);
     const disabled = choiceGroupContext?.disabled || disabledProp;
@@ -51,10 +47,16 @@ const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
         ? child
         : null,
     );
+    const captionChild = React.Children.toArray(children).find((child) =>
+      React.isValidElement(child) && child.type === FormControlCaption
+        ? child
+        : null,
+    );
     const labelChild = React.Children.toArray(children).find(
       (child) => React.isValidElement(child) && child.type === FormControlLabel,
     );
     const validationMessageId = validationChild && `${id}-validationMessage`;
+    const captionId = captionChild && `${id}-caption`;
     const validationStatus =
       React.isValidElement(validationChild) && validationChild.props.variant;
     const InputComponent = React.Children.toArray(children).find((child) =>
@@ -114,24 +116,12 @@ const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
           "An individual checkbox or radio cannot be a required field.",
         );
       }
-    } else {
-      if (
-        React.Children.toArray(children).find(
-          (child) =>
-            React.isValidElement(child) &&
-            child.type === FormControlLeadingVisual,
-        )
-      ) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          "A leading visual is only rendered for a checkbox or radio form control. If you want to render a leading visual inside of your input, check if your input supports a leading visual.",
-        );
-      }
     }
 
     return (
       <Slots
         context={{
+          captionId,
           disabled,
           id,
           required,
@@ -144,12 +134,13 @@ const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
             slots.Label.props.visuallyHidden;
 
           return isChoiceInput || layout === "horizontal" ? (
-            <div ref={ref}>
+            <div className={styles.control} ref={ref}>
               <div>
                 {React.isValidElement(InputComponent) &&
                   React.cloneElement(InputComponent, {
                     id,
                     disabled,
+                    ["aria-describedby"]: captionId,
                   })}
                 {React.Children.toArray(children).filter(
                   (child) =>
@@ -159,8 +150,14 @@ const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
                     ),
                 )}
               </div>
-              {!isLabelHidden ? (
-                <div>{slots.Label}</div>
+              {slots.LeadingVisual && <div>{slots.LeadingVisual}</div>}
+              {(React.isValidElement(slots.Label) &&
+                !slots.Label.props.visuallyHidden) ||
+              slots.Caption ? (
+                <div>
+                  {slots.Label}
+                  {slots.Caption}
+                </div>
               ) : (
                 <>
                   {slots.Label}
@@ -177,6 +174,9 @@ const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
                   required,
                   disabled,
                   validationStatus,
+                  ["aria-describedby"]: [validationMessageId, captionId]
+                    .filter(Boolean)
+                    .join(" "),
                   ...InputComponent.props,
                 })}
               {React.Children.toArray(children).filter(
@@ -186,11 +186,7 @@ const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
                     (inputComponent) => child.type === inputComponent,
                   ),
               )}
-              {validationChild && (
-                <ValidationAnimationContainer show>
-                  {slots.Validation}
-                </ValidationAnimationContainer>
-              )}
+              {validationChild && slots.Validation}
               {slots.Caption}
             </div>
           );
@@ -205,7 +201,7 @@ FormControl.defaultProps = {
 };
 
 export default Object.assign(FormControl, {
+  Caption: FormControlCaption,
   Label: FormControlLabel,
-  LeadingVisual: FormControlLeadingVisual,
   Validation: FormControlValidation,
 });

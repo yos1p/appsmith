@@ -7,6 +7,9 @@ import {
 } from "constants/ThemeConstants";
 
 import CloseLineIcon from "remixicon-react/CloseLineIcon";
+import Button from "./Button";
+import FormControl from "./FormControl/FormControl";
+import CheckboxGroup from "./CheckboxGroup";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
@@ -77,12 +80,15 @@ function Showcase() {
 
       <div className="space-y-5">
         <div className="mt-5">
+          <Button asChild>
+            <a href="https://github.com">Github</a>
+          </Button>
           <h2 className="my-2 text-xl font-semibold">Checkbox</h2>
           <div className="space-y-3">
             <div className="space-y-1">
               <h3 className="text-gray-500">States</h3>
               <div className="flex flex-col space-y-3">
-                <Checkbox checked {...checkboxProps}>
+                {/* <Checkbox checked {...checkboxProps}>
                   Checked
                 </Checkbox>
                 <Checkbox checked={false} {...checkboxProps}>
@@ -121,7 +127,37 @@ function Showcase() {
                 </Checkbox>
                 <Checkbox {...checkboxProps} required>
                   Invalid State
-                </Checkbox>
+                </Checkbox> */}
+
+                <FormControl disabled>
+                  <FormControl.Label>Checkbox option</FormControl.Label>
+                  <Checkbox
+                    {...checkboxProps}
+                    defaultChecked
+                    name="hello"
+                    value="hello"
+                  />
+                </FormControl>
+                <CheckboxGroup layout="vertical">
+                  <CheckboxGroup.Label fontWeight="bolder">
+                    Choices
+                  </CheckboxGroup.Label>
+                  <FormControl>
+                    <Checkbox value="one" {...checkboxProps} />
+                    <FormControl.Label>Choice one</FormControl.Label>
+                  </FormControl>
+                  <FormControl>
+                    <Checkbox value="two" {...checkboxProps} />
+                    <FormControl.Label>Choice two</FormControl.Label>
+                  </FormControl>
+                  <FormControl>
+                    <Checkbox value="three" {...checkboxProps} />
+                    <FormControl.Label>Choice three</FormControl.Label>
+                  </FormControl>
+                  <CheckboxGroup.Validation variant="error">
+                    Your choices are wrong
+                  </CheckboxGroup.Validation>
+                </CheckboxGroup>
               </div>
             </div>
           </div>

@@ -1,9 +1,12 @@
 :root {
-  --wds-color-border: #e1e1e1;
-  --wds-color-border-hover: #A9A7A7;
+  --wds-color-border: theme('colors.trueGray.200');
+  --wds-color-border-hover: theme('colors.trueGray.300');
 
-  --wds-color-disabled: #E0DEDE;
-  --wds-color-disabled-secondary: #1e1e1e;
+  --wds-color-text-disabled: theme('colors.trueGray.200');
+  --wds-color-text-disabled-secondary: theme('colors.trueGray.500');
+
+  --wds-color-icon-disabled: theme('colors.trueGray.200');
+  --wds-color-icon-disabled-secondary: theme('colors.trueGray.500');
 
   --wds-color-bg-danger: #f24822;
   --wds-color-bg-danger-hover: #dc3412;
