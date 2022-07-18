@@ -74,7 +74,6 @@ class CheckboxComponent extends React.Component<CheckboxComponentProps> {
           accentColor={this.props.accentColor}
           checked={this.props.isChecked}
           disabled={this.props.isDisabled}
-          onCheckedChange={this.onCheckChange}
           radii={this.props.borderRadius}
           ref={this.props.inputRef}
         />

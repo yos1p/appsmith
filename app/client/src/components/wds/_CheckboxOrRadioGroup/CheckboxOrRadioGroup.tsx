@@ -39,8 +39,6 @@ export type CheckboxOrRadioGroupContext = {
   captionId?: string;
 } & CheckboxOrRadioGroupProps;
 
-const Body = styled.div``;
-
 const CheckboxOrRadioGroup: React.FC<CheckboxOrRadioGroupProps> = ({
   "aria-labelledby": ariaLabelledby,
   children,

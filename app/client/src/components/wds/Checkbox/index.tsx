@@ -5,11 +5,13 @@ import React, {
   InputHTMLAttributes,
   ChangeEventHandler,
   CSSProperties,
+  useContext,
 } from "react";
 import CheckIcon from "remixicon-react/CheckLineIcon";
 import SubtractIcon from "remixicon-react/SubtractLineIcon";
 
 import { darkenColor } from "widgets/WidgetUtils";
+import { CheckboxGroupContext } from "../CheckboxGroup";
 import { useProvidedRefOrCreate } from "../hooks/useProvidedRefOrCreate";
 import { useProvidedStateOrCreate } from "../hooks/useProvidedStateOrCreate";
 
@@ -25,7 +27,6 @@ type CheckboxProps = {
   ref?: React.RefObject<HTMLInputElement>;
   value?: string;
   defaultChecked?: boolean;
-  onCheckedChange?(checked?: boolean): void;
   children?: React.ReactNode;
   icon?: React.ReactNode;
 } & Exclude<InputHTMLAttributes<HTMLInputElement>, "value">;
@@ -34,15 +35,15 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (
     {
       accentColor,
-      checked: providedChecked,
+      checked,
       children,
       className,
       defaultChecked,
       disabled,
       hasError,
       indeterminate,
-      onCheckedChange,
       radii,
+      onChange,
       value,
       icon = <CheckIcon />,
       ...rest
@@ -51,11 +52,6 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   ) => {
     const checkboxRef = useProvidedRefOrCreate(
       ref as React.RefObject<HTMLInputElement>,
-    );
-    const [checked, setChecked] = useProvidedStateOrCreate(
-      providedChecked,
-      onCheckedChange,
-      defaultChecked,
     );
 
     /**
@@ -68,8 +64,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       }
     }, [indeterminate, checked, checkboxRef]);
 
+    const checkboxGroupContext = useContext(CheckboxGroupContext);
     const handleOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-      setChecked(e.target.checked);
+      checkboxGroupContext.onChange && checkboxGroupContext.onChange(e);
+      onChange && onChange(e);
     };
 
     const cssVariables = useMemo(
@@ -82,8 +80,10 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       [radii, accentColor],
     );
 
+    console.log({ icon });
+
     return (
-      <>
+      <div className={styles.container}>
         <input
           aria-disabled={disabled ? "true" : "false"}
           aria-invalid={hasError ? "true" : "false"}
@@ -100,7 +100,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         <span className={styles.icon} role="presentation" style={cssVariables}>
           {indeterminate ? <SubtractIcon /> : checked ? icon : null}
         </span>
-      </>
+      </div>
     );
   },
 );

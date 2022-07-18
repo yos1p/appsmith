@@ -129,7 +129,7 @@ function Showcase() {
                   Invalid State
                 </Checkbox> */}
 
-                <FormControl disabled>
+                <FormControl>
                   <FormControl.Label>Checkbox option</FormControl.Label>
                   <Checkbox
                     {...checkboxProps}

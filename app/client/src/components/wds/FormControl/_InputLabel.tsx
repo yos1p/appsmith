@@ -5,16 +5,38 @@ import VisuallyHidden from "../_VisuallyHidden";
 
 import styles from "./styles.module.css";
 
-interface Props extends React.HTMLProps<HTMLLabelElement> {
+export interface InputLabelProps extends React.HTMLProps<HTMLLabelElement> {
+  /**
+   * makes the label disabled
+   */
   disabled?: boolean;
+  /**
+   * makes the label required
+   */
   required?: boolean;
+  /**
+   * makes the label visually hidden
+   */
   visuallyHidden?: boolean;
+  /**
+   * align label's text
+   */
   textAlign?: "left" | "center" | "right";
+  /**
+   * font size of label
+   */
+  fontSize?: string;
+  /**
+   * font weight of label
+   */
+  fontWeight?: "normal" | "bold" | "lighter" | "bolder";
 }
 
-const InputLabel: React.FC<Props> = ({
+const InputLabel: React.FC<InputLabelProps> = ({
   children,
   disabled,
+  fontSize = "1rem",
+  fontWeight = "normal",
   htmlFor,
   required,
   textAlign = "left",
@@ -23,6 +45,8 @@ const InputLabel: React.FC<Props> = ({
   const cssVariables = {
     "--cursor": disabled ? "default" : "pointer",
     "--text-align": textAlign,
+    "--font-size": fontSize,
+    "--font-weight": fontWeight,
   } as CSSProperties;
 
   return (

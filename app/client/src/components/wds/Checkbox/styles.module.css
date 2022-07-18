@@ -4,24 +4,16 @@
  *-----------------------------------------------------------------------------
  */
 .container {
-  cursor: pointer;
-  display: grid;
-  gap: 0px 10px;
-  grid-auto-columns: 1fr;
-  grid-auto-rows: min-content;
-  grid-template-columns: min-content auto;
-  cursor: default;
-  user-select: none
+  position: relative;
 }
 
 .input {
   border: 0px;
-  clip: rect(0px, 0px, 0px, 0px);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
+  inset: 0 0 0 0;
+  height: 100%;
+  width: 100%;
   padding: 0px;
-  overflow: hidden;
+  opacity: 0;
   white-space: nowrap;
   position: absolute;
 }
