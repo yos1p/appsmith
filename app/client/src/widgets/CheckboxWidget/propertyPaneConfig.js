@@ -1,4 +1,6 @@
 import { ValidationTypes } from "constants/WidgetValidation";
+import { LabelPosition } from "components/constants";
+import { AlignWidgetTypes } from "widgets/constants";
 
 const propertyPaneConfig = [
   {

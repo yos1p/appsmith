@@ -19,7 +19,6 @@ function Showcase() {
   const checkboxProps = {
     radii: borderRadius,
     accentColor: primaryColor,
-    className: "w-40",
   };
 
   return (
@@ -129,14 +128,21 @@ function Showcase() {
                   Invalid State
                 </Checkbox> */}
 
+                <FormControl disabled>
+                  <FormControl.Label>Disabled</FormControl.Label>
+                  <Checkbox {...checkboxProps} />
+                </FormControl>
+                <FormControl disabled>
+                  <FormControl.Label>Disabled Checked</FormControl.Label>
+                  <Checkbox {...checkboxProps} defaultChecked />
+                </FormControl>
                 <FormControl>
-                  <FormControl.Label>Checkbox option</FormControl.Label>
-                  <Checkbox
-                    {...checkboxProps}
-                    defaultChecked
-                    name="hello"
-                    value="hello"
-                  />
+                  <FormControl.Label>Indeterminate</FormControl.Label>
+                  <Checkbox {...checkboxProps} indeterminate />
+                </FormControl>
+                <FormControl disabled>
+                  <FormControl.Label>Indeterminate Disabled</FormControl.Label>
+                  <Checkbox {...checkboxProps} indeterminate />
                 </FormControl>
                 <CheckboxGroup layout="vertical">
                   <CheckboxGroup.Label fontWeight="bolder">

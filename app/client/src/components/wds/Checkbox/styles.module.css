@@ -16,6 +16,7 @@
   opacity: 0;
   white-space: nowrap;
   position: absolute;
+  cursor: pointer;
 }
 
 .label {
@@ -69,7 +70,7 @@
  * DISABLED
  *-----------------------------------------------------------------------------
  */
-.input:disabled + .icon {
+.input:disabled {
   cursor: not-allowed;
 }
 

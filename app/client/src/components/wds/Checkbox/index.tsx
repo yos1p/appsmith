@@ -13,7 +13,6 @@ import SubtractIcon from "remixicon-react/SubtractLineIcon";
 import { darkenColor } from "widgets/WidgetUtils";
 import { CheckboxGroupContext } from "../CheckboxGroup";
 import { useProvidedRefOrCreate } from "../hooks/useProvidedRefOrCreate";
-import { useProvidedStateOrCreate } from "../hooks/useProvidedStateOrCreate";
 
 import styles from "./styles.module.css";
 
@@ -26,8 +25,6 @@ type CheckboxProps = {
   hasError?: boolean;
   ref?: React.RefObject<HTMLInputElement>;
   value?: string;
-  defaultChecked?: boolean;
-  children?: React.ReactNode;
   icon?: React.ReactNode;
 } & Exclude<InputHTMLAttributes<HTMLInputElement>, "value">;
 
@@ -36,9 +33,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     {
       accentColor,
       checked,
-      children,
       className,
-      defaultChecked,
       disabled,
       hasError,
       indeterminate,
@@ -65,6 +60,12 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     }, [indeterminate, checked, checkboxRef]);
 
     const checkboxGroupContext = useContext(CheckboxGroupContext);
+
+    /**
+     *  handleOnChange is the handler for the onChange event
+     *
+     * @param e event
+     */
     const handleOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
       checkboxGroupContext.onChange && checkboxGroupContext.onChange(e);
       onChange && onChange(e);
@@ -80,10 +81,8 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       [radii, accentColor],
     );
 
-    console.log({ icon });
-
     return (
-      <div className={styles.container}>
+      <div className={`${styles.container} ${className}`}>
         <input
           aria-disabled={disabled ? "true" : "false"}
           aria-invalid={hasError ? "true" : "false"}
@@ -98,7 +97,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           {...rest}
         />
         <span className={styles.icon} role="presentation" style={cssVariables}>
-          {indeterminate ? <SubtractIcon /> : checked ? icon : null}
+          {indeterminate ? <SubtractIcon /> : icon}
         </span>
       </div>
     );

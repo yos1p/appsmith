@@ -1,6 +1,6 @@
 :root {
   --wds-color-border: theme('colors.trueGray.200');
-  --wds-color-border-hover: theme('colors.trueGray.300');
+  --wds-color-border-hover: theme('colors.trueGray.500');
 
   --wds-color-text-disabled: theme('colors.trueGray.200');
   --wds-color-text-disabled-secondary: theme('colors.trueGray.500');
