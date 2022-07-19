@@ -144,6 +144,10 @@ function Showcase() {
                   <FormControl.Label>Indeterminate Disabled</FormControl.Label>
                   <Checkbox {...checkboxProps} indeterminate />
                 </FormControl>
+                <FormControl>
+                  <FormControl.Label>Custom Icon</FormControl.Label>
+                  <Checkbox icon={<CloseLineIcon />} {...checkboxProps} />
+                </FormControl>
                 <CheckboxGroup layout="vertical">
                   <CheckboxGroup.Label fontWeight="bolder">
                     Choices
