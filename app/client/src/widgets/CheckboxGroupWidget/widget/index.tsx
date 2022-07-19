@@ -93,7 +93,10 @@ class CheckboxGroupWidget extends BaseWidget<
         layout={this.props.isInline ? "horizontal" : "vertical"}
         onChange={this.handleCheckboxChange}
       >
-        <CheckboxGroup.Label fontWeight="bolder">
+        <CheckboxGroup.Label
+          fontWeight="bolder"
+          minWidth={`${this.getLabelWidth()}px`}
+        >
           {this.props.labelText}
         </CheckboxGroup.Label>
         {this.props.options.map((option: OptionProps) => (

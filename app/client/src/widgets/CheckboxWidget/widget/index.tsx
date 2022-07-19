@@ -51,6 +51,7 @@ class CheckboxWidget extends BaseWidget<CheckboxWidgetProps, WidgetState> {
         id={`component-${this.props.widgetId}`}
       >
         <FormControl.Label
+          color={this.props.labelTextColor}
           fontSize={this.props.labelTextSize}
           fontWeight={
             this.props.labelStyle?.includes(FontStyleTypes.BOLD)

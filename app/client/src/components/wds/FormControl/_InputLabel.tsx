@@ -30,14 +30,24 @@ export interface InputLabelProps extends React.HTMLProps<HTMLLabelElement> {
    * font weight of label
    */
   fontWeight?: "normal" | "bold" | "lighter" | "bolder";
+  /**
+   * color of label
+   */
+  color?: string;
+  /**
+   * min width for label
+   */
+  minWidth?: string;
 }
 
 const InputLabel: React.FC<InputLabelProps> = ({
   children,
+  color = "inherit",
   disabled,
   fontSize = "1rem",
   fontWeight = "normal",
   htmlFor,
+  minWidth = "min-content",
   required,
   textAlign = "left",
   visuallyHidden,
@@ -47,6 +57,8 @@ const InputLabel: React.FC<InputLabelProps> = ({
     "--text-align": textAlign,
     "--font-size": fontSize,
     "--font-weight": fontWeight,
+    "--color": color,
+    "--min-width": minWidth,
   } as CSSProperties;
 
   return (
