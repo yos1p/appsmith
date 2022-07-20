@@ -7,6 +7,7 @@
   position: relative;
 
   --gutter: 2px;
+  --knob-size: theme('spacing.3');
 }
 
 .input {
@@ -31,7 +32,7 @@
   width: theme('spacing.8');
   height: theme('spacing.4');
   padding: var(--gutter);
-  border-radius: var(--wds-radii);
+  border-radius: theme("borderRadius.full");
   color: white;
   display: inline-flex;
   -webkit-box-align: center;
@@ -47,13 +48,13 @@
 
 .icon::after {
   content: "";
-  height: theme('spacing.3');
-  width: theme('spacing.3');
+  height: var(--knob-size);
+  width: var(--knob-size);
   background-color: currentColor;
   transition: all 0.2s ease;
   position: absolute;
   left: var(--gutter);
-  border-radius: var(--wds-radii);
+  border-radius: theme("borderRadius.full");
 }
 
 .container:hover .input:not(:disabled) + .icon {
@@ -70,7 +71,7 @@
  *-----------------------------------------------------------------------------
  */
  .input:checked + .icon::after {
-   left: calc(100% - theme('spacing.3') - var(--gutter));
+   left: calc(100% - var(--knob-size) - var(--gutter));
  }
 
 /**
