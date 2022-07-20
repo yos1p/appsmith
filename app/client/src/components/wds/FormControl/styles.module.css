@@ -12,12 +12,13 @@
 .label {
   align-self: baseline;
   grid-area: 1 / 2 / 2 / 3;
-  cursor: var(--cursor);
-  text-align: var(--text-align);
-  font-size: var(--font-size);
+  cursor: var(--label-cursor);
+  text-align: var(--label-text-align);
+  font-size: var(--label-font-size);
   display: block;
-  font-weight: var(--font-weight);
+  font-weight: var(--label-font-weight);
   user-select: none;
-  color: var(--color);
-  min-width: var(--min-width);
+  color: var(--label-color);
+  min-width: var(--label-min-width);
+  font-style: var(--label-font-style);
 }

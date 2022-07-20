@@ -88,9 +88,9 @@ const CheckboxOrRadioGroup: React.FC<CheckboxOrRadioGroupProps> = ({
         return (
           <CheckboxOrRadioGroupContext.Provider value={{ disabled }}>
             <div>
-              <fieldset>
+              <fieldset className={styles.fieldset}>
                 <div
-                  className={styles.fieldset}
+                  className={styles.container}
                   style={
                     {
                       "--layout": layout === "horizontal" ? "row" : "column",

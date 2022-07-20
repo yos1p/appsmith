@@ -45,29 +45,34 @@ class CheckboxWidget extends BaseWidget<CheckboxWidgetProps, WidgetState> {
   }
 
   getPageView() {
+    const formControlLabelProps = {
+      color: this.props.labelTextColor,
+      fontSize: this.props.labelTextSize,
+      fontStyle: this.props.labelStyle?.includes(FontStyleTypes.ITALIC)
+        ? "italic"
+        : "normal",
+      fontWeight: this.props.labelStyle?.includes(FontStyleTypes.BOLD)
+        ? "bold"
+        : "normal",
+      textAlign: this.props.alignWidget === "RIGHT" ? "right" : "left",
+    } as const;
+
+    const checkboxProps = {
+      accentColor: this.props.accentColor,
+      checked: this.props.isChecked,
+      onChange: this.onCheckChange,
+      radii: this.props.borderRadius,
+    } as const;
+
     return (
       <FormControl
         disabled={this.props.isDisabled}
         id={`component-${this.props.widgetId}`}
       >
-        <FormControl.Label
-          color={this.props.labelTextColor}
-          fontSize={this.props.labelTextSize}
-          fontWeight={
-            this.props.labelStyle?.includes(FontStyleTypes.BOLD)
-              ? "bold"
-              : "normal"
-          }
-          textAlign={this.props.alignWidget === "RIGHT" ? "right" : "left"}
-        >
+        <FormControl.Label {...formControlLabelProps}>
           {this.props.label}
         </FormControl.Label>
-        <WDSCheckbox
-          accentColor={this.props.accentColor}
-          checked={this.props.isChecked}
-          onChange={this.onCheckChange}
-          radii={this.props.borderRadius}
-        />
+        <WDSCheckbox {...checkboxProps} />
       </FormControl>
     );
   }

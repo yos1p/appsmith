@@ -32,12 +32,17 @@ export type CheckboxOrRadioGroupLabelProps = {
    * Adds font size
    */
   fontSize?: string;
+  /**
+   * font style for label
+   */
+  fontStyle?: "normal" | "italic";
 };
 
 const CheckboxOrRadioGroupLabel: React.FC<CheckboxOrRadioGroupLabelProps> = ({
   children,
   className,
-  fontSize = "1rem",
+  fontSize = "0.875rem",
+  fontStyle = "normal",
   fontWeight = "normal",
   minWidth = "min-content",
   textAlign = "left",
@@ -52,6 +57,7 @@ const CheckboxOrRadioGroupLabel: React.FC<CheckboxOrRadioGroupLabelProps> = ({
           "--label-min-width": minWidth,
           "--label-text-align": textAlign,
           "--label-font-size": fontSize,
+          "--label-font-style": fontStyle,
         } as CSSProperties;
 
         return (

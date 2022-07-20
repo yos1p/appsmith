@@ -94,7 +94,13 @@ class CheckboxGroupWidget extends BaseWidget<
         onChange={this.handleCheckboxChange}
       >
         <CheckboxGroup.Label
-          fontWeight="bolder"
+          fontSize={this.props.labelTextSize}
+          fontStyle={
+            this.props.labelStyle?.includes("ITALIC") ? "italic" : "normal"
+          }
+          fontWeight={
+            this.props.labelStyle?.includes("BOLD") ? "bold" : "normal"
+          }
           minWidth={`${this.getLabelWidth()}px`}
         >
           {this.props.labelText}
@@ -104,6 +110,7 @@ class CheckboxGroupWidget extends BaseWidget<
             <Checkbox
               accentColor={this.props.accentColor}
               checked={this.props.selectedValues.includes(option.value)}
+              radii={this.props.borderRadius}
               value={option.value}
             />
             <FormControl.Label>{option.label}</FormControl.Label>

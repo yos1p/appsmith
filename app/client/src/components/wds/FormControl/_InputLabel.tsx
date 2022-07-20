@@ -1,5 +1,4 @@
 import React, { CSSProperties } from "react";
-import cx from "clsx";
 
 import VisuallyHidden from "../_VisuallyHidden";
 

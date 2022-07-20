@@ -1,5 +1,4 @@
-
-.fieldset {
+.container {
   border: none;
   margin: 0;
   padding: 0;
@@ -16,6 +15,7 @@
   min-width: var(--label-min-width);
   text-align: var(--label-text-align);
   font-size: var(--label-font-size);
+  height: 100%;
 }
 
 .label span {
@@ -26,4 +26,5 @@
 .group {
   display: grid;
   grid-auto-columns: auto;
+  gap: theme('spacing.2');
 }
