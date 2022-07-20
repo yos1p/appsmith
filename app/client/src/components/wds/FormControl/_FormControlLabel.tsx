@@ -42,14 +42,14 @@ const FormControlLabel: React.FC<{ htmlFor?: string } & Props> = ({
   } as CSSProperties;
   return (
     <Slot name="Label">
-      {({ disabled, id, required }: FormControlContext) => (
+      {({ id, required }: FormControlContext) => (
         <VisuallyHidden
           asChild
           className={styles.label}
           isVisible={!visuallyHidden}
           style={cssVariables}
         >
-          <label htmlFor={htmlFor}>
+          <label htmlFor={htmlFor || id}>
             {required ? (
               <span className="flex">
                 <div className="mr-1">{children}</div>

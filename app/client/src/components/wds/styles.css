@@ -1,4 +1,5 @@
 :root {
+
   --wds-color-border: theme('colors.trueGray.200');
   --wds-color-border-hover: theme('colors.trueGray.500');
 
@@ -8,6 +9,9 @@
   --wds-color-icon-disabled: theme('colors.trueGray.200');
   --wds-color-icon-disabled-secondary: theme('colors.trueGray.500');
 
+  --wds-color-bg-neutral: theme('colors.trueGray.300');
+  --wds-color-bg-neutral-light: theme('colors.trueGray.200');
+  --wds-color-bg-neutral-light-hover: theme('colors.trueGray.300');
   --wds-color-bg-danger: theme('colors.red.500');
   --wds-color-bg-danger-hover: theme('colors.red.700');
   --wds-color-bg-danger-pressed: theme('colors.red.600');

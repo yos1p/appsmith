@@ -1,12 +1,16 @@
-import styled from "styled-components";
 import React, {
   ChangeEventHandler,
+  CSSProperties,
   InputHTMLAttributes,
   ReactElement,
   useContext,
+  useMemo,
 } from "react";
 import { FormValidationStatus } from "../utils/types/FormValidationStatus";
 import { RadioGroupContext } from "../RadioGroup";
+import styles from "./styles.module.css";
+import VisuallyHidden from "../_VisuallyHidden";
+import { darkenColor } from "widgets/WidgetUtils";
 
 export type RadioProps = {
   /**
@@ -38,6 +42,10 @@ export type RadioProps = {
    * Indicates whether the radio button validation state is non-standard
    */
   validationStatus?: FormValidationStatus;
+  /**
+   * The color of the radio button
+   */
+  accentColor?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 /**
@@ -46,6 +54,7 @@ export type RadioProps = {
 const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
   (
     {
+      accentColor,
       checked,
       disabled,
       name: nameProp,
@@ -71,22 +80,39 @@ const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
       );
     }
 
+    const cssVariables = useMemo(
+      () =>
+        ({
+          "--wds-color-accent": accentColor,
+          "--wds-color-accent-hover": darkenColor(accentColor),
+        } as CSSProperties),
+      [accentColor],
+    );
+
     return (
-      <input
-        aria-checked={checked ? "true" : "false"}
-        aria-disabled={disabled ? "true" : "false"}
-        aria-invalid={validationStatus === "error" ? "true" : "false"}
-        aria-required={required ? "true" : "false"}
-        checked={checked}
-        disabled={disabled}
-        name={name}
-        onChange={handleOnChange}
-        ref={ref}
-        required={required}
-        type="radio"
-        value={value}
-        {...rest}
-      />
+      <div className={styles.container}>
+        <input
+          aria-checked={checked ? "true" : "false"}
+          aria-disabled={disabled ? "true" : "false"}
+          aria-invalid={validationStatus === "error" ? "true" : "false"}
+          aria-required={required ? "true" : "false"}
+          checked={checked}
+          className={styles.input}
+          disabled={disabled}
+          name={name}
+          onChange={handleOnChange}
+          ref={ref}
+          required={required}
+          type="radio"
+          value={value}
+          {...rest}
+        />
+        <span
+          className={styles.icon}
+          role="presentation"
+          style={cssVariables}
+        />
+      </div>
     );
   },
 );

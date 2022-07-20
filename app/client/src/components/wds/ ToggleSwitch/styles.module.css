@@ -3,8 +3,10 @@
  * BASE
  *-----------------------------------------------------------------------------
  */
- .container {
+.container {
   position: relative;
+
+  --gutter: 2px;
 }
 
 .input {
@@ -17,6 +19,7 @@
   white-space: nowrap;
   position: absolute;
   cursor: pointer;
+  z-index: 1;
 }
 
 .label {
@@ -25,64 +28,64 @@
 }
 
 .icon {
-  width: theme('spacing.4');
+  width: theme('spacing.8');
   height: theme('spacing.4');
-  border-radius: theme("borderRadius.full");
-  border-width: 1px;
-  border-style: solid;
-  border-image: initial;
-  border-color: var(--wds-color-border);
-  color: transparent;
+  padding: var(--gutter);
+  border-radius: var(--wds-radii);
+  color: white;
   display: inline-flex;
   -webkit-box-align: center;
   align-items: center;
   -webkit-box-pack: center;
-  justify-content: center;
+  justify-content: flex-start;
   vertical-align: top;
   user-select: none;
   flex-shrink: 0;
   margin: 3px 0;
+  background-color: var(--wds-color-bg-neutral-light);
 }
 
-.input + .icon::after {
+.icon::after {
   content: "";
-  display: block;
-  width: theme('spacing.2');
-  height: theme('spacing.2');
-  border-radius: theme("borderRadius.full");
-  background-color:currentColor;
+  height: theme('spacing.3');
+  width: theme('spacing.3');
+  background-color: currentColor;
   transition: all 0.2s ease;
-  opacity: 0;
-  transform: scale(0);
+  position: absolute;
+  left: var(--gutter);
+  border-radius: var(--wds-radii);
 }
 
 .container:hover .input:not(:disabled) + .icon {
   border-color: var(--wds-color-border-hover);
 }
 
+.container:hover .input:not(:disabled):not(:checked) + .icon {
+  background-color: var(--wds-color-bg-neutral-light-hover);
+}
+
 /**
  * ----------------------------------------------------------------------------
- * CHECKED INCLUDING DISABLED
+ * CHECKED  INCLUDING DISABLED
  *-----------------------------------------------------------------------------
  */
  .input:checked + .icon::after {
-  opacity: 1;
-  transform: scale(1);
+   left: calc(100% - theme('spacing.3') - var(--gutter));
  }
 
 /**
  * ----------------------------------------------------------------------------
- * CHECKED - BUT NOT DISABLED
+ * CHECKED  AND INDETERMINATE - BUT NOT DISABLED
  *-----------------------------------------------------------------------------
  */
-.input:checked:not(:disabled) + .icon {
+.input:checked:not(:disabled) + .icon,
+.input:indeterminate:not(:disabled) + .icon {
   background-color: var(--wds-color-accent);
-  border-color: var(--wds-color-accent);
   color: theme('colors.white');
 }
 
-.container:hover .input:checked:not(:disabled) + .icon {
-  border-color: var(--wds-color-accent-hover);
+.container:hover .input:checked:not(:disabled) + .icon,
+.container:hover .input:indeterminate:not(:disabled) + .icon {
   background-color: var(--wds-color-accent-hover);
   color: theme('colors.white');
 }
@@ -96,9 +99,9 @@
   cursor: not-allowed;
 }
 
-.input:checked:disabled + .icon {
+.input:checked:disabled + .icon,
+.input:indeterminate:disabled + .icon {
   background-color: var(--wds-color-icon-disabled);
-  border-color: var(--wds-color-icon-disabled);
   color: var(--wds-color-icon-disabled-secondary);
 }
 
@@ -107,13 +110,8 @@
  * ERROR ( INVALID )
  *-----------------------------------------------------------------------------
  */
+
 .input:invalid + .icon {
   background-color: var(--wds-color-bg-danger-tertiary);
-  border-color: var(--wds-color-bg-danger);
 }
-
-.container:hover .input:invalid + .icon {
-  border-color: var(--wds-color-bg-danger-secondary);
-}
-
 

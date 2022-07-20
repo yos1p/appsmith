@@ -10,6 +10,9 @@ import CloseLineIcon from "remixicon-react/CloseLineIcon";
 import Button from "./Button";
 import FormControl from "./FormControl/FormControl";
 import CheckboxGroup from "./CheckboxGroup";
+import Radio from "./Radio";
+import { Colors } from "constants/Colors";
+import { ToggleSwitch } from "./ ToggleSwitch";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
@@ -85,89 +88,60 @@ function Showcase() {
           <h2 className="my-2 text-xl font-semibold">Checkbox</h2>
           <div className="space-y-3">
             <div className="space-y-1">
-              <h3 className="text-gray-500">States</h3>
-              <div className="flex flex-col space-y-3">
-                {/* <Checkbox checked {...checkboxProps}>
-                  Checked
-                </Checkbox>
-                <Checkbox checked={false} {...checkboxProps}>
-                  Unchecked
-                </Checkbox>
-                <Checkbox checked disabled {...checkboxProps}>
-                  Checked + Disabled
-                </Checkbox>
-                <Checkbox checked={false} disabled {...checkboxProps}>
-                  Unchecked + Disabled
-                </Checkbox>
-                <Checkbox indeterminate {...checkboxProps}>
-                  Indeterminate
-                </Checkbox>
-                <Checkbox disabled indeterminate {...checkboxProps}>
-                  Indeterminate + Disabled
-                </Checkbox>
-                <Checkbox defaultChecked {...checkboxProps}>
-                  Default Checked
-                </Checkbox>
-                <Checkbox defaultChecked {...checkboxProps} id="checkbox-id">
-                  With Label
-                </Checkbox>
-                <Checkbox defaultChecked {...checkboxProps} id="checkbox-id">
-                  This checkbox contains the multi line label
-                </Checkbox>
+              <div className="flex space-x-3">
+                <Checkbox accentColor={primaryColor} name="Checkbox" />
+                <Checkbox accentColor={primaryColor} checked name="Checkbox" />
+                <Checkbox accentColor={primaryColor} disabled value="blue" />
+                <Checkbox accentColor={primaryColor} checked disabled />
+                <Checkbox accentColor={primaryColor} indeterminate />
+                <Checkbox accentColor={primaryColor} disabled indeterminate />
                 <Checkbox
+                  accentColor={Colors.GREEN_SOLID}
                   defaultChecked
-                  {...checkboxProps}
                   icon={<CloseLineIcon />}
-                >
-                  Custom Icon 2
-                </Checkbox>
-                <Checkbox defaultChecked {...checkboxProps} accentColor="green">
-                  Custom accent Color
-                </Checkbox>
-                <Checkbox {...checkboxProps} required>
-                  Invalid State
-                </Checkbox> */}
-
-                <FormControl disabled>
-                  <FormControl.Label>Disabled</FormControl.Label>
-                  <Checkbox {...checkboxProps} />
-                </FormControl>
-                <FormControl disabled>
-                  <FormControl.Label>Disabled Checked</FormControl.Label>
-                  <Checkbox {...checkboxProps} defaultChecked />
-                </FormControl>
-                <FormControl>
-                  <FormControl.Label>Indeterminate</FormControl.Label>
-                  <Checkbox {...checkboxProps} indeterminate />
-                </FormControl>
-                <FormControl disabled>
-                  <FormControl.Label>Indeterminate Disabled</FormControl.Label>
-                  <Checkbox {...checkboxProps} indeterminate />
-                </FormControl>
-                <FormControl>
-                  <FormControl.Label>Custom Icon</FormControl.Label>
-                  <Checkbox icon={<CloseLineIcon />} {...checkboxProps} />
-                </FormControl>
-                <CheckboxGroup layout="vertical">
-                  <CheckboxGroup.Label fontWeight="bolder">
-                    Choices
-                  </CheckboxGroup.Label>
-                  <FormControl>
-                    <Checkbox value="one" {...checkboxProps} />
-                    <FormControl.Label>Choice one</FormControl.Label>
-                  </FormControl>
-                  <FormControl>
-                    <Checkbox value="two" {...checkboxProps} />
-                    <FormControl.Label>Choice two</FormControl.Label>
-                  </FormControl>
-                  <FormControl>
-                    <Checkbox value="three" {...checkboxProps} />
-                    <FormControl.Label>Choice three</FormControl.Label>
-                  </FormControl>
-                  <CheckboxGroup.Validation variant="error">
-                    Your choices are wrong
-                  </CheckboxGroup.Validation>
-                </CheckboxGroup>
+                  radii="9999px"
+                />
+              </div>
+              <div className="flex space-x-2">
+                <Radio accentColor={primaryColor} name="radio" value="blue" />
+                <Radio
+                  accentColor={primaryColor}
+                  checked
+                  name="radio"
+                  value="blue"
+                />
+                <Radio accentColor={primaryColor} disabled value="blue" />
+                <Radio
+                  accentColor={primaryColor}
+                  checked
+                  disabled
+                  value="blue"
+                />
+              </div>
+              <div className="flex space-x-2">
+                <ToggleSwitch
+                  accentColor={primaryColor}
+                  name="ToggleSwitch"
+                  radii={borderRadius}
+                />
+                <ToggleSwitch
+                  accentColor={primaryColor}
+                  checked
+                  name="ToggleSwitch"
+                  radii={borderRadius}
+                />
+                <ToggleSwitch
+                  accentColor={primaryColor}
+                  disabled
+                  radii={borderRadius}
+                  value="blue"
+                />
+                <ToggleSwitch
+                  accentColor={primaryColor}
+                  checked
+                  disabled
+                  radii={borderRadius}
+                />
               </div>
             </div>
           </div>
