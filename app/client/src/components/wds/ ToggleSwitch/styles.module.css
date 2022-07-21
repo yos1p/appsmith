@@ -28,7 +28,7 @@
   grid-area: 1 / 2 / 2 / 3;
 }
 
-.icon {
+.button {
   width: theme('spacing.8');
   height: theme('spacing.4');
   padding: var(--gutter);
@@ -44,49 +44,70 @@
   flex-shrink: 0;
   margin: 3px 0;
   background-color: var(--wds-color-bg-neutral-light);
+  position: relative;
 }
 
-.icon::after {
+.knob {
   content: "";
   height: var(--knob-size);
   width: var(--knob-size);
-  background-color: currentColor;
   transition: all 0.2s ease;
   position: absolute;
   left: var(--gutter);
   border-radius: theme("borderRadius.full");
 }
 
-.container:hover .input:not(:disabled) + .icon {
+.container:hover .input:not(:disabled) + .button {
   border-color: var(--wds-color-border-hover);
 }
 
-.container:hover .input:not(:disabled):not(:checked) + .icon {
+.container:hover .input:not(:disabled):not(:checked) + .button {
   background-color: var(--wds-color-bg-neutral-light-hover);
 }
+
+.knob::after {
+  position: absolute;
+  inset: 0;
+  background-color: currentColor;
+  transition: all .2s ease-in-out;
+  content: "";
+  border-radius: theme("borderRadius.full");
+}
+
+.input:active + .button .knob::after {
+  right: -30%;
+  left: 0;
+ }
 
 /**
  * ----------------------------------------------------------------------------
  * CHECKED  INCLUDING DISABLED
  *-----------------------------------------------------------------------------
  */
- .input:checked + .icon::after {
+ .input:checked + .button .knob {
    left: calc(100% - var(--knob-size) - var(--gutter));
  }
+
+ .input:checked:active + .button .knob::after {
+  right: 0;
+  left: -30%;
+ }
+
+
 
 /**
  * ----------------------------------------------------------------------------
  * CHECKED  AND INDETERMINATE - BUT NOT DISABLED
  *-----------------------------------------------------------------------------
  */
-.input:checked:not(:disabled) + .icon,
-.input:indeterminate:not(:disabled) + .icon {
+.input:checked:not(:disabled) + .button,
+.input:indeterminate:not(:disabled) + .button {
   background-color: var(--wds-color-accent);
   color: theme('colors.white');
 }
 
-.container:hover .input:checked:not(:disabled) + .icon,
-.container:hover .input:indeterminate:not(:disabled) + .icon {
+.container:hover .input:checked:not(:disabled) + .button,
+.container:hover .input:indeterminate:not(:disabled) + .button {
   background-color: var(--wds-color-accent-hover);
   color: theme('colors.white');
 }
@@ -100,8 +121,8 @@
   cursor: not-allowed;
 }
 
-.input:checked:disabled + .icon,
-.input:indeterminate:disabled + .icon {
+.input:checked:disabled + .button,
+.input:indeterminate:disabled + .button {
   background-color: var(--wds-color-icon-disabled);
   color: var(--wds-color-icon-disabled-secondary);
 }
@@ -112,7 +133,7 @@
  *-----------------------------------------------------------------------------
  */
 
-.input:invalid + .icon {
+.input:invalid + .button {
   background-color: var(--wds-color-bg-danger-tertiary);
 }
 

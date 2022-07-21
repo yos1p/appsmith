@@ -92,11 +92,13 @@ const ToggleSwitch = forwardRef<HTMLInputElement, ToggleSwitchProps>(
           value={value}
           {...rest}
         />
-        <span
-          className={styles.icon}
+        <button
+          className={styles.button}
           role="presentation"
           style={cssVariables}
-        />
+        >
+          <span className={styles.knob} />
+        </button>
       </div>
     );
   },
