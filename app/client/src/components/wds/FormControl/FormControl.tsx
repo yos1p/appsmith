@@ -6,8 +6,9 @@ import FormControlLabel from "./_FormControlLabel";
 import FormControlValidation from "./_FormControlValidation";
 import { Slots } from "./slots";
 import CheckboxOrRadioGroupContext from "../_CheckboxOrRadioGroup/_CheckboxOrRadioGroupContext";
-import cx from "clsx";
 import styles from "./styles.module.css";
+import Radio from "../Radio";
+import { ToggleSwitch } from "../ ToggleSwitch";
 
 export type FormControlProps = {
   children?: React.ReactNode;
@@ -38,7 +39,7 @@ export interface FormControlContext
 
 const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
   ({ children, disabled: disabledProp, id: idProp, layout, required }, ref) => {
-    const expectedInputComponents = [Checkbox];
+    const expectedInputComponents = [Checkbox, Radio, ToggleSwitch];
     const choiceGroupContext = useContext(CheckboxOrRadioGroupContext);
     const disabled = choiceGroupContext?.disabled || disabledProp;
     const id = useProvidedIdOrCreate(idProp);
@@ -68,7 +69,10 @@ const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
     const inputProps =
       React.isValidElement(InputComponent) && InputComponent.props;
     const isChoiceInput =
-      React.isValidElement(InputComponent) && InputComponent.type === Checkbox;
+      React.isValidElement(InputComponent) &&
+      (InputComponent.type === Checkbox ||
+        InputComponent.type === Radio ||
+        InputComponent.type === ToggleSwitch);
 
     if (InputComponent) {
       if (inputProps?.id) {
@@ -145,7 +149,7 @@ const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
                 {React.Children.toArray(children).filter(
                   (child) =>
                     React.isValidElement(child) &&
-                    ![Checkbox].some(
+                    ![Checkbox, Radio, ToggleSwitch].some(
                       (inputComponent) => child.type === inputComponent,
                     ),
                 )}

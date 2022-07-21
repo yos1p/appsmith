@@ -13,6 +13,7 @@ import CheckboxGroup from "./CheckboxGroup";
 import Radio from "./Radio";
 import { Colors } from "constants/Colors";
 import { ToggleSwitch } from "./ ToggleSwitch";
+import RadioGroup from "./RadioGroup";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
@@ -142,6 +143,53 @@ function Showcase() {
                   disabled
                   radii={borderRadius}
                 />
+              </div>
+              <div className="flex space-x-2">
+                <CheckboxGroup>
+                  <CheckboxGroup.Label>Choices</CheckboxGroup.Label>
+                  <FormControl>
+                    <Checkbox accentColor={primaryColor} value="one" />
+                    <FormControl.Label>Choice one</FormControl.Label>
+                  </FormControl>
+                  <FormControl>
+                    <Checkbox accentColor={primaryColor} value="two" />
+                    <FormControl.Label>Choice two</FormControl.Label>
+                  </FormControl>
+                  <FormControl>
+                    <Checkbox accentColor={primaryColor} value="three" />
+                    <FormControl.Label>Choice three</FormControl.Label>
+                  </FormControl>
+                </CheckboxGroup>
+                <CheckboxGroup>
+                  <CheckboxGroup.Label>Choices</CheckboxGroup.Label>
+                  <FormControl>
+                    <ToggleSwitch accentColor={primaryColor} value="one" />
+                    <FormControl.Label>Choice one</FormControl.Label>
+                  </FormControl>
+                  <FormControl>
+                    <ToggleSwitch accentColor={primaryColor} value="two" />
+                    <FormControl.Label>Choice two</FormControl.Label>
+                  </FormControl>
+                  <FormControl>
+                    <ToggleSwitch accentColor={primaryColor} value="three" />
+                    <FormControl.Label>Choice three</FormControl.Label>
+                  </FormControl>
+                </CheckboxGroup>
+                <RadioGroup name="choice">
+                  <RadioGroup.Label>Choices</RadioGroup.Label>
+                  <FormControl>
+                    <Radio accentColor={primaryColor} value="one" />
+                    <FormControl.Label>Choice one</FormControl.Label>
+                  </FormControl>
+                  <FormControl>
+                    <Radio accentColor={primaryColor} value="two" />
+                    <FormControl.Label>Choice two</FormControl.Label>
+                  </FormControl>
+                  <FormControl>
+                    <Radio accentColor={primaryColor} value="three" />
+                    <FormControl.Label>Choice three</FormControl.Label>
+                  </FormControl>
+                </RadioGroup>
               </div>
             </div>
           </div>
