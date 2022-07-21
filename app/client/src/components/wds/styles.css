@@ -1,22 +1,18 @@
 :root {
+  --wds-color-border: #E0DEDE;
+  --wds-color-border-hover: #B3B3B3;
 
-  --wds-color-border: theme('colors.trueGray.200');
-  --wds-color-border-hover: theme('colors.trueGray.500');
+  --wds-color-border-danger: #D91921;
+  --wds-color-border-danger-hover: #B90707;
 
-  --wds-color-text-disabled: theme('colors.trueGray.200');
-  --wds-color-text-disabled-secondary: theme('colors.trueGray.500');
+  --wds-color-border-disabled: #E0DEDE;
 
-  --wds-color-icon-disabled: theme('colors.trueGray.200');
-  --wds-color-icon-disabled-secondary: theme('colors.trueGray.500');
+  --wds-color-bg-strong: #E0DEDE;
+  --wds-color-bg-strong-hover: #B3B3B3;
 
-  --wds-color-bg-neutral: theme('colors.trueGray.300');
-  --wds-color-bg-neutral-light: theme('colors.trueGray.200');
-  --wds-color-bg-neutral-light-hover: theme('colors.trueGray.300');
-  --wds-color-bg-danger: theme('colors.red.500');
-  --wds-color-bg-danger-hover: theme('colors.red.700');
-  --wds-color-bg-danger-pressed: theme('colors.red.600');
-  --wds-color-bg-danger-secondary: theme('colors.red.700');
-  --wds-color-bg-danger-tertiary: theme('colors.red.200');
+  --wds-color-bg-disabled: #F3F3F3;
+  --wds-color-bg-disabled-strong: #A9A7A7;
 
-  --wds-color-icon-onaccent: #fff;
+  --wds-color-bg-danger: #D91921;
+  --wds-color-bg-danger-hover: #B90707;
 }

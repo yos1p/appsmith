@@ -43,7 +43,7 @@
   user-select: none;
   flex-shrink: 0;
   margin: 3px 0;
-  background-color: var(--wds-color-bg-neutral-light);
+  background-color: var(--wds-color-bg-strong);
   position: relative;
 }
 
@@ -57,12 +57,8 @@
   border-radius: theme("borderRadius.full");
 }
 
-.container:hover .input:not(:disabled) + .button {
-  border-color: var(--wds-color-border-hover);
-}
-
 .container:hover .input:not(:disabled):not(:checked) + .button {
-  background-color: var(--wds-color-bg-neutral-light-hover);
+  background-color: var(--wds-color-bg-strong-hover);
 }
 
 .knob::after {
@@ -93,8 +89,6 @@
   left: -30%;
  }
 
-
-
 /**
  * ----------------------------------------------------------------------------
  * CHECKED  AND INDETERMINATE - BUT NOT DISABLED
@@ -122,10 +116,13 @@
 }
 
 .input:checked:disabled + .button,
-.input:indeterminate:disabled + .button {
-  background-color: var(--wds-color-icon-disabled);
-  color: var(--wds-color-icon-disabled-secondary);
+.input:indeterminate:disabled + .button,
+.input:not(:checked):disabled + .button {
+  background-color: var(--wds-color-bg-disabled);
+  color: var(--wds-color-bg-disabled-strong);
+  box-shadow: 0px 0px 0px 1px var(--wds-color-border)
 }
+
 
 /**
  * ----------------------------------------------------------------------------

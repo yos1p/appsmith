@@ -9,7 +9,6 @@ import React, {
 import { FormValidationStatus } from "../utils/types/FormValidationStatus";
 import { RadioGroupContext } from "../RadioGroup";
 import styles from "./styles.module.css";
-import VisuallyHidden from "../_VisuallyHidden";
 import { darkenColor } from "widgets/WidgetUtils";
 
 export type RadioProps = {
@@ -90,29 +89,23 @@ const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
     );
 
     return (
-      <div className={styles.container}>
-        <input
-          aria-checked={checked ? "true" : "false"}
-          aria-disabled={disabled ? "true" : "false"}
-          aria-invalid={validationStatus === "error" ? "true" : "false"}
-          aria-required={required ? "true" : "false"}
-          checked={checked}
-          className={styles.input}
-          disabled={disabled}
-          name={name}
-          onChange={handleOnChange}
-          ref={ref}
-          required={required}
-          type="radio"
-          value={value}
-          {...rest}
-        />
-        <span
-          className={styles.icon}
-          role="presentation"
-          style={cssVariables}
-        />
-      </div>
+      <input
+        aria-checked={checked ? "true" : "false"}
+        aria-disabled={disabled ? "true" : "false"}
+        aria-invalid={validationStatus === "error" ? "true" : "false"}
+        aria-required={required ? "true" : "false"}
+        checked={checked}
+        className={styles.input}
+        disabled={disabled}
+        name={name}
+        onChange={handleOnChange}
+        ref={ref}
+        required={required}
+        style={cssVariables}
+        type="radio"
+        value={value}
+        {...rest}
+      />
     );
   },
 );

@@ -3,89 +3,40 @@
  * BASE
  *-----------------------------------------------------------------------------
  */
- .container {
-  position: relative;
-}
-
 .input {
-  border: 0px;
-  inset: 0 0 0 0;
-  height: 100%;
-  width: 100%;
-  padding: 0px;
-  opacity: 0;
-  white-space: nowrap;
-  position: absolute;
-  cursor: pointer;
-  z-index: 1;
-}
-
-.label {
-  align-self: baseline;
-  grid-area: 1 / 2 / 2 / 3;
-}
-
-.icon {
+  vertical-align: middle;
   width: theme('spacing.4');
   height: theme('spacing.4');
-  border-radius: theme("borderRadius.full");
-  border-width: 1px;
-  border-style: solid;
-  border-image: initial;
-  border-color: var(--wds-color-border);
-  color: transparent;
-  display: inline-flex;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  vertical-align: top;
-  user-select: none;
-  flex-shrink: 0;
-  margin: 3px 0;
+  border-radius: 10px;
+  background: none;
+  border: 0;
+  box-shadow: inset 0 0 0 1px var(--wds-color-border);
+  appearance: none;
+  padding: 0;
+  margin: 0;
+  transition: box-shadow 150ms cubic-bezier(0.95, 0.15, 0.5, 1.25);
+  cursor: pointer;
 }
 
-.input + .icon::after {
-  content: "";
-  display: block;
-  width: theme('spacing.2');
-  height: theme('spacing.2');
-  border-radius: theme("borderRadius.full");
-  background-color:currentColor;
-  transition: all 0.2s ease;
-  opacity: 0;
-  transform: scale(0);
+.input:focus {
+  outline: none;
 }
 
-.container:hover .input:not(:disabled) + .icon {
-  border-color: var(--wds-color-border-hover);
+.input:not(:disabled):hover {
+  box-shadow: inset 0 0 0 1px var(--wds-color-border-hover);
 }
 
 /**
  * ----------------------------------------------------------------------------
- * CHECKED INCLUDING DISABLED
+ * CHECKED
  *-----------------------------------------------------------------------------
  */
- .input:checked + .icon::after {
-  opacity: 1;
-  transform: scale(1);
- }
-
-/**
- * ----------------------------------------------------------------------------
- * CHECKED - BUT NOT DISABLED
- *-----------------------------------------------------------------------------
- */
-.input:checked:not(:disabled) + .icon {
-  background-color: var(--wds-color-accent);
-  border-color: var(--wds-color-accent);
-  color: theme('colors.white');
+.input:checked {
+  box-shadow: inset 0 0 0 4px var(--wds-color-accent);
 }
 
-.container:hover .input:checked:not(:disabled) + .icon {
-  border-color: var(--wds-color-accent-hover);
-  background-color: var(--wds-color-accent-hover);
-  color: theme('colors.white');
+.input:checked:not(:disabled):hover {
+  box-shadow: inset 0 0 0 4px var(--wds-color-accent-hover);
 }
 
 /**
@@ -93,28 +44,11 @@
  * DISABLED
  *-----------------------------------------------------------------------------
  */
-.input:disabled {
+ .input:disabled {
   cursor: not-allowed;
+ }
+
+ .input:checked:disabled {
+  box-shadow: inset 0 0 0 1px var(--wds-color-border), inset 0 0 0 4px var(--wds-color-bg-disabled);
+  background-color: var(--wds-color-bg-disabled-strong);
 }
-
-.input:checked:disabled + .icon {
-  background-color: var(--wds-color-icon-disabled);
-  border-color: var(--wds-color-icon-disabled);
-  color: var(--wds-color-icon-disabled-secondary);
-}
-
-/**
- * ----------------------------------------------------------------------------
- * ERROR ( INVALID )
- *-----------------------------------------------------------------------------
- */
-.input:invalid + .icon {
-  background-color: var(--wds-color-bg-danger-tertiary);
-  border-color: var(--wds-color-bg-danger);
-}
-
-.container:hover .input:invalid + .icon {
-  border-color: var(--wds-color-bg-danger-secondary);
-}
-
-
