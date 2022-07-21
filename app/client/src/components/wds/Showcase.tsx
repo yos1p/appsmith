@@ -91,9 +91,13 @@ function Showcase() {
             <div className="space-y-1">
               <div className="flex space-x-3">
                 <Checkbox accentColor={primaryColor} name="Checkbox" />
-                <Checkbox accentColor={primaryColor} checked name="Checkbox" />
+                <Checkbox
+                  accentColor={primaryColor}
+                  defaultChecked
+                  name="Checkbox"
+                />
                 <Checkbox accentColor={primaryColor} disabled value="blue" />
-                <Checkbox accentColor={primaryColor} checked disabled />
+                <Checkbox accentColor={primaryColor} defaultChecked disabled />
                 <Checkbox accentColor={primaryColor} indeterminate />
                 <Checkbox accentColor={primaryColor} disabled indeterminate />
                 <Checkbox
@@ -107,7 +111,7 @@ function Showcase() {
                 <Radio accentColor={primaryColor} name="radio" value="blue" />
                 <Radio
                   accentColor={primaryColor}
-                  checked
+                  defaultChecked
                   name="radio"
                   value="blue"
                 />
@@ -127,7 +131,7 @@ function Showcase() {
                 />
                 <ToggleSwitch
                   accentColor={primaryColor}
-                  checked
+                  defaultChecked
                   name="ToggleSwitch"
                   radii={borderRadius}
                 />
@@ -139,7 +143,7 @@ function Showcase() {
                 />
                 <ToggleSwitch
                   accentColor={primaryColor}
-                  checked
+                  defaultChecked
                   disabled
                   radii={borderRadius}
                 />
