@@ -78,28 +78,20 @@ const ToggleSwitch = forwardRef<HTMLInputElement, ToggleSwitchProps>(
     );
 
     return (
-      <div className={`${styles.container} ${className}`}>
-        <input
-          aria-disabled={disabled ? "true" : "false"}
-          aria-invalid={hasError ? "true" : "false"}
-          checked={indeterminate ? false : checked}
-          className={styles.input}
-          disabled={disabled}
-          name={value}
-          onChange={handleOnChange}
-          ref={toggleSwitchRef}
-          type="checkbox"
-          value={value}
-          {...rest}
-        />
-        <button
-          className={styles.button}
-          role="presentation"
-          style={cssVariables}
-        >
-          <span className={styles.knob} />
-        </button>
-      </div>
+      <input
+        aria-disabled={disabled ? "true" : "false"}
+        aria-invalid={hasError ? "true" : "false"}
+        checked={indeterminate ? false : checked}
+        className={styles.input}
+        disabled={disabled}
+        name={value}
+        onChange={handleOnChange}
+        ref={toggleSwitchRef}
+        style={cssVariables}
+        type="checkbox"
+        value={value}
+        {...rest}
+      />
     );
   },
 );

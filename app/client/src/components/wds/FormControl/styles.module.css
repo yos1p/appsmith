@@ -22,3 +22,8 @@
   min-width: var(--label-min-width);
   font-style: var(--label-font-style);
 }
+
+/* hover interaction for checkbox when control is hovered */
+.control:hover input[type="checkbox"]:not(:disabled):not(:checked) + span {
+  border-color: var(--wds-color-border-hover);
+}

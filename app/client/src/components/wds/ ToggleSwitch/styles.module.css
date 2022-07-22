@@ -3,32 +3,10 @@
  * BASE
  *-----------------------------------------------------------------------------
  */
-.container {
-  position: relative;
-
+.input {
   --gutter: 2px;
   --knob-size: theme('spacing.3');
-}
 
-.input {
-  border: 0px;
-  inset: 0 0 0 0;
-  height: 100%;
-  width: 100%;
-  padding: 0px;
-  opacity: 0;
-  white-space: nowrap;
-  position: absolute;
-  cursor: pointer;
-  z-index: 1;
-}
-
-.label {
-  align-self: baseline;
-  grid-area: 1 / 2 / 2 / 3;
-}
-
-.button {
   width: theme('spacing.8');
   height: theme('spacing.4');
   padding: var(--gutter);
@@ -45,9 +23,11 @@
   margin: 3px 0;
   background-color: var(--wds-color-bg-strong);
   position: relative;
+  appearance: none;
+  cursor: pointer;
 }
 
-.knob {
+.input::after {
   content: "";
   height: var(--knob-size);
   width: var(--knob-size);
@@ -55,38 +35,20 @@
   position: absolute;
   left: var(--gutter);
   border-radius: theme("borderRadius.full");
+  background-color: currentColor;
 }
 
-.container:hover .input:not(:disabled):not(:checked) + .button {
+.input:not(:disabled):not(:checked):hover {
   background-color: var(--wds-color-bg-strong-hover);
 }
-
-.knob::after {
-  position: absolute;
-  inset: 0;
-  background-color: currentColor;
-  transition: all .2s ease-in-out;
-  content: "";
-  border-radius: theme("borderRadius.full");
-}
-
-.input:active + .button .knob::after {
-  right: -30%;
-  left: 0;
- }
 
 /**
  * ----------------------------------------------------------------------------
  * CHECKED  INCLUDING DISABLED
  *-----------------------------------------------------------------------------
  */
- .input:checked + .button .knob {
+ .input:checked::after {
    left: calc(100% - var(--knob-size) - var(--gutter));
- }
-
- .input:checked:active + .button .knob::after {
-  right: 0;
-  left: -30%;
  }
 
 /**
@@ -94,14 +56,14 @@
  * CHECKED  AND INDETERMINATE - BUT NOT DISABLED
  *-----------------------------------------------------------------------------
  */
-.input:checked:not(:disabled) + .button,
-.input:indeterminate:not(:disabled) + .button {
+.input:checked:not(:disabled),
+.input:indeterminate:not(:disabled) {
   background-color: var(--wds-color-accent);
   color: theme('colors.white');
 }
 
-.container:hover .input:checked:not(:disabled) + .button,
-.container:hover .input:indeterminate:not(:disabled) + .button {
+.input:checked:not(:disabled):hover,
+.input:indeterminate:not(:disabled):hover {
   background-color: var(--wds-color-accent-hover);
   color: theme('colors.white');
 }
@@ -115,9 +77,9 @@
   cursor: not-allowed;
 }
 
-.input:checked:disabled + .button,
-.input:indeterminate:disabled + .button,
-.input:not(:checked):disabled + .button {
+.input:checked:disabled,
+.input:indeterminate:disabled,
+.input:not(:checked):disabled {
   background-color: var(--wds-color-bg-disabled);
   color: var(--wds-color-bg-disabled-strong);
   box-shadow: 0px 0px 0px 1px var(--wds-color-border)
@@ -130,7 +92,7 @@
  *-----------------------------------------------------------------------------
  */
 
-.input:invalid + .button {
+.input:invalid {
   background-color: var(--wds-color-bg-danger-tertiary);
 }
 

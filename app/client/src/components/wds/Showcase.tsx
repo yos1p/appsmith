@@ -19,6 +19,7 @@ function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
   const [boxShadow, setBoxShadow] = useState<string | undefined>("none");
   const [primaryColor, setPrimaryColor] = useState("#553DE9");
+  const [animation, setAnimation] = useState<boolean>(false);
 
   const checkboxProps = {
     radii: borderRadius,
@@ -79,6 +80,16 @@ function Showcase() {
             </button>
           ))}
         </div>
+
+        <FormControl>
+          <Checkbox
+            accentColor={primaryColor}
+            onChange={(e) => setAnimation(e.target.checked)}
+          />
+          <FormControl.Label>
+            Animation {animation ? "Alloed" : "Stopped"}
+          </FormControl.Label>
+        </FormControl>
       </div>
 
       <div className="space-y-5">
@@ -100,6 +111,7 @@ function Showcase() {
                 <Checkbox accentColor={primaryColor} defaultChecked disabled />
                 <Checkbox accentColor={primaryColor} indeterminate />
                 <Checkbox accentColor={primaryColor} disabled indeterminate />
+                <Checkbox accentColor={primaryColor} required />
                 <Checkbox
                   accentColor={Colors.GREEN_SOLID}
                   defaultChecked
@@ -121,6 +133,12 @@ function Showcase() {
                   checked
                   disabled
                   value="blue"
+                />
+                <Radio
+                  accentColor={primaryColor}
+                  name="hello"
+                  required
+                  value="abc"
                 />
               </div>
               <div className="flex space-x-2">
