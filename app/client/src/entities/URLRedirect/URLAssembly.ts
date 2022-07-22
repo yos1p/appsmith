@@ -48,15 +48,12 @@ export type PageURLParams = {
 };
 
 const fetchQueryParamsToPersist = () => {
-  const existingParams = getQueryParamsObject() || {};
-  // not persisting the entire query currently, since that's the current behavior
-  const { branch, embed } = existingParams;
-  let params = { branch, embed } as any;
+  let existingParams = getQueryParamsObject() || {};
   // test param to make sure a query param is present in the URL during dev and tests
   if ((window as any).Cypress) {
-    params = { a: "b", ...params };
+    existingParams = { a: "b", ...existingParams };
   }
-  return params;
+  return existingParams;
 };
 
 export class URLBuilder {
