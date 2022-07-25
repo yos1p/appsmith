@@ -392,6 +392,10 @@ export default function* executePluginActionTriggerSaga(
         callbackData: [payload.body, params],
         ...triggerMeta,
       });
+      throw new PluginTriggerFailureError(
+        createMessage(ERROR_ACTION_EXECUTE_FAIL, action.name),
+        [payload.body, params],
+      );
     } else {
       throw new PluginTriggerFailureError(
         createMessage(ERROR_PLUGIN_ACTION_EXECUTE, action.name),
@@ -420,9 +424,14 @@ export default function* executePluginActionTriggerSaga(
         callbackData: [payload.body, params],
         ...triggerMeta,
       });
+      return [{ success: true }];
     }
   }
-  return [payload.body, params];
+  // added success flag for successfull api execution and handle callback
+  return [
+    set((payload.body || {}) as Record<string, unknown>, "success", true),
+    params,
+  ];
 }
 
 function* runActionShortcutSaga() {
