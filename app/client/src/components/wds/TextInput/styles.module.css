@@ -1,0 +1,41 @@
+.unstyled {
+  border: 0;
+  font-size: inherit;
+  font-family: inherit;
+  background-color: transparent;
+  -webkit-appearance: none;
+  color: inherit;
+  width: 100%;
+}
+
+.unstyled:focus {
+  outline: none;
+}
+
+
+.base {
+  font-size: theme("fontSize.base");
+  line-height: 20px;
+  color: red;
+  vertical-align: middle;
+  background-color: white;;
+  border: 1px solid #e1e1e1;
+  border-radius: var(--wds-radii);
+  outline: none;
+  box-shadow: rgb(208 215 222 / 20%) 0px 1px 0px inset;
+  display: inline-flex;
+  align-items: stretch;
+  min-height: 32px;
+}
+
+.base input, .base textarea {
+  cursor: text;
+}
+
+.base select {
+  cursor: pointer;
+}
+
+.base::placeholder {
+  color: blue;
+}

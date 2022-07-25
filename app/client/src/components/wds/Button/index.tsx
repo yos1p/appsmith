@@ -19,10 +19,10 @@ import withRecaptcha, { RecaptchaProps } from "./withRecaptcha";
 import { getCSSVariables } from "./styles";
 import styles from "./styles.module.css";
 import cx from "clsx";
+import { Spinner } from "../Spinner";
 
 type ButtonStyleProps = {
-  buttonColor?: string;
-  buttonVariant?: ButtonVariant;
+  accentColor?: string;
   iconName?: IconName;
   placement?: ButtonPlacement;
   justifyContent?:
@@ -40,11 +40,12 @@ export type ButtonProps = {
   borderRadius?: string;
   tooltip?: string;
   children?: React.ReactNode;
-  leftIcon?: IconName;
   isDisabled?: boolean;
   isLoading?: boolean;
   className?: string;
   asChild?: boolean;
+  leadingIcon?: React.ReactNode;
+  trailingIcon?: React.ReactNode;
 } & ButtonStyleProps &
   RecaptchaProps &
   HTMLAttributes<HTMLButtonElement>;
@@ -59,14 +60,17 @@ export enum VariantTypes {
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (props, forwardedRef): JSX.Element => {
     const {
+      accentColor,
       asChild,
       borderRadius,
       boxShadow,
-      buttonColor,
       children,
       className,
       isDisabled,
+      isLoading,
+      leadingIcon,
       tooltip,
+      trailingIcon,
       variant,
       ...rest
     } = props;
@@ -74,13 +78,32 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       [styles.base]: true,
       [styles[variant || "solid"]]: true,
       [className || ""]: true,
+      [styles.loading]: isLoading,
     });
 
     const cssVariables = useMemo(() => {
       return getCSSVariables(props, "default");
-    }, [borderRadius, buttonColor, boxShadow]);
+    }, [borderRadius, accentColor, boxShadow]);
 
     const Component = (asChild ? Slot : "button") as "button";
+
+    const content = useMemo(() => {
+      if (isLoading) {
+        return <Spinner />;
+      }
+
+      return (
+        <>
+          {leadingIcon && (
+            <span className={styles.leadingIcon}>{leadingIcon}</span>
+          )}
+          {children && <span>{children}</span>}
+          {trailingIcon && (
+            <span className={styles.trailingIcon}>{trailingIcon}</span>
+          )}
+        </>
+      );
+    }, [isLoading, children]);
 
     return (
       <Component
@@ -90,21 +113,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={forwardedRef}
         style={cssVariables}
       >
-        {children}
+        {content}
       </Component>
     );
   },
 );
-
-Button.defaultProps = {
-  buttonVariant: ButtonVariantTypes.PRIMARY,
-  disabled: false,
-  text: "Button Text",
-  minimal: true,
-  variant: "solid",
-  buttonColor: "#553DE9",
-  borderRadius: borderRadiusOptions.md,
-  justifyContent: "center",
-} as ButtonProps;
 
 export default withRecaptcha(withTooltip(Button));

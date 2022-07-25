@@ -14,6 +14,8 @@ import Radio from "./Radio";
 import { Colors } from "constants/Colors";
 import { ToggleSwitch } from "./ ToggleSwitch";
 import RadioGroup from "./RadioGroup";
+import { Icon } from "./Icon";
+import TextInput from "./TextInput";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
@@ -94,13 +96,62 @@ function Showcase() {
 
       <div className="space-y-5">
         <div className="mt-5">
-          <Button asChild>
-            <a href="https://github.com">Github</a>
-          </Button>
           <h2 className="my-2 text-xl font-semibold">Checkbox</h2>
           <div className="space-y-3">
             <div className="space-y-1">
-              <div className="flex space-x-3">
+              <div className="flex space-x-2">
+                <Button
+                  accentColor={primaryColor}
+                  className="w-28"
+                  variant="solid"
+                >
+                  Primary
+                </Button>
+                <Button
+                  accentColor={primaryColor}
+                  className="w-28"
+                  variant="outline"
+                >
+                  Outline
+                </Button>
+                <Button
+                  accentColor={primaryColor}
+                  className="w-28"
+                  variant="ghost"
+                >
+                  Ghost
+                </Button>
+                <Button className="w-28" variant="link">
+                  Link
+                </Button>
+                <Button
+                  accentColor={primaryColor}
+                  className="w-32"
+                  trailingIcon={<Icon name="plus" />}
+                >
+                  Trailing Icon
+                </Button>
+                <Button
+                  accentColor={primaryColor}
+                  className="w-32"
+                  leadingIcon={<Icon name="plus" />}
+                  variant="outline"
+                >
+                  Leading Icon
+                </Button>
+                <Button accentColor={primaryColor} className="w-32" isLoading>
+                  Loading
+                </Button>
+                <Button
+                  accentColor={primaryColor}
+                  className="w-32"
+                  isLoading
+                  variant="outline"
+                >
+                  Loading
+                </Button>
+              </div>
+              <div className="flex space-x-2">
                 <Checkbox accentColor={primaryColor} name="Checkbox" />
                 <Checkbox
                   accentColor={primaryColor}
@@ -212,6 +263,9 @@ function Showcase() {
                     <FormControl.Label>Choice three</FormControl.Label>
                   </FormControl>
                 </RadioGroup>
+              </div>
+              <div className="flex space-x-2">
+                <TextInput placeholder="hello" />
               </div>
             </div>
           </div>

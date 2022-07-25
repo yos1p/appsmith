@@ -16,12 +16,7 @@ export const getCSSVariables = (
   props: ButtonProps,
   colorSchemeName: keyof typeof ColorSchemeTypes = "default",
 ): { [key: string]: string } => {
-  const {
-    borderRadius,
-    boxShadow,
-    buttonColor: accentColor,
-    isDisabled,
-  } = props;
+  const { accentColor, borderRadius, boxShadow, isDisabled } = props;
 
   const colorSchemes: any = {
     default: {

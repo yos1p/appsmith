@@ -9,11 +9,13 @@
   text-align: center;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  min-width: max-content;
   height: 100%;
+  white-space: nowrap;
   cursor: pointer;
   outline: 0;
-  gap: theme('spacing.4');
+  gap: theme('spacing.1');
+  padding: 0 theme('spacing.2');
   min-height: theme('spacing.8');
   border-radius: var(--wds-radii);
   box-shadow: var(--wds-shadow);
@@ -80,4 +82,9 @@
 
 .link:hover {
   text-decoration: underline;
+}
+
+.loading {
+  cursor: not-allowed;
+  opacity: 0.8;
 }
