@@ -192,6 +192,13 @@ function trueTypeOf(obj: any) {
     .toLowerCase();
 }
 
+function getBindingObject(value: any, overridenDatatype?: string) {
+  const dataType = overridenDatatype ? overridenDatatype : trueTypeOf(value);
+  const tmpJSON: any = {};
+  tmpJSON[dataType] = value;
+  return tmpJSON;
+}
+
 /**
  * This function resolves :
  * - individual objects containing blob urls
@@ -201,8 +208,7 @@ function trueTypeOf(obj: any) {
  * @param value
  */
 
-function* resolvingBlobUrls(value: any) {
-  const dataType = trueTypeOf(value);
+function* resolvingBlobUrls(value: any, isArray?: boolean) {
   if (isTrueObject(value)) {
     const blobUrlPaths: string[] = [];
     Object.keys(value).forEach((propertyName) => {
@@ -216,15 +222,14 @@ function* resolvingBlobUrls(value: any) {
       const resolvedBlobValue: unknown = yield call(readBlob, blobUrl);
       set(value, blobUrlPath, resolvedBlobValue);
     }
+    value = getBindingObject(value, "file");
   } else {
-    const tmpJSON: any = {};
-    tmpJSON[dataType] = value;
-    value = tmpJSON;
-  }
-
-  if (isBlobUrl(value)) {
-    // @ts-expect-error: Values can take many types
-    value = yield call(readBlob, value);
+    if (isBlobUrl(value)) {
+      // @ts-expect-error: Values can take many types
+      value = yield call(readBlob, value);
+    } else {
+      value = isArray ? value : getBindingObject(value);
+    }
   }
 
   return value;
@@ -282,7 +287,7 @@ function* evaluateActionParams(
         const newVal: unknown = yield call(resolvingBlobUrls, val);
         tempArr.push(newVal);
       }
-      value = tempArr;
+      value = getBindingObject(tempArr);
     } else {
       // @ts-expect-error: Values can take many types
       value = yield call(resolvingBlobUrls, value);
