@@ -875,7 +875,14 @@ public class NewActionServiceCEImpl extends BaseService<NewActionRepository, New
                                 byte[] bytes = new byte[dataBuffer.readableByteCount()];
                                 dataBuffer.read(bytes);
                                 DataBufferUtils.release(dataBuffer);
-                                param.setValue(new String(bytes, StandardCharsets.UTF_8));
+                                try {
+                                    JsonNode paramJsonNode = objectMapper.readTree(bytes);
+                                    String jsDataType = paramJsonNode.fieldNames().next();
+                                    log.debug("JS Data Type: {}", jsDataType);
+                                    param.setValue(paramJsonNode.path(jsDataType).asText());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                                 return param;
                             });
                 })
