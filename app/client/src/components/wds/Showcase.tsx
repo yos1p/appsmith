@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { CSSProperties, useState } from "react";
 
 import { Checkbox } from "components/wds";
 import {
@@ -92,7 +92,14 @@ function Showcase() {
         </FormControl>
       </div>
 
-      <div className="space-y-5">
+      <div
+        className="space-y-5"
+        style={
+          {
+            "--wds-radii": borderRadius,
+          } as CSSProperties
+        }
+      >
         <div className="mt-5">
           <h2 className="my-2 text-xl font-semibold">Checkbox</h2>
           <div className="space-y-3">
@@ -300,6 +307,7 @@ function Showcase() {
                   placeholder="hello"
                   trailingVisual={<Icon name="pencil" />}
                 />
+                <TextInput disabled placeholder="username" />
                 <FormControl>
                   <FormControl.Label>Username</FormControl.Label>
                   <TextInput placeholder="username" />

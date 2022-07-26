@@ -22,16 +22,20 @@
   color: var(--wds-color-text);
   vertical-align: middle;
   background-color: white;;
-  border: 1px solid #e1e1e1;
+  border: 1px solid var(--wds-color-border);
   border-radius: var(--wds-radii);
-  outline: none;
   box-shadow: rgb(208 215 222 / 20%) 0px 1px 0px inset;
+  outline: none;
   display: inline-flex;
   align-items: stretch;
   min-height: 32px;
   padding-left: var(--gutter);
   padding-right: var(--gutter);
   gap: var(--gap);
+}
+
+.base:hover {
+  border-color: var(--wds-color-border-hover);
 }
 
 .base input, .base textarea {
@@ -77,9 +81,13 @@
   color: var(--wds-color-icon-secondary);
 }
 
-.disabled {
+.base.disabled {
   border-color: var(--wds-color-border-disabled);
   background-color: var(--wds-color-bg-disabled);
+}
+
+.base.disabled:hover {
+  border-color: var(--wds-color-border-disabled);
 }
 
 .disabled input, .disabled input {

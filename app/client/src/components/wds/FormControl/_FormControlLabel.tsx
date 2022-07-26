@@ -23,7 +23,7 @@ const FormControlLabel: React.FC<{ htmlFor?: string } & Props> = ({
   children,
   color,
   disabled,
-  fontSize = "1rem",
+  fontSize = "0.875rem",
   fontStyle = "normal",
   fontWeight,
   htmlFor,
