@@ -34,10 +34,6 @@
   gap: var(--gap);
 }
 
-.base:hover {
-  border-color: var(--wds-color-border-hover);
-}
-
 .base input, .base textarea {
   cursor: text;
 }
