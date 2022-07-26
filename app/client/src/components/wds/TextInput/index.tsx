@@ -7,6 +7,7 @@ import { Merge } from "../utils/types/Merge";
 
 import styles from "./styles.module.css";
 import { FormValidationStatus } from "../utils/types/FormValidationStatus";
+import clsx from "clsx";
 
 export type TextInputNonPassthroughProps = {
   /** @deprecated Use `leadingVisual` or `trailingVisual` prop instead */
@@ -23,11 +24,11 @@ export type TextInputNonPassthroughProps = {
   /**
    * A visual that renders inside the input before the typing area
    */
-  leadingVisual?: string | React.ComponentType<{ className?: string }>;
+  leadingVisual?: React.ReactNode;
   /**
    * A visual that renders inside the input after the typing area
    */
-  trailingVisual?: string | React.ComponentType<{ className?: string }>;
+  trailingVisual?: React.ReactNode;
   /**
    * A visual that renders inside the input after the typing area
    */
@@ -69,7 +70,6 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       ref as React.RefObject<HTMLInputElement>,
     );
     // this class is necessary to style FilterSearch, plz no touchy!
-    const wrapperClasses = classnames(className, "TextInput-wrapper");
     const showLeadingLoadingIndicator =
       loading &&
       (loaderPosition === "leading" ||
@@ -100,20 +100,25 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       <span
         aria-busy={Boolean(loading)}
         aria-live="polite"
-        className={styles.wrapper}
+        className={clsx(
+          className,
+          styles.base,
+          LeadingVisual && styles["with-leading-visual"],
+          TrailingVisual && styles["with-trailing-visual"],
+          trailingAction && styles["with-trailing-action"],
+          disabled && styles.disabled,
+        )}
         onClick={focusInput}
       >
         {IconComponent && <IconComponent className="TextInput-icon" />}
         <TextInputInnerVisualSlot
-          hasLoadingIndicator={typeof loading === "boolean"}
+          hasLoadingIndicator={
+            typeof loading === "boolean" && Boolean(showLeadingLoadingIndicator)
+          }
           showLoadingIndicator={showLeadingLoadingIndicator}
           visualPosition="leading"
         >
-          {typeof LeadingVisual === "function" ? (
-            <LeadingVisual />
-          ) : (
-            LeadingVisual
-          )}
+          {LeadingVisual}
         </TextInputInnerVisualSlot>
         <input
           className={styles.unstyled}
@@ -125,15 +130,14 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
           data-component="input"
         />
         <TextInputInnerVisualSlot
-          hasLoadingIndicator={typeof loading === "boolean"}
+          hasLoadingIndicator={
+            typeof loading === "boolean" &&
+            Boolean(showTrailingLoadingIndicator)
+          }
           showLoadingIndicator={showTrailingLoadingIndicator}
           visualPosition="trailing"
         >
-          {typeof TrailingVisual === "function" ? (
-            <TrailingVisual />
-          ) : (
-            TrailingVisual
-          )}
+          {TrailingVisual}
         </TextInputInnerVisualSlot>
         {trailingAction}
       </span>
@@ -148,4 +152,4 @@ TextInput.defaultProps = {
 
 TextInput.displayName = "TextInput";
 
-export default Object.assign(TextInput);
+export default TextInput;

@@ -1,6 +1,8 @@
+import clsx from "clsx";
 import React from "react";
 import { Spinner } from "../Spinner";
 import { TextInputNonPassthroughProps } from "./";
+import styles from "./styles.module.css";
 
 const TextInputInnerVisualSlot: React.FC<{
   /** Whether the input is expected to ever show a loading indicator */
@@ -23,14 +25,28 @@ const TextInputInnerVisualSlot: React.FC<{
   }
 
   if (!hasLoadingIndicator) {
-    return <span className="TextInput-icon">{children}</span>;
+    return <span className={styles.icon}>{children}</span>;
   }
 
   return (
-    <span className="TextInput-icon">
+    <span className={styles.icon}>
       <div className="relative flex">
-        {children && <div>{children}</div>}
-        <Spinner />
+        {children && (
+          <div className={clsx(showLoadingIndicator ? "invisible" : "visible")}>
+            {children}
+          </div>
+        )}
+        <Spinner
+          className={clsx(
+            children
+              ? `absolute top-0 bottom-0 ${
+                  showLoadingIndicator ? "visible" : "invisible"
+                } ${visualPosition === "leading" ? "left-0" : "right-0"}`
+              : showLoadingIndicator
+              ? "visible"
+              : "invisible",
+          )}
+        />
       </div>
     </span>
   );

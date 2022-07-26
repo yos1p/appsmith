@@ -1,6 +1,7 @@
 :root {
   --wds-color-border: #E0DEDE;
   --wds-color-border-hover: #B3B3B3;
+  --wds-color-border-focus: rgb(9, 105, 218);
 
   --wds-color-border-danger: #D91921;
   --wds-color-border-danger-hover: #B90707;
@@ -15,6 +16,16 @@
 
   --wds-color-bg-danger: #D91921;
   --wds-color-bg-danger-hover: #B90707;
+
+
+  --wds-color-text: rgba(0, 0, 0, .9);
+  --wds-color-text-secondary: rgba(0, 0, 0, .5);
+  --wds-color-text-tertiary: rgba(0, 0, 0, .3);
+
+
+  --wds-color-icon: rgba(0, 0, 0, .9);
+  --wds-color-icon-secondary: rgba(0, 0, 0, .5);
+  --wds-color-icon-secondary-hover: rgba(0, 0, 0, .9);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -14,9 +14,12 @@
 
 
 .base {
+  --gutter: theme('spacing.2');
+  --gap: theme('spacing.1');
+
   font-size: theme("fontSize.base");
   line-height: 20px;
-  color: red;
+  color: var(--wds-color-text);
   vertical-align: middle;
   background-color: white;;
   border: 1px solid #e1e1e1;
@@ -26,6 +29,9 @@
   display: inline-flex;
   align-items: stretch;
   min-height: 32px;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+  gap: var(--gap);
 }
 
 .base input, .base textarea {
@@ -37,5 +43,45 @@
 }
 
 .base::placeholder {
-  color: blue;
+  color: var(--wds-color-text-tertiary);
+}
+
+.base:focus-within {
+  border-color: var(--wds-color-border-focus);
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--wds-color-border-focus);
+}
+
+.base.with-leading-visual {
+  padding-left: theme('spacing.2');
+}
+
+.base.with-leading-visual > input,
+.base.with-leading-visual > select {
+  padding-right: 0;
+}
+
+.base.with-trailing-visual {
+  padding-right: var(--gutter);
+}
+
+.base.with-trailing-visual > input,
+.base.with-trailing-visual > select {
+  padding-left: 0;
+}
+
+
+.base .icon {
+  align-self: center;
+  flex-shrink: 0;
+  color: var(--wds-color-icon-secondary);
+}
+
+.disabled {
+  border-color: var(--wds-color-border-disabled);
+  background-color: var(--wds-color-bg-disabled);
+}
+
+.disabled input, .disabled input {
+  cursor: not-allowed;
 }

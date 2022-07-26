@@ -21,7 +21,7 @@ function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
   const [boxShadow, setBoxShadow] = useState<string | undefined>("none");
   const [primaryColor, setPrimaryColor] = useState("#553DE9");
-  const [animation, setAnimation] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const checkboxProps = {
     radii: borderRadius,
@@ -86,11 +86,9 @@ function Showcase() {
         <FormControl>
           <Checkbox
             accentColor={primaryColor}
-            onChange={(e) => setAnimation(e.target.checked)}
+            onChange={(e) => setLoading(e.target.checked)}
           />
-          <FormControl.Label>
-            Animation {animation ? "Alloed" : "Stopped"}
-          </FormControl.Label>
+          <FormControl.Label>Loading</FormControl.Label>
         </FormControl>
       </div>
 
@@ -139,13 +137,17 @@ function Showcase() {
                 >
                   Leading Icon
                 </Button>
-                <Button accentColor={primaryColor} className="w-32" isLoading>
+                <Button
+                  accentColor={primaryColor}
+                  className="w-32"
+                  isLoading={loading}
+                >
                   Loading
                 </Button>
                 <Button
                   accentColor={primaryColor}
                   className="w-32"
-                  isLoading
+                  isLoading={loading}
                   variant="outline"
                 >
                   Loading
@@ -266,6 +268,39 @@ function Showcase() {
               </div>
               <div className="flex space-x-2">
                 <TextInput placeholder="hello" />
+                <TextInput
+                  leadingVisual={<Icon name="pencil" />}
+                  placeholder="hello"
+                />
+                <TextInput
+                  placeholder="hello"
+                  trailingVisual={<Icon name="pencil" />}
+                />
+                <TextInput
+                  leadingVisual={<Icon name="pencil" />}
+                  loaderPosition="leading"
+                  loading={loading}
+                  placeholder="hello"
+                />
+                <TextInput
+                  leadingVisual={<Icon name="pencil" />}
+                  loaderPosition="trailing"
+                  loading={loading}
+                  placeholder="hello"
+                />
+                <TextInput
+                  loaderPosition="leading"
+                  loading={loading}
+                  placeholder="hello"
+                  trailingVisual={<Icon name="pencil" />}
+                />
+                <TextInput
+                  loaderPosition="trailing"
+                  loading={loading}
+                  placeholder="hello"
+                  trailingVisual={<Icon name="pencil" />}
+                />
+                <TextInput disabled placeholder="Disabled" />
               </div>
             </div>
           </div>
