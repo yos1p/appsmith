@@ -266,7 +266,7 @@ function Showcase() {
                   </FormControl>
                 </RadioGroup>
               </div>
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <TextInput placeholder="hello" />
                 <TextInput
                   leadingVisual={<Icon name="pencil" />}
@@ -300,7 +300,10 @@ function Showcase() {
                   placeholder="hello"
                   trailingVisual={<Icon name="pencil" />}
                 />
-                <TextInput disabled placeholder="Disabled" />
+                <FormControl>
+                  <FormControl.Label>Username</FormControl.Label>
+                  <TextInput placeholder="username" />
+                </FormControl>
               </div>
             </div>
           </div>
