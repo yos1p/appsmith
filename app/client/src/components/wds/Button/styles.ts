@@ -1,6 +1,6 @@
 import cx from "classnames";
 
-import { ButtonProps, VariantTypes } from "./";
+import { ButtonProps } from "./";
 import {
   darkenColor,
   getComplementaryGrayscaleColor,
@@ -15,8 +15,9 @@ enum ColorSchemeTypes {
 export const getCSSVariables = (
   props: ButtonProps,
   colorSchemeName: keyof typeof ColorSchemeTypes = "default",
+  iconOnly = false,
 ): { [key: string]: string } => {
-  const { accentColor, borderRadius, boxShadow, isDisabled } = props;
+  const { accentColor, borderRadius, boxShadow, isDisabled, size = 32 } = props;
 
   const colorSchemes: any = {
     default: {
@@ -40,19 +41,23 @@ export const getCSSVariables = (
     },
   };
 
-  let colorScheme = colorSchemes[colorSchemeName];
+  let cssVariables = { ...colorSchemes[colorSchemeName] };
 
   if (isDisabled) {
-    colorScheme = colorSchemes["disabled"];
+    cssVariables = colorSchemes["disabled"];
   }
 
   if (borderRadius) {
-    colorScheme["--wds-radii"] = borderRadius || "0px";
+    cssVariables["--wds-radii"] = borderRadius || "0px";
   }
 
   if (boxShadow) {
-    colorScheme["--wds-shadow"] = boxShadow || "none";
+    cssVariables["--wds-shadow"] = boxShadow || "none";
   }
 
-  return colorScheme;
+  if (iconOnly) {
+    cssVariables["--size"] = `${size}px`;
+  }
+
+  return cssVariables;
 };

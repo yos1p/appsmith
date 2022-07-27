@@ -35,7 +35,7 @@ type ButtonStyleProps = {
 };
 
 export type ButtonProps = {
-  variant?: keyof typeof VariantTypes;
+  variant?: "solid" | "outline" | "link" | "ghost";
   boxShadow?: string;
   borderRadius?: string;
   tooltip?: string;
@@ -46,16 +46,13 @@ export type ButtonProps = {
   asChild?: boolean;
   leadingIcon?: React.ReactNode;
   trailingIcon?: React.ReactNode;
+  /**
+   * size of button ( mainly used for icon buttons )
+   */
+  size?: number;
 } & ButtonStyleProps &
   RecaptchaProps &
   HTMLAttributes<HTMLButtonElement>;
-
-export enum VariantTypes {
-  solid = "solid",
-  outline = "outline",
-  ghost = "ghost",
-  link = "link",
-}
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (props, forwardedRef): JSX.Element => {
@@ -74,23 +71,25 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       variant,
       ...rest
     } = props;
+
+    const iconOnly = Boolean(!children && (leadingIcon || trailingIcon));
     const computedClassnames = cx({
       [styles.base]: true,
       [styles[variant || "solid"]]: true,
       [className || ""]: true,
       [styles.loading]: isLoading,
+      [styles["icon-only"]]: iconOnly,
     });
 
     const cssVariables = useMemo(() => {
-      return getCSSVariables(props, "default");
+      return getCSSVariables(props, "default", iconOnly);
     }, [borderRadius, accentColor, boxShadow]);
 
     const Component = (asChild ? Slot : "button") as "button";
 
     const content = useMemo(() => {
-      if (isLoading) {
-        return <Spinner />;
-      }
+      // if button is loading, show spinner only
+      if (isLoading) return <Spinner />;
 
       return (
         <>

@@ -16,6 +16,7 @@ import { ToggleSwitch } from "./ ToggleSwitch";
 import RadioGroup from "./RadioGroup";
 import { Icon } from "./Icon";
 import TextInput from "./TextInput";
+import Dialog from "components/wds/Dialog";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
@@ -159,6 +160,20 @@ function Showcase() {
                 >
                   Loading
                 </Button>
+                <Dialog aria-labelledby={loading ? "Animated" : "asdsa"}>
+                  <Dialog.Trigger>
+                    <Button
+                      accentColor={primaryColor}
+                      trailingIcon={<Icon name="plus" />}
+                      variant="solid"
+                    />
+                  </Dialog.Trigger>
+                  <Dialog.Content>
+                    <input placeholder="helo" type="text" />
+                    <input placeholder="helo2" type="text" />
+                    <p>Dialog</p>
+                  </Dialog.Content>
+                </Dialog>
               </div>
               <div className="flex space-x-2">
                 <Checkbox accentColor={primaryColor} name="Checkbox" />
