@@ -27,6 +27,7 @@ export function useOpenAndCloseFocus({
       firstItem?.focus();
     }
     return function() {
+      console.log("returnFocusRef", returnRef);
       returnRef?.focus();
     };
   }, [initialFocusRef, returnFocusRef, containerRef, preventFocusOnOpen]);

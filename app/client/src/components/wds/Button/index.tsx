@@ -52,7 +52,7 @@ export type ButtonProps = {
   size?: number;
 } & ButtonStyleProps &
   RecaptchaProps &
-  HTMLAttributes<HTMLButtonElement>;
+  React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (props, forwardedRef): JSX.Element => {
@@ -118,4 +118,4 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   },
 );
 
-export default withRecaptcha(withTooltip(Button));
+export default Button;

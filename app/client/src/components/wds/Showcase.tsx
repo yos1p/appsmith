@@ -17,6 +17,7 @@ import RadioGroup from "./RadioGroup";
 import { Icon } from "./Icon";
 import TextInput from "./TextInput";
 import Dialog from "components/wds/Dialog";
+import { ActionMenu } from "./DropdownMenu";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
@@ -171,9 +172,20 @@ function Showcase() {
                   <Dialog.Content>
                     <input placeholder="helo" type="text" />
                     <input placeholder="helo2" type="text" />
+                    <button>Button</button>
                     <p>Dialog</p>
                   </Dialog.Content>
                 </Dialog>
+                <ActionMenu>
+                  <ActionMenu.Anchor>
+                    <button>Open Menu</button>
+                  </ActionMenu.Anchor>
+
+                  <ActionMenu.Overlay>
+                    <div>Hello world</div>
+                    <button>Submit</button>
+                  </ActionMenu.Overlay>
+                </ActionMenu>
               </div>
               <div className="flex space-x-2">
                 <Checkbox accentColor={primaryColor} name="Checkbox" />

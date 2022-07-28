@@ -10,6 +10,7 @@ import { useCombinedRefs } from "../hooks/useCombinedRefs";
 import styles from "./styles.module.css";
 import Button, { ButtonProps } from "../Button";
 import { useFocusTrap } from "../hooks/useFocusTrap";
+import Portal from "../Portal";
 
 const noop = () => null;
 
@@ -162,7 +163,7 @@ const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
     });
 
     return context.isOpen ? (
-      <>
+      <Portal>
         <span className={styles.overlay} ref={overlayRef} />
         <div
           aria-modal="true"
@@ -175,7 +176,7 @@ const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
           <button onClick={onCloseClick} ref={closeButtonRef} />
           {children}
         </div>
-      </>
+      </Portal>
     ) : null;
   },
 );

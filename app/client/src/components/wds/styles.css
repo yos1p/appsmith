@@ -8,6 +8,8 @@
 
   --wds-color-border-disabled: #E0DEDE;
 
+  --wds-color-bg: #fff;
+
   --wds-color-bg-strong: #E0DEDE;
   --wds-color-bg-strong-hover: #B3B3B3;
 
@@ -26,6 +28,11 @@
   --wds-color-icon: rgba(0, 0, 0, .9);
   --wds-color-icon-secondary: rgba(0, 0, 0, .5);
   --wds-color-icon-secondary-hover: rgba(0, 0, 0, .9);
+}
+
+:focus-visible {
+  outline: 1px solid blue !important;
+  outline-offset: 2px !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

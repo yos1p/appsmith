@@ -1,19 +1,18 @@
 import React from "react";
 import { useSSRSafeId } from "@react-aria/ssr";
-import { TriangleDownIcon } from "@primer/octicons-react";
-import { AnchoredOverlay, AnchoredOverlayProps } from "./AnchoredOverlay";
-import { OverlayProps } from "./Overlay";
+import { AnchoredOverlay, AnchoredOverlayProps } from "../AnchoredOverlay";
+import { OverlayProps } from "../Overlay";
 import {
   useProvidedRefOrCreate,
   useProvidedStateOrCreate,
   useMenuInitialFocus,
   useMnemonics,
-} from "./hooks";
-import { Divider } from "./ActionList/Divider";
-import { ActionListContainerContext } from "./ActionList/ActionListContainerContext";
-import { Button, ButtonProps } from "./Button";
-import { MandateProps } from "./utils/types";
-import { SxProp, merge } from "./sx";
+} from "../hooks";
+import { ActionListContainerContext } from "../ActionList/ActionListContainerContext";
+import Button, { ButtonProps } from "../Button";
+import { MandateProps } from "../utils/types";
+
+import { Icon } from "../Icon";
 
 type MenuContextProps = Pick<
   AnchoredOverlayProps,
@@ -103,21 +102,10 @@ export type ActionMenuButtonProps = ButtonProps;
 const MenuButton = React.forwardRef<
   AnchoredOverlayProps["anchorRef"],
   ButtonProps
->(({ sx: sxProp = {}, ...props }, anchorRef) => {
+>(({ ...props }, anchorRef) => {
   return (
     <Anchor ref={anchorRef}>
-      <Button
-        sx={merge(
-          {
-            // override the margin on caret for optical alignment
-            "[data-component=trailingIcon]": { marginX: -1 },
-          },
-          sxProp as SxProp,
-        )}
-        trailingIcon={TriangleDownIcon}
-        type="button"
-        {...props}
-      />
+      <Button trailingIcon={<Icon name="plus" />} type="button" {...props} />
     </Anchor>
   );
 });
@@ -186,5 +174,4 @@ export const ActionMenu = Object.assign(Menu, {
   Button: MenuButton,
   Anchor,
   Overlay,
-  Divider,
 });

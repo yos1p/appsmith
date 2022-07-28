@@ -1,0 +1,17 @@
+.overlay {
+  background-color: var(--wds-color-bg);
+  position: absolute;
+  min-width: 192px;
+  max-width: 640px;
+  height: auto;
+  width: auto;
+  border-radius: var(--wds-radii);
+  overflow: hidden;
+  visibility: var(--visibility);
+}
+
+@media (forced-colors: active) {
+  .overlay {
+    outline: solid 1px transparent;
+  }
+}
