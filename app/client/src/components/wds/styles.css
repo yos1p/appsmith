@@ -30,10 +30,6 @@
   --wds-color-icon-secondary-hover: rgba(0, 0, 0, .9);
 }
 
-:focus-visible {
-  outline: 1px solid blue !important;
-  outline-offset: 2px !important;
-}
 
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {

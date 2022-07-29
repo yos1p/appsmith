@@ -14,6 +14,8 @@ import { AnchorSide } from "../behaviours/anchored-position";
 
 import styles from "./styles.module.css";
 import { useFocusTrap } from "../hooks/useFocusTrap";
+import { useFocusZone } from "../hooks/useFocusZone";
+import { useOnOutsideClick } from "../hooks/useOnOutsideClick";
 
 type StyledOverlayProps = {
   width?: keyof typeof widthMap;
@@ -131,6 +133,20 @@ const Overlay = React.forwardRef<HTMLDivElement, OwnOverlayProps>(
       disabled: !visibility,
       restoreFocusOnCleanUp: true,
       initialFocusRef: initialFocusRef,
+    });
+
+    // allow pressing up/down to move focus within the dialog
+    useFocusZone({
+      containerRef: combinedRef,
+      disabled: !visibility,
+      focusOutBehavior: "wrap",
+    });
+
+    // closes the dialog when the user clicks outside of it
+    useOnOutsideClick({
+      containerRef: combinedRef,
+      ignoreClickRefs,
+      onClickOutside: onClickOutside,
     });
 
     return (

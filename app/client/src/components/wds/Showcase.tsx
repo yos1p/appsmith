@@ -17,7 +17,8 @@ import RadioGroup from "./RadioGroup";
 import { Icon } from "./Icon";
 import TextInput from "./TextInput";
 import Dialog from "components/wds/Dialog";
-import { ActionMenu } from "./DropdownMenu";
+import { ActionMenu } from "./ActionMenu";
+import { ActionList } from "./ActionList";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
@@ -169,10 +170,11 @@ function Showcase() {
                       variant="solid"
                     />
                   </Dialog.Trigger>
-                  <Dialog.Content>
-                    <input placeholder="helo" type="text" />
-                    <input placeholder="helo2" type="text" />
-                    <button>Button</button>
+                  <Dialog.Content className="p-3">
+                    <div className="space-x-3">
+                      <TextInput placeholder="First Name" />
+                      <TextInput placeholder="Last name" />
+                    </div>
                     <p>Dialog</p>
                   </Dialog.Content>
                 </Dialog>
@@ -182,8 +184,15 @@ function Showcase() {
                   </ActionMenu.Anchor>
 
                   <ActionMenu.Overlay>
-                    <div>Hello world</div>
-                    <button>Submit</button>
+                    <ActionList>
+                      <ActionList.Item>New file</ActionList.Item>
+                      <ActionList.Item>Copy link</ActionList.Item>
+                      <ActionList.Item>Edit file</ActionList.Item>
+                      <ActionList.Divider />
+                      <ActionList.Item variant="danger">
+                        Delete file
+                      </ActionList.Item>
+                    </ActionList>
                   </ActionMenu.Overlay>
                 </ActionMenu>
               </div>

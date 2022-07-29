@@ -11,6 +11,7 @@ import styles from "./styles.module.css";
 import Button, { ButtonProps } from "../Button";
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import Portal from "../Portal";
+import clsx from "clsx";
 
 const noop = () => null;
 
@@ -126,13 +127,17 @@ const DialogButton = React.forwardRef<
  * -----------------------------------------------------------------------------------------------*/
 
 type DialogContentProps = {
+  className?: string;
   initialFocusRef?: React.RefObject<HTMLElement>;
   returnFocusRef?: React.RefObject<HTMLElement>;
   children?: JSX.Element | JSX.Element[];
 };
 
 const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
-  ({ children, initialFocusRef, returnFocusRef, ...props }, forwardedRef) => {
+  (
+    { children, className, initialFocusRef, returnFocusRef, ...props },
+    forwardedRef,
+  ) => {
     const overlayRef = useRef(null);
     const closeButtonRef = useRef(null);
     const context = useContext(DialogContext);
@@ -167,7 +172,7 @@ const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
         <span className={styles.overlay} ref={overlayRef} />
         <div
           aria-modal="true"
-          className={styles.base}
+          className={clsx(styles.base, className)}
           ref={modalRef}
           role="dialog"
           tabIndex={-1}
