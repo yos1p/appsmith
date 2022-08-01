@@ -355,15 +355,10 @@ function Showcase() {
                   loaderPosition="trailing"
                   loading={loading}
                   placeholder="hello"
+                  trailingVisual={<Icon name="close" />}
                 />
                 <TextInput
                   loaderPosition="leading"
-                  loading={loading}
-                  placeholder="hello"
-                  trailingVisual={<Icon name="pencil" />}
-                />
-                <TextInput
-                  loaderPosition="trailing"
                   loading={loading}
                   placeholder="hello"
                   trailingVisual={<Icon name="pencil" />}
