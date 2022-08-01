@@ -52,7 +52,7 @@ export const Selection: React.FC<SelectionProps> = ({ selected }) => {
    */
   return (
     <LeadingVisualContainer>
-      <Checkbox />
+      <Checkbox className="pointer-events-none" />
     </LeadingVisualContainer>
   );
 };

@@ -1,6 +1,6 @@
 import { ForwardRefComponent as PolymorphicForwardRefComponent } from "@radix-ui/react-polymorphic";
-import React, { PropsWithChildren } from "react";
-import styled from "styled-components";
+import clsx from "clsx";
+import React, { CSSProperties, PropsWithChildren } from "react";
 import { useProvidedIdOrCreate } from "../hooks/useProvidedIdOrCreate";
 import createSlots from "../utils/create-slots";
 import { AriaRole } from "../utils/types";
@@ -8,6 +8,8 @@ import { ActionListContainerContext } from "./ActionListContainerContext";
 import { ActionListGroupProps, GroupContext } from "./Group";
 import { ActionListProps, ListContext } from "./List";
 import { Selection } from "./Selection";
+
+import styles from "./styles.module.css";
 
 export const getVariantStyles = (
   variant: ActionListItemProps["variant"],
@@ -81,6 +83,8 @@ export type ActionListItemProps = {
    * Private API for use internally only. Used by LinkItem to wrap contents in an anchor
    */
   _PrivateItemWrapper?: React.FC;
+
+  className?: string;
 };
 
 const { Slot, Slots } = createSlots([
@@ -108,6 +112,7 @@ export const Item = React.forwardRef<HTMLLIElement, ActionListItemProps>(
       id,
       role,
       _PrivateItemWrapper,
+      className,
       ...props
     },
     forwardedRef,
@@ -193,15 +198,39 @@ export const Item = React.forwardRef<HTMLLIElement, ActionListItemProps>(
             role={role || itemRole}
             tabIndex={disabled || _PrivateItemWrapper ? undefined : 0}
             {...(selectionAttribute && { [selectionAttribute]: selected })}
+            className={clsx(
+              styles.item,
+              className,
+              listVariant === "inset" && styles.inset,
+            )}
+            style={
+              {
+                "--divider-width": showDividers ? "1px" : 0,
+              } as CSSProperties
+            }
             {...props}
           >
             <ItemWrapper>
               <Selection selected={selected} />
               {slots.LeadingVisual}
-              <div data-component="ActionList.Item--DividerContainer">
-                <ConditionalBox if={Boolean(slots.TrailingVisual)}>
-                  <ConditionalBox if={Boolean(slots.InlineDescription)}>
-                    <span id={labelId}>{props.children}</span>
+              <div
+                className="flex flex-col min-w-0 grow"
+                data-component="ActionList.Item--DividerContainer"
+              >
+                <ConditionalBox
+                  className="flex grow"
+                  if={Boolean(slots.TrailingVisual)}
+                >
+                  <ConditionalBox
+                    className="flex items-baseline min-w-0 grow"
+                    if={Boolean(slots.InlineDescription)}
+                  >
+                    <span
+                      className={clsx(slots.InlineDescription ? "" : "grow")}
+                      id={labelId}
+                    >
+                      {props.children}
+                    </span>
                     {slots.InlineDescription}
                   </ConditionalBox>
                   {slots.TrailingVisual}
@@ -221,6 +250,7 @@ Item.displayName = "ActionList.Item";
 type ConditionalBoxProps = {
   if: boolean;
   children?: any;
+  className?: string;
 };
 
 const ConditionalBox = (props: ConditionalBoxProps) => {

@@ -1,5 +1,6 @@
 .overlay {
   background-color: var(--wds-color-bg);
+  box-shadow: 0px 0px 0px 1px var(--wds-color-border);
   position: absolute;
   min-width: 192px;
   max-width: 640px;

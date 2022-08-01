@@ -6,6 +6,9 @@ import {
   boxShadowOptions,
 } from "constants/ThemeConstants";
 
+// load polyfill for :focus-visible
+import "focus-visible";
+
 import CloseLineIcon from "remixicon-react/CloseLineIcon";
 import Button from "./Button";
 import FormControl from "./FormControl/FormControl";
@@ -25,6 +28,7 @@ function Showcase() {
   const [boxShadow, setBoxShadow] = useState<string | undefined>("none");
   const [primaryColor, setPrimaryColor] = useState("#553DE9");
   const [loading, setLoading] = useState<boolean>(true);
+  const [selected, setSelected] = useState<number | undefined>();
 
   const checkboxProps = {
     radii: borderRadius,
@@ -103,10 +107,48 @@ function Showcase() {
           } as CSSProperties
         }
       >
+        <div id="__primerPortalRoot__" />
         <div className="mt-5">
-          <h2 className="my-2 text-xl font-semibold">Checkbox</h2>
           <div className="space-y-3">
             <div className="space-y-1">
+              <div className="flex space-x-2">
+                <ActionList className="w-56">
+                  <ActionList.Item>New file</ActionList.Item>
+                  <ActionList.Item>Copy link</ActionList.Item>
+                  <ActionList.Item>Edit file</ActionList.Item>
+                  <ActionList.Divider />
+                  <ActionList.Item variant="danger">
+                    Delete file
+                  </ActionList.Item>
+                </ActionList>
+                <ActionList className="w-56" selectionVariant="multiple">
+                  <ActionList.Item
+                    onSelect={() => setSelected(0)}
+                    selected={selected === 0}
+                  >
+                    <ActionList.LeadingVisual>
+                      <Icon name="pencil" />
+                    </ActionList.LeadingVisual>
+                    github.com/primer
+                  </ActionList.Item>
+                  <ActionList.Item variant="danger">
+                    <ActionList.LeadingVisual>
+                      <Icon name="plus" />
+                    </ActionList.LeadingVisual>
+                    4 vulnerabilities
+                  </ActionList.Item>
+                  <ActionList.Item>
+                    <ActionList.LeadingVisual>
+                      <img
+                        alt=""
+                        className="w-4 h-4 rounded-full"
+                        src="https://avatars.githubusercontent.com/u/92997159?v=4"
+                      />
+                    </ActionList.LeadingVisual>
+                    mona
+                  </ActionList.Item>
+                </ActionList>
+              </div>
               <div className="flex space-x-2">
                 <Button
                   accentColor={primaryColor}
@@ -178,23 +220,6 @@ function Showcase() {
                     <p>Dialog</p>
                   </Dialog.Content>
                 </Dialog>
-                <ActionMenu>
-                  <ActionMenu.Anchor>
-                    <button>Open Menu</button>
-                  </ActionMenu.Anchor>
-
-                  <ActionMenu.Overlay>
-                    <ActionList>
-                      <ActionList.Item>New file</ActionList.Item>
-                      <ActionList.Item>Copy link</ActionList.Item>
-                      <ActionList.Item>Edit file</ActionList.Item>
-                      <ActionList.Divider />
-                      <ActionList.Item variant="danger">
-                        Delete file
-                      </ActionList.Item>
-                    </ActionList>
-                  </ActionMenu.Overlay>
-                </ActionMenu>
               </div>
               <div className="flex space-x-2">
                 <Checkbox accentColor={primaryColor} name="Checkbox" />

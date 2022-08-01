@@ -1,0 +1,129 @@
+/**
+ * ----------------------------------------------------------------------------
+ * LIST
+ *-----------------------------------------------------------------------------
+ */
+
+.list {
+  margin: 0;
+  padding-inline-start: 0;
+}
+
+.list.inset {
+  padding: 8px 0;
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * ITEM
+ *-----------------------------------------------------------------------------
+ */
+
+.item {
+  position: relative;
+  display: flex;
+  padding: 6px 8px;
+  line-height: 20px;
+  min-height: 5px;
+  appearance: none;
+  background: unset;
+  border: unset;
+  width: calc(100% - 16px);
+  font-family: unset;
+  text-align: unset;
+  margin-top: unset;
+  margin-bottom: unset;
+  gap: theme('spacing.2');
+}
+
+.item[aria-disaled] {
+  cursor: not-allowed;
+}
+
+.item.inset {
+  margin-left: 8px;
+  margin-right: 8px;
+  border-radius: var(--wds-radii);
+  transition: background 33.333ms linear;
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover:not([aria-disabled]) {
+    background-color: rgba(208, 215, 222, 0.24);
+    color: rgb(36, 41, 47);
+  }
+
+  .item:focus:not([data-focus-visible-added]) {
+    background-color: rgba(208, 215, 222, 0.24);
+    color: rgb(36, 41, 47);
+    outline: none;
+  }
+
+  /* // we don't use :focus-visible because not all browsers (safari) have it yet */
+  .item[data-focus-visible-added] {
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(9, 105, 218);
+  }
+
+  .item:active:not([aria-disabled]) {
+    background-color: blue;
+    color: lightblue;
+  }
+}
+
+/* // Support for Windows high contrast https://sarahmhigley.com/writing/whcm-quick-tips */
+@media (forced-colors: active) {
+  .item:focus {
+    outline: solid 1px transparent !important;
+  }
+}
+
+
+/** Divider styles */
+.item [data-component="ActionList.Item--DividerContainer"] {
+  position: relative;
+}
+
+.item [data-component="ActionList.Item--DividerContainer"]::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 100%;
+  top: -7px;
+  border: 0px solid;
+  border-top-width: var(--divider-width);
+  border-color: var(--divider-color, transparent);
+}
+
+/* // show between 2 items */
+.item:not(:first-of-type){
+  --divider-color: var(--wds-color-border;);
+}
+
+/* // hide divider after dividers & group header, with higher importance! */
+.item [data-component="ActionList.Divider"] + .item {
+  --divider-color: transparent !important;
+}
+
+/* // hide border on current and previous item */
+.item:hover:not([aria-disabled]), .item:focus:not([aria-disabled]), .item[data-focus-visible-added]:not([aria-disabled]) {
+  --divider-color: transparent;
+}
+
+.item:hover:not([aria-disabled]) + .item, .item:focus:not([aria-disabled]) + .item, .item[data-focus-visible-added] + li {
+  --divider-color: transparent;
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * DIVIDER
+ *-----------------------------------------------------------------------------
+ */
+.divider {
+  height: 1px;
+  background-color: var(--wds-color-border);
+  margin-top: 7px;
+  margin-bottom: 8px;
+  list-style: none;;
+}

@@ -1,6 +1,9 @@
+import clsx from "clsx";
 import React from "react";
 import { AriaRole } from "../utils/types";
 import { ActionListContainerContext } from "./ActionListContainerContext";
+
+import styles from "./styles.module.css";
 
 export type ActionListProps = {
   /**
@@ -20,6 +23,7 @@ export type ActionListProps = {
    */
   role?: AriaRole;
   children?: React.ReactNode;
+  className?: string;
 };
 
 type ContextProps = Pick<
@@ -31,6 +35,7 @@ export const ListContext = React.createContext<ContextProps>({});
 export const List = React.forwardRef<HTMLUListElement, ActionListProps>(
   (
     {
+      className,
       role,
       selectionVariant,
       showDividers = false,
@@ -49,6 +54,11 @@ export const List = React.forwardRef<HTMLUListElement, ActionListProps>(
     return (
       <ul
         aria-labelledby={listLabelledBy}
+        className={clsx(
+          className,
+          styles.list,
+          variant === "inset" && styles.inset,
+        )}
         role={role || listRole}
         {...props}
         ref={forwardedRef}
