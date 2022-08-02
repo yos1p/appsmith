@@ -22,6 +22,7 @@ import TextInput from "./TextInput";
 import Dialog from "components/wds/Dialog";
 import { ActionMenu } from "./ActionMenu";
 import { ActionList } from "./ActionList";
+import { Action } from "pages/Editor/PagesEditor/PageListItem";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
@@ -148,6 +149,20 @@ function Showcase() {
                     mona
                   </ActionList.Item>
                 </ActionList>
+                <ActionMenu>
+                  <ActionMenu.Button>Open menu</ActionMenu.Button>
+                  <ActionMenu.Overlay align="center">
+                    <ActionList className="w-56">
+                      <ActionList.Item>New file</ActionList.Item>
+                      <ActionList.Item>Copy link</ActionList.Item>
+                      <ActionList.Item>Edit file</ActionList.Item>
+                      <ActionList.Divider />
+                      <ActionList.Item variant="danger">
+                        Delete file
+                      </ActionList.Item>
+                    </ActionList>
+                  </ActionMenu.Overlay>
+                </ActionMenu>
               </div>
               <div className="flex space-x-2">
                 <Button
