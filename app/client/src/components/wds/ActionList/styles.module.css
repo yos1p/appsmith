@@ -50,12 +50,12 @@
 
 @media (hover: hover) and (pointer: fine) {
   .item:hover:not([aria-disabled]) {
-    background-color: rgba(208, 215, 222, 0.24);
+    background-color: var(--wds-color-bg-hover);
     color: rgb(36, 41, 47);
   }
 
   .item:focus:not([data-focus-visible-added]) {
-    background-color: rgba(208, 215, 222, 0.24);
+    background-color: var(--wds-color-bg-hover);
     color: rgb(36, 41, 47);
     outline: none;
   }
