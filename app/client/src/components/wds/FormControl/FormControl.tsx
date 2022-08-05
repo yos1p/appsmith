@@ -10,6 +10,7 @@ import styles from "./styles.module.css";
 import Radio from "../Radio";
 import { ToggleSwitch } from "../ ToggleSwitch";
 import TextInput from "../TextInput";
+import { InputGroup } from "../InputGroup";
 
 export type FormControlProps = {
   children?: React.ReactNode;
@@ -40,7 +41,13 @@ export interface FormControlContext
 
 const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
   ({ children, disabled: disabledProp, id: idProp, layout, required }, ref) => {
-    const expectedInputComponents = [Checkbox, Radio, ToggleSwitch, TextInput];
+    const expectedInputComponents = [
+      Checkbox,
+      Radio,
+      ToggleSwitch,
+      TextInput,
+      InputGroup,
+    ];
     const choiceGroupContext = useContext(CheckboxOrRadioGroupContext);
     const disabled = choiceGroupContext?.disabled || disabledProp;
     const id = useProvidedIdOrCreate(idProp);

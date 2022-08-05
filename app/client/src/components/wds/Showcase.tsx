@@ -23,6 +23,7 @@ import Dialog from "components/wds/Dialog";
 import { ActionMenu } from "./ActionMenu";
 import { ActionList } from "./ActionList";
 import { Action } from "pages/Editor/PagesEditor/PageListItem";
+import { InputGroup } from "./InputGroup";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
@@ -150,7 +151,9 @@ function Showcase() {
                   </ActionList.Item>
                 </ActionList>
                 <ActionMenu>
-                  <ActionMenu.Button>Open menu</ActionMenu.Button>
+                  <ActionMenu.Button variant="outline">
+                    Open menu
+                  </ActionMenu.Button>
                   <ActionMenu.Overlay align="center">
                     <ActionList className="w-56">
                       <ActionList.Item>New file</ActionList.Item>
@@ -382,6 +385,28 @@ function Showcase() {
                 <FormControl>
                   <FormControl.Label>Username</FormControl.Label>
                   <TextInput placeholder="username" />
+                </FormControl>
+                <FormControl>
+                  <FormControl.Label>Username</FormControl.Label>
+                  <InputGroup className="h-12">
+                    <TextInput />
+                    <ActionMenu>
+                      <ActionMenu.Button variant="outline">
+                        Open menu
+                      </ActionMenu.Button>
+                      <ActionMenu.Overlay align="center">
+                        <ActionList className="w-56">
+                          <ActionList.Item>New file</ActionList.Item>
+                          <ActionList.Item>Copy link</ActionList.Item>
+                          <ActionList.Item>Edit file</ActionList.Item>
+                          <ActionList.Divider />
+                          <ActionList.Item variant="danger">
+                            Delete file
+                          </ActionList.Item>
+                        </ActionList>
+                      </ActionMenu.Overlay>
+                    </ActionMenu>
+                  </InputGroup>
                 </FormControl>
               </div>
             </div>

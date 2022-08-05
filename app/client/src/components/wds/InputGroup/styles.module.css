@@ -1,0 +1,21 @@
+.input-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 100%;
+}
+
+/** using -1px to avoid two border */
+.input-group > :not(:first-child) {
+  margin-left: -1px;
+}
+
+.input-group > button {
+  position: relative;
+  z-index: 1;
+}
+
+.input-group :not(button):focus-within {
+  position: relative;
+  z-index: 2;
+}
