@@ -352,8 +352,9 @@ function Showcase() {
                   </FormControl>
                 </RadioGroup>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <TextInput placeholder="hello" />
+                <TextInput disabled placeholder="username" />
                 <TextInput
                   leadingVisual={<Icon name="pencil" />}
                   placeholder="hello"
@@ -381,8 +382,12 @@ function Showcase() {
                   placeholder="hello"
                   trailingVisual={<Icon name="pencil" />}
                 />
-                <TextInput disabled placeholder="username" />
+
                 <FormControl>
+                  <FormControl.Label>Username</FormControl.Label>
+                  <TextInput placeholder="username" />
+                </FormControl>
+                <FormControl layout="horizontal">
                   <FormControl.Label>Username</FormControl.Label>
                   <TextInput placeholder="username" />
                 </FormControl>

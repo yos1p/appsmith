@@ -5,11 +5,22 @@
   width: 100%;
 }
 
+.input-group > :last-child:not(:first-child) {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.input-group > :first-child:not(:last-child) {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
 /** using -1px to avoid two border */
 .input-group > :not(:first-child) {
   margin-left: -1px;
 }
 
+/** toggling z index to make sure focus element is at the top */
 .input-group > button {
   position: relative;
   z-index: 1;

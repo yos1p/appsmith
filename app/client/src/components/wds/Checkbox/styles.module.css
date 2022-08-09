@@ -6,7 +6,6 @@
 .container {
   position: relative;
 }
-
 .input {
   border: 0px;
   inset: 0 0 0 0;
@@ -97,4 +96,13 @@
   border-color: var(--wds-color-border-danger-hover);
 }
 
+/**
+ * ----------------------------------------------------------------------------
+ * FOCUSED
+ *-----------------------------------------------------------------------------
+ */
+.input[data-focus-visible-added] + .icon {
+  outline: 1px solid var(--wds-color-border-focus);
+  outline-offset: 2px;
+}
 

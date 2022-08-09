@@ -11,6 +11,7 @@ import Radio from "../Radio";
 import { ToggleSwitch } from "../ ToggleSwitch";
 import TextInput from "../TextInput";
 import { InputGroup } from "../InputGroup";
+import clsx from "clsx";
 
 export type FormControlProps = {
   children?: React.ReactNode;
@@ -145,8 +146,8 @@ const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
             React.isValidElement(slots.Label) &&
             slots.Label.props.visuallyHidden;
 
-          return isChoiceInput || layout === "horizontal" ? (
-            <div className={styles.control} ref={ref}>
+          return isChoiceInput ? (
+            <div className={clsx(styles.control, styles.horizontal)} ref={ref}>
               <div>
                 {React.isValidElement(InputComponent) &&
                   React.cloneElement(InputComponent, {
@@ -178,7 +179,13 @@ const FormControl = React.forwardRef<HTMLDivElement, FormControlProps>(
               )}
             </div>
           ) : (
-            <div ref={ref}>
+            <div
+              className={clsx(
+                styles.control,
+                layout === "horizontal" && styles.horizontal,
+              )}
+              ref={ref}
+            >
               {slots.Label}
               {React.isValidElement(InputComponent) &&
                 React.cloneElement(InputComponent, {
