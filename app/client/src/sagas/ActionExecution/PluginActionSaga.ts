@@ -298,7 +298,7 @@ function* evaluateActionParams(
         );
         tempArr.push(newVal);
       }
-      executeActionRequest.paramProperties[`k${i}`] = "array";
+      executeActionRequest.paramProperties[`k${i}`] = "ARRAY";
       value = tempArr;
     } else {
       // @ts-expect-error: Values can take many types

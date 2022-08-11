@@ -708,7 +708,7 @@ export const findDatatype = (value: unknown) => {
   return Object.prototype.toString
     .call(value)
     .slice(8, -1)
-    .toLowerCase();
+    .toUpperCase();
 };
 
 export const isDynamicLeaf = (unEvalTree: DataTree, propertyPath: string) => {
