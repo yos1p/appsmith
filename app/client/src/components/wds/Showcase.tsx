@@ -24,6 +24,7 @@ import { ActionMenu } from "./ActionMenu";
 import { ActionList } from "./ActionList";
 import { Action } from "pages/Editor/PagesEditor/PageListItem";
 import { InputGroup } from "./InputGroup";
+import Tooltip from "./Tooltip/Tooltip";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
@@ -110,6 +111,7 @@ function Showcase() {
         }
       >
         <div id="__primerPortalRoot__" />
+        <Tooltip aria-label="Hello, Tooltip!">Text with a tooltip</Tooltip>
         <div className="mt-5">
           <div className="space-y-3">
             <div className="space-y-1">
@@ -354,6 +356,7 @@ function Showcase() {
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <TextInput placeholder="hello" />
+                <TextInput placeholder="hello" type="search" />
                 <TextInput disabled placeholder="username" />
                 <TextInput
                   leadingVisual={<Icon name="pencil" />}

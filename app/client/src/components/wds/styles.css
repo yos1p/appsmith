@@ -2,29 +2,35 @@
   --wds-color-border: #E0DEDE;
   --wds-color-border-hover: #B3B3B3;
   --wds-color-border-focus: rgb(9, 105, 218);
-
   --wds-color-border-danger: #D91921;
   --wds-color-border-danger-hover: #B90707;
-
   --wds-color-border-disabled: #E0DEDE;
 
   --wds-color-bg: #fff;
   --wds-color-bg-hover: rgba(208, 215, 222, 0.24);
-
   --wds-color-bg-strong: #E0DEDE;
   --wds-color-bg-strong-hover: #B3B3B3;
-
   --wds-color-bg-disabled: #F3F3F3;
   --wds-color-bg-disabled-strong: #A9A7A7;
-
   --wds-color-bg-danger: #D91921;
   --wds-color-bg-danger-hover: #B90707;
 
+  --wds-color-bg-tooltip: #1e1e1e;
+  --wds-color-bg-tooltip-disabled: #757575;
+  --wds-color-bg-tooltip-hover: #2c2c2c;
+  --wds-color-bg-tooltip-pressed: #2c2c2c;
+  --wds-color-bg-tooltip-secondary: #383838;
+  --wds-color-bg-tooltip-selected: #0d99ff;
+  --wds-color-bg-tooltip-selected-hover: #007be5;
+  --wds-color-bg-tooltip-selected-pressed: #007be5;
+  --wds-color-bg-tooltip-selected-secondary: #394360;
+  --wds-color-bg-tooltip-selected-tertiary: #394360;
+  --wds-color-bg-tooltip-tertiary: #444444;
 
   --wds-color-text: rgba(0, 0, 0, .9);
   --wds-color-text-secondary: rgba(0, 0, 0, .5);
   --wds-color-text-tertiary: rgba(0, 0, 0, .3);
-
+  --wds-color-text-tooltip: rgba(255, 255, 255, 1);
 
   --wds-color-icon: rgba(0, 0, 0, .9);
   --wds-color-icon-secondary: rgba(0, 0, 0, .5);
