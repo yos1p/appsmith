@@ -40,6 +40,14 @@
   cursor: not-allowed;
 }
 
+.item[data-is-active-descendant="activated-indirectly"] {
+  background: var(--wds-color-bg-hover);
+}
+
+.item[data-is-active-descendant="activated-directly"] {
+  background: var(--wds-color-bg-focus);
+}
+
 .item.inset {
   margin-left: 8px;
   margin-right: 8px;

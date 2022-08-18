@@ -25,6 +25,7 @@ import { ActionList } from "./ActionList";
 import { Action } from "pages/Editor/PagesEditor/PageListItem";
 import { InputGroup } from "./InputGroup";
 import Tooltip from "./Tooltip/Tooltip";
+import { Select } from "./Select";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
@@ -168,6 +169,22 @@ function Showcase() {
                     </ActionList>
                   </ActionMenu.Overlay>
                 </ActionMenu>
+                <Select>
+                  <Select.Button variant="outline">
+                    Select an Option
+                  </Select.Button>
+                  <Select.Overlay>
+                    <ActionList className="w-56" selectionVariant="single">
+                      <ActionList.Item selected>New file</ActionList.Item>
+                      <ActionList.Item>Copy link</ActionList.Item>
+                      <ActionList.Item>Edit file</ActionList.Item>
+                      <ActionList.Divider />
+                      <ActionList.Item variant="danger">
+                        Delete file
+                      </ActionList.Item>
+                    </ActionList>
+                  </Select.Overlay>
+                </Select>
               </div>
               <div className="flex space-x-2">
                 <Button

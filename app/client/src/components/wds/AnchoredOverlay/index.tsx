@@ -181,6 +181,8 @@ export const AnchoredOverlay: React.FC<AnchoredOverlayProps> = ({
       {open ? (
         <Overlay
           anchorSide={position?.anchorSide}
+          focusTrapSettings={focusTrapSettings}
+          focusZoneSettings={focusZoneSettings}
           height={height}
           ignoreClickRefs={[anchorRef]}
           left={position?.left || 0}

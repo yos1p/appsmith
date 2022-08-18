@@ -13,8 +13,8 @@ import { useCombinedRefs } from "../hooks/useCombinedRefs";
 import { AnchorSide } from "../behaviours/anchored-position";
 
 import styles from "./styles.module.css";
-import { useFocusTrap } from "../hooks/useFocusTrap";
-import { useFocusZone } from "../hooks/useFocusZone";
+import { FocusTrapHookSettings, useFocusTrap } from "../hooks/useFocusTrap";
+import { FocusZoneHookSettings, useFocusZone } from "../hooks/useFocusZone";
 import { useOnOutsideClick } from "../hooks/useOnOutsideClick";
 
 type StyledOverlayProps = {
@@ -74,6 +74,8 @@ type BaseOverlayProps = {
   preventFocusOnOpen?: boolean;
   role?: AriaRole;
   children?: React.ReactNode;
+  focusTrapSettings?: Partial<FocusTrapHookSettings>;
+  focusZoneSettings?: Partial<FocusZoneHookSettings>;
 };
 
 type OwnOverlayProps = Merge<StyledOverlayProps, BaseOverlayProps>;
@@ -99,6 +101,8 @@ const Overlay = React.forwardRef<HTMLDivElement, OwnOverlayProps>(
   (
     {
       anchorSide,
+      focusTrapSettings,
+      focusZoneSettings,
       height,
       ignoreClickRefs,
       initialFocusRef,
@@ -133,6 +137,7 @@ const Overlay = React.forwardRef<HTMLDivElement, OwnOverlayProps>(
       disabled: !visibility,
       restoreFocusOnCleanUp: true,
       initialFocusRef: initialFocusRef,
+      ...focusTrapSettings,
     });
 
     // allow pressing up/down to move focus within the dialog
@@ -140,6 +145,7 @@ const Overlay = React.forwardRef<HTMLDivElement, OwnOverlayProps>(
       containerRef: combinedRef,
       disabled: !visibility,
       focusOutBehavior: "wrap",
+      ...focusZoneSettings,
     });
 
     // closes the dialog when the user clicks outside of it

@@ -7,7 +7,8 @@
   --wds-color-border-disabled: #E0DEDE;
 
   --wds-color-bg: #fff;
-  --wds-color-bg-hover: rgba(208, 215, 222, 0.24);
+  --wds-color-bg-hover: rgba(208, 215, 222, 0.32);
+  --wds-color-bg-focus: rgba(208, 215, 222, 0.48);
   --wds-color-bg-strong: #E0DEDE;
   --wds-color-bg-strong-hover: #B3B3B3;
   --wds-color-bg-disabled: #F3F3F3;
