@@ -1,5 +1,6 @@
 import { Response } from "express";
 import { ValidationError } from "express-validator";
+import { StatusCodes } from "http-status-codes";
 
 type ErrorData = {
   error: string | string[];
@@ -24,7 +25,7 @@ export default class BaseController {
     response: Response,
     result: any,
     message?: string,
-    code: number = 200
+    code: number = StatusCodes.OK
   ): Response<ResponseData> {
     return response.status(code).json({
       success: true,
@@ -37,7 +38,7 @@ export default class BaseController {
     response: Response,
     error: string,
     errorMessage,
-    code: number = 400
+    code: number = StatusCodes.BAD_REQUEST
   ): Response<ErrorBag> {
     let errorBag: ErrorBag = { success: false, message: error };
 

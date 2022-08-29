@@ -1,5 +1,7 @@
 import { Response, Request } from "express";
 import { validationResult } from "express-validator";
+import { StatusCodes } from "http-status-codes";
+
 import BaseController from "../BaseController";
 import AstService from "../../services/AstService";
 
@@ -35,7 +37,7 @@ export default class AstController extends BaseController {
         res,
         super.serverErrorMessaage,
         [err.message],
-        500
+        StatusCodes.INTERNAL_SERVER_ERROR
       );
     }
   }
@@ -63,7 +65,7 @@ export default class AstController extends BaseController {
         res,
         super.serverErrorMessaage,
         [err.message],
-        500
+        StatusCodes.INTERNAL_SERVER_ERROR
       );
     }
   }
