@@ -55,8 +55,8 @@ export default class AstController extends BaseController {
           async (script) =>
             await AstService.getIdentifiersFromScript(script, evalVersion)
         )
-      ).then((identifiers: string[]) => {
-        return super.sendResponse(res, identifiers);
+      ).then((data) => {
+        return super.sendResponse(res, data);
       });
     } catch (err) {
       return super.sendError(

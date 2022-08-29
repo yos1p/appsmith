@@ -93,6 +93,11 @@ export interface PropertyNode extends Node {
   kind: "init" | "get" | "set";
 }
 
+export type Extractions = {
+  identifiers: string[],
+  variables: string[],
+};
+
 /* We need these functions to typescript casts the nodes with the correct types */
 export const isIdentifierNode = (node: Node): node is IdentifierNode => {
   return node.type === NodeTypes.Identifier;
@@ -171,7 +176,7 @@ export const getAST = (code: string) =>
 export const extractIdentifiersFromCode = (
   code: string,
   evaluationVersion: number
-): string[] => {
+): Extractions => {
   // List of all identifiers found
   const identifiers = new Set<string>();
   // List of variables declared within the script. This will be removed from identifier list
@@ -195,7 +200,10 @@ export const extractIdentifiersFromCode = (
   } catch (e) {
     if (e instanceof SyntaxError) {
       // Syntax error. Ignore and return 0 identifiers
-      return [];
+      return {
+        identifiers: [],
+        variables: [],
+      };
     }
     throw e;
   }
@@ -281,7 +289,10 @@ export const extractIdentifiersFromCode = (
   variableDeclarations.forEach((variable) => identifiers.delete(variable));
   functionalParams.forEach((param) => identifiers.delete(param.paramName));
 
-  return Array.from(identifiers);
+  return {
+    identifiers: Array.from(identifiers),
+    variables: Array.from(variableDeclarations),
+  };
 };
 
 export type functionParams = { paramName: string; defaultValue: unknown };

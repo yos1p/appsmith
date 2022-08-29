@@ -1,7 +1,7 @@
 import { flatten } from "lodash";
 import toPath from "lodash/toPath";
 import { EvalErrorTypes } from "utils/DynamicBindingUtils";
-import { extractIdentifiersFromCode } from "@shared/ast";
+import { extractIdentifiersFromCode, Extractions } from "@shared/ast";
 import DataTreeEvaluator from "workers/DataTreeEvaluator";
 import { convertPathToString } from "../evaluationUtils";
 
@@ -10,12 +10,12 @@ export const extractReferencesFromBinding = (
   allPaths: Record<string, true>,
 ): string[] => {
   const references: Set<string> = new Set<string>();
-  const identifiers = extractIdentifiersFromCode(
+  const extractions: Extractions = extractIdentifiersFromCode(
     script,
     self?.evaluationVersion,
   );
 
-  identifiers.forEach((identifier: string) => {
+  extractions.identifiers.forEach((identifier: string) => {
     // If the identifier exists directly, add it and return
     if (allPaths.hasOwnProperty(identifier)) {
       references.add(identifier);

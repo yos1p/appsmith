@@ -1,4 +1,8 @@
-import { extractIdentifiersFromCode, parseJSObjectWithAST } from "workers/ast";
+import {
+  extractIdentifiersFromCode,
+  parseJSObjectWithAST,
+  Extractions,
+} from "./index";
 
 describe("getAllIdentifiers", () => {
   it("works properly", () => {
@@ -223,8 +227,11 @@ describe("getAllIdentifiers", () => {
     ];
 
     cases.forEach((perCase) => {
-      const references = extractIdentifiersFromCode(perCase.script);
-      expect(references).toStrictEqual(perCase.expectedResults);
+      const references: Extractions = extractIdentifiersFromCode(
+        perCase.script,
+        2
+      );
+      expect(references.identifiers).toStrictEqual(perCase.expectedResults);
     });
   });
 });
