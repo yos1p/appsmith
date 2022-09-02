@@ -224,6 +224,33 @@ describe("getAllIdentifiers", () => {
         script: `Table15.data || [{}]`,
         expectedResults: ["Table15.data"],
       },
+      {
+        script: `
+          (function (par) {
+            let Api3 = {};
+            function abc(k) {
+              let b = {};
+              return [b, Api3.data, Api4.data, k.data];
+            }
+            return [Api1.data, Api2.data, par.a, ...abc()];
+          })();
+        `,
+        expectedResults: ["Api4.data", "Api1.data", "Api2.data"],
+      },
+      {
+        script: `
+          (function qr(par) {
+            let Api3 = {};
+            function abc(k) {
+              let b = {};
+              return { data: [b, Api3.data, Api4.data, k.data] };
+            }
+            const bb = abc();
+            return [Api1.data, Api2.data, par.a, ...bb.data];
+          })();
+        `,
+        expectedResults: ["Api4.data","Api1.data","Api2.data"]
+      }
     ];
 
     cases.forEach((perCase) => {

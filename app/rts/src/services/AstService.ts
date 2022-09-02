@@ -18,7 +18,7 @@ export default class AstService {
         const data: IdentifiersResponse = {
           identifiers: extractions.identifiers,
         };
-        resolve(data);
+        resolve(extractions);
       } catch (err) {
         reject(err);
       }

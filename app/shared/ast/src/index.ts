@@ -94,8 +94,10 @@ export interface PropertyNode extends Node {
 }
 
 export type Extractions = {
-  identifiers: string[],
-  variables: string[],
+  identifiers: string[];
+  variables: string[];
+  functionalParams: functionParams[];
+  functionalDeclarations: string[];
 };
 
 /* We need these functions to typescript casts the nodes with the correct types */
@@ -183,6 +185,8 @@ export const extractIdentifiersFromCode = (
   const variableDeclarations = new Set<string>();
   // List of functionalParams found. This will be removed from the identifier list
   let functionalParams = new Set<functionParams>();
+  // List of functionDeclarations found. This will be removed from the identifier list
+  let functionalDeclarations = new Set<string>();
   let ast: Node = { end: 0, start: 0, type: "" };
   try {
     const sanitizedScript = sanitizeScript(code, evaluationVersion);
@@ -203,6 +207,8 @@ export const extractIdentifiersFromCode = (
       return {
         identifiers: [],
         variables: [],
+        functionalParams: [],
+        functionalDeclarations: [],
       };
     }
     throw e;
@@ -269,6 +275,7 @@ export const extractIdentifiersFromCode = (
       // params in function declarations are also counted as identifiers so we keep
       // track of them and remove them from the final list of identifiers
       if (!isFunctionDeclaration(node)) return;
+      if (node.id?.name) functionalDeclarations.add(node.id?.name);
       functionalParams = new Set([
         ...functionalParams,
         ...getFunctionalParamsFromNode(node),
@@ -286,12 +293,33 @@ export const extractIdentifiersFromCode = (
   });
 
   // Remove declared variables and function params
-  variableDeclarations.forEach((variable) => identifiers.delete(variable));
-  functionalParams.forEach((param) => identifiers.delete(param.paramName));
+  const variablesToBeRemoved = new Set<string>();
+  const functionalParameters = new Set<string>();
+  functionalParams.forEach((param) =>
+    functionalParameters.add(param.paramName)
+  );
 
+  // Checking for the presence of all the calculated identifiers in any one of the variableDeclarations, functionalParameters or functionalDeclarations and storing the found identifiers in a different set.
+  identifiers.forEach((identifier: string) => {
+    // Checking for the presence of parent node of an identifier in the above mentioned sets 
+    // e.g. Api1.data is an idenfier and Api1 is a variable present then Api1.data is an unwanted identifier as Api1 is already a declared variable.
+    const variable = identifier.split(".")[0];
+    if (
+      variableDeclarations.has(variable) ||
+      functionalParameters.has(variable) ||
+      functionalDeclarations.has(variable)
+    ) {
+      variablesToBeRemoved.add(identifier);
+    }
+  });
+
+  // Removing all the unwanted identifiers from the variables list.
+  variablesToBeRemoved.forEach((variable) => identifiers.delete(variable));
   return {
     identifiers: Array.from(identifiers),
     variables: Array.from(variableDeclarations),
+    functionalParams: Array.from(functionalParams),
+    functionalDeclarations: Array.from(functionalDeclarations),
   };
 };
 
