@@ -185,6 +185,7 @@ function KeyValueRow(props: Props & WrappedFieldArrayProps) {
                         border={CodeEditorBorder.ALL_SIDE}
                         className={`t--${field}.key.${index}`}
                         dataTreePath={`${props.dataTreePath}[${index}].key`}
+                        disabled={props.disabled}
                         expected={expected}
                         hoverInteraction
                         name={`${field}.key`}
@@ -200,6 +201,9 @@ function KeyValueRow(props: Props & WrappedFieldArrayProps) {
                           name={`${field}.type`}
                           options={MULTI_PART_DROPDOWN_OPTIONS}
                           placeholder={DEFAULT_MULTI_PART_DROPDOWN_PLACEHOLDER}
+                          props={{
+                            disabled: props.disabled,
+                          }}
                           width={DEFAULT_MULTI_PART_DROPDOWN_WIDTH}
                         />
                       </DynamicDropdownFieldWrapper>
@@ -209,6 +213,7 @@ function KeyValueRow(props: Props & WrappedFieldArrayProps) {
                       border={CodeEditorBorder.ALL_SIDE}
                       className={`t--${field}.key.${index}`}
                       dataTreePath={`${props.dataTreePath}[${index}].key`}
+                      disabled={props.disabled}
                       expected={expected}
                       hoverInteraction
                       name={`${field}.key`}
@@ -224,6 +229,7 @@ function KeyValueRow(props: Props & WrappedFieldArrayProps) {
                       border={CodeEditorBorder.ALL_SIDE}
                       className={`t--${field}.value.${index}`}
                       dataTreePath={`${props.dataTreePath}[${index}].value`}
+                      disabled={props.disabled}
                       expected={expected}
                       hoverInteraction
                       name={`${field}.value`}
@@ -239,6 +245,7 @@ function KeyValueRow(props: Props & WrappedFieldArrayProps) {
                       className={`t--${field}.value.${index}`}
                       dataTreePath={`${props.dataTreePath}[${index}].value`}
                       disabled={
+                        props.disabled ||
                         !(
                           props.actionConfig[index].editable ||
                           props.actionConfig[index].editable === undefined
@@ -267,7 +274,7 @@ function KeyValueRow(props: Props & WrappedFieldArrayProps) {
                     />
                   </Flex>
                 )}
-                {props.addOrDeleteFields !== false && (
+                {props.addOrDeleteFields !== false && !props.disabled && (
                   <CenteredIcon
                     name="delete"
                     onClick={() => props.fields.remove(index)}
@@ -279,12 +286,20 @@ function KeyValueRow(props: Props & WrappedFieldArrayProps) {
           })}
         </>
       )}
-      <AddMoreAction onClick={() => props.fields.push({ key: "", value: "" })}>
-        <Icon className="t--addApiHeader" name="add-more" size={IconSize.XXL} />
-        <Text case={Case.UPPERCASE} type={TextType.H5}>
-          Add more
-        </Text>
-      </AddMoreAction>
+      {!props.disabled && (
+        <AddMoreAction
+          onClick={() => props.fields.push({ key: "", value: "" })}
+        >
+          <Icon
+            className="t--addApiHeader"
+            name="add-more"
+            size={IconSize.XXL}
+          />
+          <Text case={Case.UPPERCASE} type={TextType.H5}>
+            Add more
+          </Text>
+        </AddMoreAction>
+      )}
     </KeyValueStackContainer>
   );
 }
@@ -307,6 +322,7 @@ type Props = {
   theme?: EditorTheme;
   hasType?: boolean;
   removeTopPadding?: boolean;
+  disabled?: boolean;
 };
 
 function KeyValueFieldArray(props: Props) {

@@ -576,6 +576,9 @@ function ApiEditorForm(props: Props) {
     (action) => action.id === params.apiId || action.id === params.queryId,
   );
   const { pageId } = useParams<ExplorerURLParams>();
+  const isChangeRestricted = currentActionConfig?.userPermissions
+    ? currentActionConfig?.userPermissions?.includes("manage:actions")
+    : false;
 
   const theme = EditorTheme.LIGHT;
   const handleClickLearnHow = (e: React.MouseEvent) => {
@@ -592,12 +595,13 @@ function ApiEditorForm(props: Props) {
         <MainConfiguration>
           <FormRow className="form-row-header">
             <NameWrapper className="t--nameOfApi">
-              <ActionNameEditor page="API_PANE" />
+              <ActionNameEditor disabled={isChangeRestricted} page="API_PANE" />
             </NameWrapper>
             <ActionButtons className="t--formActionButtons">
               <MoreActionsMenu
                 className="t--more-action-menu"
                 id={currentActionConfig ? currentActionConfig.id : ""}
+                isChangeRestricted={isChangeRestricted}
                 name={currentActionConfig ? currentActionConfig.name : ""}
                 pageId={pageId}
               />
@@ -624,6 +628,7 @@ function ApiEditorForm(props: Props) {
             >
               <RequestDropdownField
                 className={`t--apiFormHttpMethod ${replayHighlightClass}`}
+                disabled={isChangeRestricted}
                 height={"35px"}
                 name="actionConfiguration.httpMethod"
                 optionWidth={"110px"}
@@ -639,6 +644,9 @@ function ApiEditorForm(props: Props) {
                 name="actionConfiguration.path"
                 placeholder="https://mock-api.appsmith.com/users"
                 pluginId={pluginId}
+                props={{
+                  disabled: isChangeRestricted,
+                }}
                 theme={theme}
               />
             </DatasourceWrapper>
@@ -678,6 +686,7 @@ function ApiEditorForm(props: Props) {
                         <KeyValueFieldArray
                           actionConfig={actionConfigurationHeaders}
                           dataTreePath={`${actionName}.config.headers`}
+                          disabled={isChangeRestricted}
                           hideHeader={!!props.datasourceHeaders.length}
                           label="Headers"
                           name="actionConfiguration.headers"
@@ -703,6 +712,7 @@ function ApiEditorForm(props: Props) {
                         <KeyValueFieldArray
                           actionConfig={actionConfigurationParams}
                           dataTreePath={`${actionName}.config.queryParameters`}
+                          disabled={isChangeRestricted}
                           hideHeader={!!props.datasourceParams.length}
                           label="Params"
                           name="actionConfiguration.queryParameters"
@@ -718,6 +728,7 @@ function ApiEditorForm(props: Props) {
                     panelComponent: allowPostBody ? (
                       <PostBodyData
                         dataTreePath={`${actionName}.config`}
+                        disabled={isChangeRestricted}
                         theme={theme}
                       />
                     ) : (
@@ -733,6 +744,7 @@ function ApiEditorForm(props: Props) {
                     title: createMessage(API_EDITOR_TAB_TITLES.PAGINATION),
                     panelComponent: (
                       <Pagination
+                        disabled={isChangeRestricted}
                         onTestClick={props.onRunClick}
                         paginationType={props.paginationType}
                         theme={theme}
@@ -742,7 +754,9 @@ function ApiEditorForm(props: Props) {
                   {
                     key: API_EDITOR_TABS.AUTHENTICATION,
                     title: createMessage(API_EDITOR_TAB_TITLES.AUTHENTICATION),
-                    panelComponent: <ApiAuthentication />,
+                    panelComponent: (
+                      <ApiAuthentication disabled={isChangeRestricted} />
+                    ),
                   },
                   {
                     key: API_EDITOR_TABS.SETTINGS,

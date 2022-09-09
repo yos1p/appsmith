@@ -32,6 +32,7 @@ type EntityContextMenuProps = {
   name: string;
   className?: string;
   pageId: string;
+  isChangeRestricted?: boolean;
 };
 
 export const MoreActionablesContainer = styled.div<{ isOpen?: boolean }>`

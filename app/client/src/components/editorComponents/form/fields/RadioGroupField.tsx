@@ -11,6 +11,7 @@ interface RadioFieldProps {
     value: string;
   }>;
   placeholder: string;
+  disabled?: boolean;
 }
 
 const renderComponent = (

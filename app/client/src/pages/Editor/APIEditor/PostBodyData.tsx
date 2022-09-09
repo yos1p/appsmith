@@ -55,6 +55,7 @@ interface PostDataProps {
   theme?: EditorTheme;
   updateBodyContentType: (contentType: string, apiId: string) => void;
   apiId: string;
+  disabled?: boolean;
 }
 
 type Props = PostDataProps;
@@ -69,6 +70,7 @@ function PostBodyData(props: Props) {
   const {
     apiId,
     dataTreePath,
+    disabled,
     displayFormat,
     theme,
     updateBodyContentType,
@@ -87,6 +89,7 @@ function PostBodyData(props: Props) {
           <DynamicTextField
             border={CodeEditorBorder.ALL_SIDE}
             dataTreePath={`${dataTreePath}.body`}
+            disabled={disabled}
             expected={expectedPostBody}
             mode={EditorModes.JSON_WITH_BINDING}
             name="actionConfiguration.body"
@@ -101,6 +104,7 @@ function PostBodyData(props: Props) {
       [POST_BODY_FORMAT_OPTIONS.FORM_URLENCODED]: (
         <KeyValueFieldArray
           dataTreePath={`${dataTreePath}.bodyFormData`}
+          disabled={disabled}
           key={key}
           label=""
           name="actionConfiguration.bodyFormData"
@@ -112,6 +116,7 @@ function PostBodyData(props: Props) {
       [POST_BODY_FORMAT_OPTIONS.MULTIPART_FORM_DATA]: (
         <KeyValueFieldArray
           dataTreePath={`${dataTreePath}.bodyFormData`}
+          disabled={disabled}
           hasType
           key={key}
           label=""
@@ -126,6 +131,7 @@ function PostBodyData(props: Props) {
           <DynamicTextField
             border={CodeEditorBorder.ALL_SIDE}
             dataTreePath={`${dataTreePath}.body`}
+            disabled={disabled}
             mode={EditorModes.TEXT_WITH_BINDING}
             name="actionConfiguration.body"
             placeholder={`{{\n\t{name: inputName.property, preference: dropdownName.property}\n}}`}

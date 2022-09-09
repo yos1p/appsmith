@@ -9,6 +9,7 @@ export type RadioGroupWrapperProps = {
   className?: string;
   columns?: number;
   rows?: number;
+  disabled?: boolean;
 };
 
 function RadioGroupWrapper(props: RadioGroupWrapperProps) {
@@ -41,6 +42,7 @@ function RadioGroupWrapper(props: RadioGroupWrapperProps) {
       className={props.className}
       columns={props.columns}
       defaultValue={selectedOption}
+      disabled={props.disabled}
       onSelect={(value: string) => onSelectHandler(value)}
       options={props.options}
       rows={props.rows}

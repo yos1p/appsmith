@@ -21,6 +21,7 @@ interface PaginationProps {
   onTestClick: (test?: "PREV" | "NEXT") => void;
   paginationType: PaginationType;
   theme?: EditorTheme;
+  disabled?: boolean;
 }
 const PaginationFieldWrapper = styled.div`
   display: flex;
@@ -116,6 +117,7 @@ export default function Pagination(props: PaginationProps) {
       <FormRow>
         <RadioFieldGroup
           className="t--apiFormPaginationType"
+          disabled={props.disabled}
           name="actionConfiguration.paginationType"
           options={[
             {
@@ -160,6 +162,7 @@ export default function Pagination(props: PaginationProps) {
               <DynamicTextField
                 border={CodeEditorBorder.ALL_SIDE}
                 className="t--apiFormPaginationPrev"
+                disabled={props.disabled}
                 fill={!!true}
                 height="100%"
                 name="actionConfiguration.prev"
@@ -168,6 +171,7 @@ export default function Pagination(props: PaginationProps) {
               <Button
                 category={Category.tertiary}
                 className="t--apiFormPaginationPrevTest"
+                disabled={props.disabled}
                 height="auto"
                 onClick={() => {
                   props.onTestClick("PREV");
@@ -185,6 +189,7 @@ export default function Pagination(props: PaginationProps) {
               <DynamicTextField
                 border={CodeEditorBorder.ALL_SIDE}
                 className="t--apiFormPaginationNext"
+                disabled={props.disabled}
                 fill={!!true}
                 height="100%"
                 name="actionConfiguration.next"
@@ -193,6 +198,7 @@ export default function Pagination(props: PaginationProps) {
               <Button
                 category={Category.tertiary}
                 className="t--apiFormPaginationNextTest"
+                disabled={props.disabled}
                 height="auto"
                 onClick={() => {
                   props.onTestClick("NEXT");

@@ -77,11 +77,11 @@ function OAuthLabel(props: ErrorProps) {
   );
 }
 
-type Props = ReduxStateProps & ReduxDispatchProps;
+type Props = ReduxStateProps & ReduxDispatchProps & { disabled?: boolean };
 
 function ApiAuthentication(props: Props): JSX.Element {
   const dispatch = useDispatch();
-  const { datasource } = props;
+  const { datasource, disabled } = props;
   const authType = get(
     datasource,
     "datasourceConfiguration.authentication.authenticationType",
@@ -121,7 +121,7 @@ function ApiAuthentication(props: Props): JSX.Element {
       </DescriptionText>
       <Button
         category={Category.tertiary}
-        disabled={!datasourceUrl}
+        disabled={disabled || !datasourceUrl}
         onClick={onClick}
         size={Size.medium}
         tag="button"

@@ -193,6 +193,7 @@ class DropdownComponent extends Component<
     return (
       <StyledDropdown
         activeItem={this.getActiveOption()}
+        disabled={this.props.disabled}
         filterable={!!autocomplete}
         itemListRenderer={this.renderItemList}
         itemPredicate={this.searchItem}
@@ -239,6 +240,7 @@ export interface BaseDropdownComponentProps {
   placeholder: string;
   toggle?: ReactNode;
   width?: string;
+  disabled?: boolean;
 }
 
 // stand-alone dropdown interface
