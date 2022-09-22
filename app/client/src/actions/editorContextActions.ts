@@ -67,3 +67,10 @@ export const setCanvasDebuggerSelectedTab = (selectedTab: string) => {
     payload: selectedTab,
   };
 };
+
+export const setDebuggerLogFilter = (logFilter: string) => {
+  return {
+    type: ReduxActionTypes.SET_DEBUGGER_LOG_FILTER,
+    payload: logFilter,
+  };
+};

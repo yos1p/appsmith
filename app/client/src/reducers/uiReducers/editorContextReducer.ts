@@ -25,6 +25,7 @@ export type EditorContextState = {
   propertySectionState: Record<string, boolean>;
   selectedPropertyTabIndex: number;
   selectedDebuggerTab: string;
+  selectedLogFilter: string;
 };
 
 const initialState: EditorContextState = {
@@ -32,6 +33,7 @@ const initialState: EditorContextState = {
   propertySectionState: {},
   selectedPropertyTabIndex: 0,
   selectedDebuggerTab: "",
+  selectedLogFilter: "",
 };
 
 /**
@@ -101,5 +103,11 @@ export const editorContextReducer = createImmerReducer(initialState, {
     action: { payload: string },
   ) => {
     state.selectedDebuggerTab = action.payload;
+  },
+  [ReduxActionTypes.SET_DEBUGGER_LOG_FILTER]: (
+    state: EditorContextState,
+    action: { payload: string },
+  ) => {
+    state.selectedLogFilter = action.payload;
   },
 });

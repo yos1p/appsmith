@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState, useMemo } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import styled, { DefaultTheme, useTheme } from "styled-components";
 import { get, isUndefined } from "lodash";
 import { LOG_CATEGORY, Severity } from "entities/AppsmithConsole";
@@ -14,12 +20,14 @@ import {
   LOGS_FILTER_OPTION_SYSTEM,
   NO_LOGS,
 } from "@appsmith/constants/messages";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "selectors/usersSelectors";
 import bootIntercom from "utils/bootIntercom";
 import { thinScrollbar } from "constants/DefaultTheme";
 import { IconName } from "@blueprintjs/core";
 import AnalyticsUtil from "utils/AnalyticsUtil";
+import { getSelectedLogFilter } from "selectors/editorContextSelectors";
+import { setDebuggerLogFilter } from "actions/editorContextActions";
 
 const LIST_HEADER_HEIGHT = "38px";
 
@@ -64,8 +72,12 @@ const LOGS_FILTER_OPTIONS = (theme: DefaultTheme) => [
 ];
 
 function DebbuggerLogs(props: Props) {
-  const [filter, setFilter] = useState("");
+  const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState(props.searchQuery);
+  const filter = useSelector(getSelectedLogFilter);
+  const setFilter = useCallback((filter: string) => {
+    dispatch(setDebuggerLogFilter(filter));
+  }, []);
   const filteredLogs = useFilteredLogs(searchQuery, filter);
   const { next, paginatedData } = usePagination(filteredLogs);
   const listRef = useRef<HTMLDivElement>(null);

@@ -14,11 +14,13 @@ import {
   getAllPropertySectionState,
   getFocusableField,
   getSelectedCanvasDebuggerTab,
+  getSelectedLogFilter,
   getSelectedPropertyTabIndex,
 } from "selectors/editorContextSelectors";
 import {
   setAllPropertySectionState,
   setCanvasDebuggerSelectedTab,
+  setDebuggerLogFilter,
   setFocusableField,
   setSelectedPropertyTabIndex,
 } from "actions/editorContextActions";
@@ -63,6 +65,7 @@ export enum FocusElement {
   PropertyTabs = "PropertyTabs",
   SelectedWidgets = "SelectedWidgets",
   CanvasDebuggerTabs = "CanvasDebuggerTabs",
+  DebuggerLogFilter = "DebuggerLogFilter",
 }
 
 type Config = {
@@ -92,6 +95,11 @@ export const FocusElementsConfig: Record<FocusEntity, Config[]> = {
       selector: getSelectedCanvasDebuggerTab,
       setter: setCanvasDebuggerSelectedTab,
     },
+    {
+      name: FocusElement.DebuggerLogFilter,
+      selector: getSelectedLogFilter,
+      setter: setDebuggerLogFilter,
+    },
   ],
   [FocusEntity.JS_OBJECT]: [
     {
@@ -115,6 +123,11 @@ export const FocusElementsConfig: Record<FocusEntity, Config[]> = {
       selector: getJSPaneResponsePaneHeight,
       setter: setJsPaneResponsePaneHeight,
       defaultValue: ActionExecutionResizerHeight,
+    },
+    {
+      name: FocusElement.DebuggerLogFilter,
+      selector: getSelectedLogFilter,
+      setter: setDebuggerLogFilter,
     },
   ],
   [FocusEntity.QUERY]: [
@@ -140,6 +153,11 @@ export const FocusElementsConfig: Record<FocusEntity, Config[]> = {
       selector: getQueryPaneResponsePaneHeight,
       setter: setQueryPaneResponsePaneHeight,
       defaultValue: ActionExecutionResizerHeight,
+    },
+    {
+      name: FocusElement.DebuggerLogFilter,
+      selector: getSelectedLogFilter,
+      setter: setDebuggerLogFilter,
     },
   ],
   [FocusEntity.PROPERTY_PANE]: [
@@ -177,6 +195,11 @@ export const FocusElementsConfig: Record<FocusEntity, Config[]> = {
       selector: getApiPaneResponsePaneHeight,
       setter: setApiPaneResponsePaneHeight,
       defaultValue: ActionExecutionResizerHeight,
+    },
+    {
+      name: FocusElement.DebuggerLogFilter,
+      selector: getSelectedLogFilter,
+      setter: setDebuggerLogFilter,
     },
   ],
 };

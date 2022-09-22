@@ -86,3 +86,6 @@ export const getSelectedPropertyTabIndex = (state: AppState) =>
 
 export const getSelectedCanvasDebuggerTab = (state: AppState) =>
   state.ui.editorContext.selectedDebuggerTab;
+
+export const getSelectedLogFilter = (state: AppState) =>
+  state.ui.editorContext.selectedLogFilter;
