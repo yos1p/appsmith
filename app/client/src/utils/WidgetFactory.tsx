@@ -1,6 +1,10 @@
 import { WidgetBuilder, WidgetProps, WidgetState } from "widgets/BaseWidget";
 import React from "react";
-import { PropertyPaneConfig } from "constants/PropertyControlConstants";
+import {
+  PropertyPaneConfig,
+  PropertyPaneControlConfig,
+  PropertyPaneSectionConfig,
+} from "constants/PropertyControlConstants";
 
 import { WidgetConfigProps } from "reducers/entityReducers/widgetConfigReducer";
 import { RenderMode } from "constants/WidgetConstants";
@@ -16,6 +20,41 @@ import { CanvasWidgetStructure } from "widgets/constants";
 type WidgetDerivedPropertyType = any;
 export type DerivedPropertiesMap = Record<string, string>;
 export type WidgetType = typeof WidgetFactory.widgetTypes[number];
+
+function closeAllSectionsExceptFirst(
+  config: PropertyPaneConfig[],
+): PropertyPaneConfig[] {
+  return config.map((configItem, i) => {
+    if ((configItem as PropertyPaneSectionConfig).sectionName) {
+      return {
+        ...configItem,
+        isDefaultOpen: i === 0 ? true : false,
+        children: closeAllSectionsExceptFirst(
+          (configItem as PropertyPaneSectionConfig).children,
+        ),
+      };
+    } else if ((configItem as PropertyPaneControlConfig).controlType) {
+      const panelConfig = (configItem as PropertyPaneControlConfig).panelConfig;
+      if (
+        panelConfig &&
+        (panelConfig.contentChildren || panelConfig.styleChildren)
+      )
+        return {
+          ...configItem,
+          panelConfig: {
+            ...panelConfig,
+            styleChildren: closeAllSectionsExceptFirst(
+              panelConfig.styleChildren || [],
+            ),
+            contentChildren: closeAllSectionsExceptFirst(
+              panelConfig.contentChildren || [],
+            ),
+          },
+        };
+    }
+    return configItem;
+  });
+}
 
 class WidgetFactory {
   static widgetTypes: Record<string, string> = {};
@@ -97,8 +136,12 @@ class WidgetFactory {
       }
 
       if (propertyPaneContentConfig) {
-        const enhancedPropertyPaneConfig = enhancePropertyPaneConfig(
+        const configWithClosedSections = closeAllSectionsExceptFirst(
           propertyPaneContentConfig,
+        );
+
+        const enhancedPropertyPaneConfig = enhancePropertyPaneConfig(
+          configWithClosedSections,
           features,
         );
 
@@ -117,8 +160,12 @@ class WidgetFactory {
       }
 
       if (propertyPaneStyleConfig) {
-        const enhancedPropertyPaneConfig = enhancePropertyPaneConfig(
+        const configWithClosedSections = closeAllSectionsExceptFirst(
           propertyPaneStyleConfig,
+        );
+
+        const enhancedPropertyPaneConfig = enhancePropertyPaneConfig(
+          configWithClosedSections,
           features,
         );
 
