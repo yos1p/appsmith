@@ -328,7 +328,10 @@ class FilePickerWidget extends BaseWidget<
             inputType: "INTEGER",
             isBindProperty: true,
             isTriggerProperty: false,
-            validation: { type: ValidationTypes.NUMBER },
+            validation: {
+              type: ValidationTypes.NUMBER,
+              params: { min: 1, default: 1, natural: true },
+            },
           },
         ],
       },
@@ -767,6 +770,7 @@ class FilePickerWidget extends BaseWidget<
           isLoading={this.props.isLoading || this.state.isLoading}
           key={this.props.widgetId}
           label={this.props.label}
+          maxNumFiles={this.props.maxNumFiles || 1} // 1 is the default case when this.props.maxNumFiles is undefined
           uppy={this.state.uppy}
           widgetId={this.props.widgetId}
         />

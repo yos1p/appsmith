@@ -25,7 +25,12 @@ function FilePickerComponent(props: FilePickerComponentProps) {
       borderRadius={props.borderRadius}
       boxShadow={props.boxShadow}
       buttonColor={props.buttonColor}
-      disabled={props.isDisabled}
+      disabled={
+        props.isDisabled ||
+        typeof props.maxNumFiles !== "number" ||
+        props.maxNumFiles % 1 !== 0 ||
+        props.maxNumFiles < 1
+      }
       loading={props.isLoading}
       onClick={openModal}
       text={computedLabel}
@@ -40,6 +45,7 @@ export interface FilePickerComponentProps extends ComponentProps {
   buttonColor: string;
   borderRadius: string;
   boxShadow?: string;
+  maxNumFiles: number;
 }
 
 FilePickerComponent.defaultProps = {
