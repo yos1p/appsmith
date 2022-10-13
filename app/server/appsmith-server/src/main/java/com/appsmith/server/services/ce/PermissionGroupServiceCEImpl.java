@@ -245,13 +245,16 @@ public class PermissionGroupServiceCEImpl extends BaseService<PermissionGroupRep
     }
 
     @Override
+    public Flux<PermissionGroup> findByAssignedToUserIdsIn(Set<String> userIds) {
+        return repository.findByAssignedToUserIdsIn(userIds);
+    }
+
+    @Override
     public boolean isEntityAccessible(BaseDomain object, String permission, String permissionGroupId) {
         return object.getPolicies()
                 .stream()
-                .filter(policy -> policy.getPermission().equals(permission) &&
-                        policy.getPermissionGroups().contains(permissionGroupId))
-                .findFirst()
-                .isPresent();
+                .anyMatch(policy -> policy.getPermission().equals(permission) &&
+                        policy.getPermissionGroups().contains(permissionGroupId));
     }
 
 }

@@ -33,7 +33,7 @@ public interface PermissionGroupServiceCE extends CrudService<PermissionGroup, S
     Mono<PermissionGroup> unassignFromUser(PermissionGroup permissionGroup, User user);
 
     Flux<PermissionGroup> getAllByAssignedToUserAndDefaultWorkspace(User user, Workspace defaultWorkspace, AclPermission aclPermission);
-    
+
     Mono<Void> delete(String id);
 
     Mono<PermissionGroup> findById(String permissionGroupId);
@@ -47,6 +47,8 @@ public interface PermissionGroupServiceCE extends CrudService<PermissionGroup, S
     Mono<PermissionGroup> getPublicPermissionGroup();
 
     Mono<String> getPublicPermissionGroupId();
+
+    Flux<PermissionGroup> findByAssignedToUserIdsIn(Set<String> userIds);
 
     boolean isEntityAccessible(BaseDomain object, String permission, String publicPermissionGroupId);
 }

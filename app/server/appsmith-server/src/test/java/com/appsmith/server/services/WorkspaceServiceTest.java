@@ -148,7 +148,7 @@ public class WorkspaceServiceTest {
                 });
 
         Mono<Set<PermissionGroup>> userPermissionGroupsSetMono = userMono
-                .flatMapMany(user -> permissionGroupRepository.findByAssignedToUserIdsIn(user.getId()))
+                .flatMapMany(user -> permissionGroupRepository.findByAssignedToUserIdsIn(Set.of(user.getId())))
                 .collect(Collectors.toSet());
 
 
@@ -532,7 +532,7 @@ public class WorkspaceServiceTest {
         workspace.setSlug("test-update-name");
         Mono<Workspace> createWorkspace = workspaceService.create(workspace);
         String[] validEmails = {"valid@email.com", "valid@email.co.in", "valid@email-assoc.co.in"};
-        for (String validEmail: validEmails) {
+        for (String validEmail : validEmails) {
             Mono<Workspace> updateWorkspace = createWorkspace
                     .flatMap(t -> {
                         Workspace newWorkspace = new Workspace();
@@ -600,7 +600,7 @@ public class WorkspaceServiceTest {
         String[] validWebsites = {"https://www.valid.website.com", "http://www.valid.website.com",
                 "https://valid.website.com", "http://valid.website.com", "www.valid.website.com", "valid.website.com",
                 "valid-website.com", "valid.12345.com", "12345.com"};
-        for (String validWebsite: validWebsites) {
+        for (String validWebsite : validWebsites) {
             Mono<Workspace> updateWorkspace = createWorkspace
                     .flatMap(t -> {
                         Workspace newWorkspace = new Workspace();

@@ -15,7 +15,7 @@ public interface PermissionGroupRepositoryCE extends BaseRepository<PermissionGr
 
     Mono<PermissionGroup> findById(String id, AclPermission permission);
 
-    Flux<PermissionGroup> findByAssignedToUserIdsIn(String userId);
+    Flux<PermissionGroup> findByAssignedToUserIdsIn(Set<String> userIds);
 
     Flux<PermissionGroup> findByDefaultWorkspaceId(String defaultWorkspaceId);
 
