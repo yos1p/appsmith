@@ -66,7 +66,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -84,7 +83,6 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailSender emailSender;
-    private final ApplicationRepository applicationRepository;
     private final PolicyUtils policyUtils;
     private final CommonConfig commonConfig;
     private final EmailConfig emailConfig;
@@ -114,7 +112,6 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
                              PasswordResetTokenRepository passwordResetTokenRepository,
                              PasswordEncoder passwordEncoder,
                              EmailSender emailSender,
-                             ApplicationRepository applicationRepository,
                              PolicyUtils policyUtils,
                              CommonConfig commonConfig,
                              EmailConfig emailConfig,
@@ -130,7 +127,6 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailSender = emailSender;
-        this.applicationRepository = applicationRepository;
         this.policyUtils = policyUtils;
         this.commonConfig = commonConfig;
         this.emailConfig = emailConfig;
@@ -152,47 +148,6 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
     public Mono<User> findByEmailAndTenantId(String email, String tenantId) {
         return repository.findByEmailAndTenantId(email, tenantId);
     }
-
-    /**
-     * This function switches the user's currentWorkspace in the User collection in the DB. This means that on subsequent
-     * logins, the user will see applications for their last used workspace.
-     *
-     * @param workspaceId
-     * @return
-     */
-    @Override
-    public Mono<User> switchCurrentWorkspace(String workspaceId) {
-        if (workspaceId == null || workspaceId.isEmpty()) {
-            return Mono.error(new AppsmithException(AppsmithError.INVALID_PARAMETER, "workspaceId"));
-        }
-        return sessionUserService.getCurrentUser()
-                .flatMap(user -> repository.findByEmail(user.getUsername()))
-                .flatMap(user -> {
-                    log.debug("Going to set workspaceId: {} for user: {}", workspaceId, user.getId());
-
-                    if (user.getCurrentWorkspaceId().equals(workspaceId)) {
-                        return Mono.just(user);
-                    }
-
-                    Set<String> workspaceIds = user.getWorkspaceIds();
-                    if (workspaceIds == null || workspaceIds.isEmpty()) {
-                        return Mono.error(new AppsmithException(AppsmithError.USER_DOESNT_BELONG_ANY_WORKSPACE, user.getId()));
-                    }
-
-                    Optional<String> maybeWorkspaceId = workspaceIds.stream()
-                            .filter(workspaceId1 -> workspaceId1.equals(workspaceId))
-                            .findFirst();
-
-                    if (maybeWorkspaceId.isPresent()) {
-                        user.setCurrentWorkspaceId(maybeWorkspaceId.get());
-                        return repository.save(user);
-                    }
-
-                    // Throw an exception if the workspaceId is not part of the user's workspaces
-                    return Mono.error(new AppsmithException(AppsmithError.USER_DOESNT_BELONG_TO_WORKSPACE, user.getId(), workspaceId));
-                });
-    }
-
 
     /**
      * This function creates a one-time token for resetting the user's password. This token is stored in the `passwordResetToken`
@@ -418,6 +373,10 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
                 .flatMap(tuple -> analyticsService.identifyUser(tuple.getT1(), tuple.getT2()));
     }
 
+    protected Mono<PermissionGroup> addDefaultUserPolicies(User savedUser) {
+        return Mono.empty();
+    }
+
     private Mono<User> addUserPolicies(User savedUser, Boolean isAdminUser) {
 
         // Create user management permission group
@@ -430,26 +389,34 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
                 )
         );
 
+
         // Assign the permission group to the user
         userManagementPermissionGroup.setAssignedToUserIds(Set.of(savedUser.getId()));
 
-        return permissionGroupService.save(userManagementPermissionGroup)
-                .flatMap(savedPermissionGroup -> {
+        // Add this user to the default permission group for all users. This will give the user all the default permissions
+        // when the user signs up.
+        Mono<PermissionGroup> allUsersPermissionGroupMono = addDefaultUserPolicies(savedUser);
 
-                    Map<String, Policy> crudUserPolicies = policyUtils.generatePolicyFromPermissionGroupForObject(savedPermissionGroup,
-                            savedUser.getId());
+        return allUsersPermissionGroupMono
+                .then(
+                        permissionGroupService.save(userManagementPermissionGroup)
+                                .flatMap(savedPermissionGroup -> {
 
-                    User updatedWithPolicies = policyUtils.addPoliciesToExistingObject(crudUserPolicies, savedUser);
+                                    Map<String, Policy> crudUserPolicies = policyUtils.generatePolicyFromPermissionGroupForObject(savedPermissionGroup,
+                                            savedUser.getId());
 
-                    return repository.save(updatedWithPolicies);
-                })
-                .flatMap(crudUser -> {
-                    if (isAdminUser) {
-                        return userUtils.makeSuperUser(List.of(crudUser))
-                                .then(Mono.just(crudUser));
-                    }
-                    return Mono.just(crudUser);
-                });
+                                    User updatedWithPolicies = policyUtils.addPoliciesToExistingObject(crudUserPolicies, savedUser);
+
+                                    return repository.save(updatedWithPolicies);
+                                })
+                                .flatMap(crudUser -> {
+                                    if (isAdminUser) {
+                                        return userUtils.makeSuperUser(List.of(crudUser))
+                                                .then(Mono.just(crudUser));
+                                    }
+                                    return Mono.just(crudUser);
+                                })
+                );
     }
 
     /**
@@ -598,10 +565,9 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
     }
 
 
-
     @Override
     public Mono<? extends User> createNewUserAndSendInviteEmail(String email, String originHeader,
-                                                                 Workspace workspace, User inviter, String role) {
+                                                                Workspace workspace, User inviter, String role) {
         User newUser = new User();
         newUser.setEmail(email.toLowerCase());
 

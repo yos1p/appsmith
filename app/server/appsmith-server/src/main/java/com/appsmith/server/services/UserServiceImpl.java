@@ -36,7 +36,6 @@ public class UserServiceImpl extends UserServiceCEImpl implements UserService {
                            PasswordResetTokenRepository passwordResetTokenRepository,
                            PasswordEncoder passwordEncoder,
                            EmailSender emailSender,
-                           ApplicationRepository applicationRepository,
                            PolicyUtils policyUtils,
                            CommonConfig commonConfig,
                            EmailConfig emailConfig,
@@ -48,7 +47,7 @@ public class UserServiceImpl extends UserServiceCEImpl implements UserService {
                            UserUtils userUtils) {
 
         super(scheduler, validator, mongoConverter, reactiveMongoTemplate, repository, workspaceService, analyticsService,
-                sessionUserService, passwordResetTokenRepository, passwordEncoder, emailSender, applicationRepository,
+                sessionUserService, passwordResetTokenRepository, passwordEncoder, emailSender,
                 policyUtils, commonConfig, emailConfig, userChangedHandler, encryptionService, userDataService, tenantService,
                 permissionGroupService, userUtils);
     }
