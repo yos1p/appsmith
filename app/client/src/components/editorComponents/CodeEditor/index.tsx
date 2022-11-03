@@ -412,6 +412,8 @@ class CodeEditor extends Component<Props, State> {
       setTimeout(() => {
         if (this.props.editorIsFocused) {
           this.editor.focus();
+          this.props.editorLastCursorPosition &&
+            this.editor.setCursor(this.props.editorLastCursorPosition);
         }
       }, 200);
     }
@@ -584,7 +586,14 @@ class CodeEditor extends Component<Props, State> {
 
   handleEditorFocus = (cm: CodeMirror.Editor) => {
     this.setState({ isFocused: true });
-    if (this.props.editorLastCursorPosition) {
+
+    const { ch, line, sticky } = cm.getCursor();
+    if (
+      ch === 0 &&
+      line === 0 &&
+      sticky === null &&
+      this.props.editorLastCursorPosition
+    ) {
       cm.setCursor(this.props.editorLastCursorPosition);
     }
 

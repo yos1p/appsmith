@@ -43,29 +43,13 @@ export function shouldFocusOnPropertyControl(
 export function getPropertyControlFocusElement(
   element: HTMLDivElement | null,
 ): HTMLElement | undefined {
-  if (element?.children) {
-    const [, propertyInputElement] = element.children;
+  return element?.children?.[1]?.querySelector(
+    'button:not([tabindex="-1"]), input, [tabindex]:not([tabindex="-1"]):not(.CodeEditorTarget)',
+  ) as HTMLElement | undefined;
+}
 
-    if (propertyInputElement) {
-      const uiInputElement = propertyInputElement.querySelector(
-        'button:not([tabindex="-1"]), input, [tabindex]:not([tabindex="-1"])',
-      ) as HTMLElement | undefined;
-      if (uiInputElement) {
-        return uiInputElement;
-      }
-      const codeEditorInputElement = propertyInputElement.getElementsByClassName(
-        "CodeEditorTarget",
-      )[0] as HTMLElement | undefined;
-      if (codeEditorInputElement) {
-        return codeEditorInputElement;
-      }
-
-      const lazyCodeEditorInputElement = propertyInputElement.getElementsByClassName(
-        "LazyCodeEditor",
-      )[0] as HTMLElement | undefined;
-      if (lazyCodeEditorInputElement) {
-        return lazyCodeEditorInputElement;
-      }
-    }
-  }
+export function getCodeEditorControlFocusElement(
+  element: HTMLDivElement | null,
+): HTMLElement | undefined {
+  return element?.querySelector(".CodeEditorTarget") as HTMLElement | undefined;
 }

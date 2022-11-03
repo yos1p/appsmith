@@ -53,6 +53,7 @@ import { AppTheme } from "entities/AppTheming";
 import { JS_TOGGLE_DISABLED_MESSAGE } from "@appsmith/constants/messages";
 import { AppState } from "@appsmith/reducers";
 import {
+  getCodeEditorControlFocusElement,
   getPropertyControlFocusElement,
   shouldFocusOnPropertyControl,
 } from "utils/editorContextUtils";
@@ -114,17 +115,22 @@ const PropertyControl = memo((props: Props) => {
 
   useEffect(() => {
     if (shouldFocusPropertyPath) {
-      // We can get a code editor element as well, which will take time to load
-      // for that we setTimeout to 200 ms
       setTimeout(() => {
+        controlRef.current?.scrollIntoView({
+          block: "center",
+        });
         if (shouldFocusOnPropertyControl(controlRef.current)) {
           const focusableElement = getPropertyControlFocusElement(
             controlRef.current,
           );
-          focusableElement?.scrollIntoView({
-            block: "start",
-            behavior: "smooth",
-          });
+          focusableElement?.focus();
+        }
+      }, 0);
+      setTimeout(() => {
+        if (shouldFocusOnPropertyControl(controlRef.current)) {
+          const focusableElement = getCodeEditorControlFocusElement(
+            controlRef.current,
+          );
           focusableElement?.focus();
         }
       }, 500);
