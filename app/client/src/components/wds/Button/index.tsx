@@ -1,14 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import {
-  IButtonProps,
-  MaybeElement,
-  Button as BlueprintButton,
-} from "@blueprintjs/core";
+import React, { useMemo, forwardRef, HTMLAttributes } from "react";
 import { IconName } from "@blueprintjs/icons";
 import { withTooltip } from "components/wds";
 
-import { Colors } from "constants/Colors";
+import { Slot } from "@radix-ui/react-slot";
 
 import _ from "lodash";
 import {
@@ -20,161 +14,85 @@ import {
   getComplementaryGrayscaleColor,
   lightenColor,
 } from "widgets/WidgetUtils";
-import { borderRadiusOptions } from "constants/ThemeConstants";
-import withRecaptcha, { RecaptchaProps } from "./withRecaptcha";
+import { getCSSVariables } from "./styles";
+import styles from "./styles.module.css";
+import cx from "clsx";
+import { Spinner } from "../Spinner";
 
-type ButtonStyleProps = {
-  buttonColor?: string;
-  buttonVariant?: ButtonVariant;
-  iconName?: IconName;
-  placement?: ButtonPlacement;
-  justifyContent?:
-    | "flex-start"
-    | "flex-end"
-    | "center"
-    | "space-between"
-    | "space-around"
-    | "space-evenly";
-};
-
-export interface ButtonProps
-  extends IButtonProps,
-    ButtonStyleProps,
-    RecaptchaProps {
-  variant?: keyof typeof VariantTypes;
+export type ButtonProps = {
+  accentColor?: string;
+  variant?: "filled" | "outline" | "link" | "subtle" | "white" | "light";
   boxShadow?: string;
   borderRadius?: string;
   tooltip?: string;
   children?: React.ReactNode;
-  leftIcon?: IconName | MaybeElement;
   isDisabled?: boolean;
   isLoading?: boolean;
-}
+  className?: string;
+  asChild?: boolean;
+  leadingIcon?: React.ReactNode;
+  trailingIcon?: React.ReactNode;
+  size?: number;
+} & HTMLAttributes<HTMLButtonElement>;
 
-enum VariantTypes {
-  solid = "solid",
-  outline = "outline",
-  ghost = "ghost",
-  link = "link",
-}
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (props, forwardedRef): JSX.Element => {
+    const {
+      accentColor,
+      asChild,
+      borderRadius,
+      boxShadow,
+      children,
+      className = "",
+      isDisabled,
+      isLoading,
+      leadingIcon,
+      tooltip,
+      trailingIcon,
+      variant = "filled",
+      ...rest
+    } = props;
 
-export const StyledButton = styled((props) => (
-  <BlueprintButton
-    {..._.omit(props, [
-      "borderRadius",
-      "boxShadow",
-      "buttonColor",
-      "buttonVariant",
-      "variant",
-      "justifyContent",
-    ])}
-  />
-))<ButtonProps>`
-  gap: 8px;
-  height: 100%;
-  outline: none;
-  padding: 0px 10px;
-  background-image: none !important;
-  border-radius: ${({ borderRadius }) => borderRadius};
-  box-shadow: ${({ boxShadow }) => `${boxShadow}`} !important;
-  justify-content: ${({ justifyContent }) => `${justifyContent}`} !important;
-  flex-direction: ${({ iconAlign }) => `${iconAlign}`};
+    const iconOnly = Boolean(!children && (leadingIcon || trailingIcon));
 
-  ${({ buttonColor }) => `
-    &.button--solid {
-      &:enabled {
-        background: ${buttonColor};
-        color: ${getComplementaryGrayscaleColor(buttonColor)}
-      }
-    }
+    const computedClassnames = cx({
+      [styles.base]: true,
+      [styles.disabled]: isDisabled,
+      [styles[variant]]: true,
+      [className]: true,
+      [styles.loading]: isLoading,
+    });
+    const cssVariables = getCSSVariables(props);
+    const Component = (asChild ? Slot : "button") as "button";
 
-    &.button--outline {
-      &:enabled {
-        background: none;
-        border: 1px solid ${buttonColor};
-        color: ${buttonColor};
-      }
+    const content = useMemo(() => {
+      if (isLoading) return <Spinner />;
 
-      &:enabled:hover {
-        background: ${lightenColor(buttonColor)};
-      }
-    }
+      return (
+        <>
+          {leadingIcon && (
+            <span className={styles.leadingIcon}>{leadingIcon}</span>
+          )}
+          {children && <span>{children}</span>}
+          {trailingIcon && (
+            <span className={styles.trailingIcon}>{trailingIcon}</span>
+          )}
+        </>
+      );
+    }, [isLoading, children]);
 
-    &.button--ghost {
-      &:enabled {
-        background: none;
-        color: ${buttonColor};
-      }
+    return (
+      <Component
+        {...rest}
+        className={computedClassnames}
+        disabled={isDisabled}
+        ref={forwardedRef}
+        style={cssVariables}
+      >
+        {content}
+      </Component>
+    );
+  },
+);
 
-      &:enabled:hover {
-        background: ${lightenColor(buttonColor)};
-      }
-    }
-
-    &.button--link {
-      &:enabled {
-        background: none;
-        color: ${buttonColor};
-      }
-
-      &:enabled:hover {
-        text-decoration: underline;
-      }
-    }
-
-    &:disabled {
-      background-color: ${Colors.GREY_1} !important;
-      color: ${Colors.GREY_9} !important;
-      box-shadow: none !important;
-      pointer-events: none;
-      border-color: ${Colors.GREY_1} !important;
-      > span {
-        color: ${Colors.GREY_9} !important;
-      }
-    }
-
-    & > * {
-      margin-right: 0;
-    }
-
-    & > span, & > span.bp3-icon {
-      max-height: 100%;
-      max-width: 99%;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      line-height: normal;
-      color: inherit;
-    }
-  `}
-`;
-
-function Button(props: ButtonProps) {
-  const { children, isDisabled, isLoading, leftIcon, ...rest } = props;
-
-  return (
-    <StyledButton
-      {...rest}
-      className={`button--${props.variant} ${props.className}`}
-      disabled={isDisabled}
-      icon={leftIcon}
-      loading={isLoading}
-      text={children}
-    />
-  );
-}
-
-Button.defaultProps = {
-  buttonVariant: ButtonVariantTypes.PRIMARY,
-  disabled: false,
-  text: "Button Text",
-  minimal: true,
-  variant: "solid",
-  buttonColor: "#553DE9",
-  borderRadius: borderRadiusOptions.md,
-  justifyContent: "center",
-} as ButtonProps;
-
-export default withRecaptcha(withTooltip(Button));
+export default Button;
