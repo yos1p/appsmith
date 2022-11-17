@@ -7,6 +7,7 @@ import {
 } from "constants/ThemeConstants";
 import CloseLineIcon from "remixicon-react/CloseLineIcon";
 import { Icon } from "./Icon";
+import { Slottable } from "@radix-ui/react-slot";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
@@ -114,18 +115,19 @@ function Showcase() {
               </Button>
               <Button
                 accentColor={primaryColor}
+                asChild
+                className="w-28"
+                variant="filled"
+              >
+                <a href="https://appsmith.com">Link</a>
+              </Button>
+              <Button
+                accentColor={primaryColor}
                 className="w-28"
                 isDisabled
                 variant="subtle"
               >
                 Disabled
-              </Button>
-              <Button
-                accentColor={primaryColor}
-                className="w-28"
-                variant="link"
-              >
-                Link
               </Button>
               <Button
                 accentColor={primaryColor}

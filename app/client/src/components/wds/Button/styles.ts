@@ -21,27 +21,20 @@ export const getCSSVariables = (
     "--wds-color-bg-button-hover": darkenColor(accentColor),
     "--wds-color-text-button": accentColor,
     "--wds-color-text-onbutton": getComplementaryGrayscaleColor(accentColor),
-    "--wds-btn-color-border-button": accentColor,
+    "--wds-color-border-button": accentColor,
+    "--wds-radii": borderRadius ? borderRadius : undefined,
+    "--wds-shadow": boxShadow ? boxShadow : undefined,
   };
 
-  if (variant == "light" || variant == "subtle" || variant == "outline") {
+  if ("light" || variant == "subtle" || variant == "outline") {
     cssVariables["--wds-color-bg-button-light"] = lightenColor(
       accentColor,
       "0.97",
     );
-
     cssVariables["--wds-color-bg-button-hover-light"] = lightenColor(
       accentColor,
       "0.95",
     );
-  }
-
-  if (borderRadius) {
-    cssVariables["--wds-radii"] = borderRadius || "0px";
-  }
-
-  if (boxShadow) {
-    cssVariables["--wds-shadow"] = boxShadow || "none";
   }
 
   return cssVariables;

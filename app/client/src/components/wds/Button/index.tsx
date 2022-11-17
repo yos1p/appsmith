@@ -4,7 +4,6 @@ import { withTooltip } from "components/wds";
 
 import { Slot } from "@radix-ui/react-slot";
 
-import _ from "lodash";
 import {
   ButtonPlacement,
   ButtonVariant,
@@ -53,8 +52,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ...rest
     } = props;
 
-    const iconOnly = Boolean(!children && (leadingIcon || trailingIcon));
-
     const computedClassnames = cx({
       [styles.base]: true,
       [styles.disabled]: isDisabled,
@@ -63,7 +60,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       [styles.loading]: isLoading,
     });
     const cssVariables = getCSSVariables(props);
-    const Component = (asChild ? Slot : "button") as "button";
+    const Component = asChild ? Slot : "button";
 
     const content = useMemo(() => {
       if (isLoading) return <Spinner />;

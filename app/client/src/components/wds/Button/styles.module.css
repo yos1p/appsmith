@@ -41,6 +41,8 @@
  * VARIANT STYLES
  *-----------------------------------------------------------------------------
  */
+
+ /* filled variant */
 .filled {
   background: var(--wds-color-bg-button);
   color: var(--wds-color-text-onbutton);
@@ -55,21 +57,24 @@
   background: var(--wds-color-bg-button);
 }
 
+/* outline variant */
 .outline {
   border-width: 1px;
   background: transparent;
-  color: var(--wds-btn-color-text-button);
+  color: var(--wds-color-text-button);
   border-color: var(--wds-color-border-button);
 }
 
 .outline:hover {
   background: var(--wds-color-bg-button-hover-light);
+  border-color: var(--wds-color-border-button);
 }
 
 .outline:hover:disabled {
   background: transparent;
 }
 
+/* subtle variant */
 .subtle {
   border-width: 1px;
   background: transparent;
@@ -81,11 +86,16 @@
   background: var(--wds-color-bg-button-hover-light);
 }
 
+.subtle.disabled:hover {
+  background: var(--wds-color-bg-button-light);
+}
+
 .subtle:disabled:hover {
   background: transparent;
   background: var(--wds-color-bg-hover);
 }
 
+/* linked variant */
 .link {
   border-width: 1px;
   border-color: transparent;
@@ -97,11 +107,8 @@
   text-decoration: underline;
 }
 
-.loading {
-  cursor: not-allowed;
-  opacity: 0.8;
-}
 
+/* light variant */
 .light {
   background: var(--wds-color-bg-button-light);
   border-color: transparent;
@@ -115,6 +122,11 @@
 .light:disabled:hover {
   background: var(--wds-color-bg-light);
   background: var(--wds-color-bg-hover);
+}
+
+.loading {
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
 /**
