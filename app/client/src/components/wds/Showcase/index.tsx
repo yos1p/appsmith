@@ -1,13 +1,11 @@
 import React, { CSSProperties, useState } from "react";
 
-import { Checkbox, Button } from "components/wds";
 import {
   borderRadiusOptions,
   boxShadowOptions,
 } from "constants/ThemeConstants";
 import CloseLineIcon from "remixicon-react/CloseLineIcon";
-import { Icon } from "./Icon";
-import { Slottable } from "@radix-ui/react-slot";
+import ButtonShowCase from "./Button";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
@@ -81,87 +79,7 @@ function Showcase() {
 
       <div className="space-y-5">
         {/* buttons */}
-        <div className="">
-          <h2 className="my-2 text-xl font-semibold">Buttons</h2>
-          <div className="space-y-3">
-            <div className="flex space-x-3">
-              <Button
-                accentColor={primaryColor}
-                className="w-28"
-                variant="filled"
-              >
-                Primary
-              </Button>
-              <Button
-                accentColor={primaryColor}
-                className="w-28"
-                variant="outline"
-              >
-                Outline
-              </Button>
-              <Button
-                accentColor={primaryColor}
-                className="w-28"
-                variant="light"
-              >
-                Light
-              </Button>
-              <Button
-                accentColor={primaryColor}
-                className="w-28"
-                variant="subtle"
-              >
-                Subtle
-              </Button>
-              <Button
-                accentColor={primaryColor}
-                asChild
-                className="w-28"
-                variant="filled"
-              >
-                <a href="https://appsmith.com">Link</a>
-              </Button>
-              <Button
-                accentColor={primaryColor}
-                className="w-28"
-                isDisabled
-                variant="subtle"
-              >
-                Disabled
-              </Button>
-              <Button
-                accentColor={primaryColor}
-                className="w-32"
-                trailingIcon={<Icon name="plus" />}
-              >
-                Trailing Icon
-              </Button>
-              <Button
-                accentColor={primaryColor}
-                className="w-32"
-                leadingIcon={<Icon name="plus" />}
-                variant="outline"
-              >
-                Leading Icon
-              </Button>
-              <Button
-                accentColor={primaryColor}
-                className="w-32"
-                isLoading={loading}
-              >
-                Loading
-              </Button>
-              <Button
-                accentColor={primaryColor}
-                className="w-32"
-                isLoading={loading}
-                variant="outline"
-              >
-                Loading
-              </Button>
-            </div>
-          </div>
-        </div>
+        <ButtonShowCase loading={loading} primaryColor={primaryColor} />
         {/*button end */}
       </div>
     </div>

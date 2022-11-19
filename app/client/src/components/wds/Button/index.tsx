@@ -60,7 +60,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       [styles.loading]: isLoading,
     });
     const cssVariables = getCSSVariables(props);
-    const Component = asChild ? Slot : "button";
 
     const content = useMemo(() => {
       if (isLoading) return <Spinner />;
@@ -79,15 +78,17 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     }, [isLoading, children]);
 
     return (
-      <Component
-        {...rest}
-        className={computedClassnames}
-        disabled={isDisabled}
-        ref={forwardedRef}
-        style={cssVariables}
-      >
-        {content}
-      </Component>
+      <div className={styles.container} data-disabled={isDisabled}>
+        <button
+          {...rest}
+          className={computedClassnames}
+          disabled={isDisabled}
+          ref={forwardedRef}
+          style={cssVariables}
+        >
+          {content}
+        </button>
+      </div>
     );
   },
 );

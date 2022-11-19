@@ -26,11 +26,13 @@ export const getCSSVariables = (
     "--wds-shadow": boxShadow ? boxShadow : undefined,
   };
 
+  // If the button is a light, subtitle or outline button, we need to change the colors
   if ("light" || variant == "subtle" || variant == "outline") {
     cssVariables["--wds-color-bg-button-light"] = lightenColor(
       accentColor,
       "0.97",
     );
+
     cssVariables["--wds-color-bg-button-hover-light"] = lightenColor(
       accentColor,
       "0.95",
