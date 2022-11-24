@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { TabComponent, TabProp, Text, TextType } from "design-system";
 import { Icon } from "@blueprintjs/core";
 import General from "./General";
-import { Colors } from "constants/Colors";
 import GitConfig from "./GitConfig";
 import { useLocation } from "react-router";
 import { GIT_PROFILE_ROUTE } from "constants/routes";
@@ -58,7 +57,7 @@ function UserProfile() {
     <PageWrapper displayName={"Profile"}>
       <ProfileWrapper>
         <LinkToApplications className="t--back" onClick={() => history.back()}>
-          <Icon color={Colors.SILVER_CHALICE} icon="chevron-left" />
+          <Icon color="var(--ads-color-text)" icon="chevron-left" />
           <Text type={TextType.H1}>Profile</Text>
         </LinkToApplications>
         <TabComponent

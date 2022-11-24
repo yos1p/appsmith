@@ -18,6 +18,7 @@ const StyledUpdatesButton = styled.div`
   background-color: ${(props) =>
     props.theme.colors.floatingBtn.backgroundColor};
   border: 1px solid ${(props) => props.theme.colors.floatingBtn.borderColor};
+  border-radius: var(--ads-border-radius);
 `;
 
 const StyledTag = styled.div`

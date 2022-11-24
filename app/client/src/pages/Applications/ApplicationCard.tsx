@@ -79,7 +79,7 @@ const NameWrapper = styled((props: HTMLDivProps & NameWrapperProps) => (
   <div {...omit(props, ["hasReadPermission", "showOverlay", "isMenuOpen"])} />
 ))`
   .bp3-card {
-    border-radius: 0;
+    border-radius: var(--ads-border-radius);
     box-shadow: none;
     padding: 16px;
     display: flex;
@@ -199,7 +199,7 @@ const Wrapper = styled(
     ${(props) => !props.hasReadPermission && `pointer-events: none;`}
   }
   .bp3-card {
-    border-radius: 0;
+    border-radius: var(--ads-border-radius);
   }
   .${CsClasses.APP_ICON} {
     margin: 0 auto;

@@ -29,23 +29,7 @@ export const BackButtonText = styled.span`
   margin: 0 0 0 8px;
 `;
 
-export const StyledSearchInput = styled(SearchInput)`
-  > div {
-    border-radius: 1px;
-    border: 1px solid var(--appsmith-color-black-250);
-    color: var(--appsmith-color-black-700);
-    box-shadow: none;
-    margin: 0 16px 0 0;
-
-    &:active,
-    &:hover,
-    &:focus {
-      border: 1px solid var(--appsmith-color-black-250);
-      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.06),
-        0px 1px 3px rgba(0, 0, 0, 0.1);
-    }
-  }
-`;
+export const StyledSearchInput = styled(SearchInput)``;
 
 export const SettingsHeader = styled.h2`
   padding: 0px 8px;
