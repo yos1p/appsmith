@@ -24,6 +24,14 @@ declare global {
   }
 }
 
+/*
+ * When an action that is marked TRIGGER is encountered during eval,
+ * it is batched and not executed immediately.
+ * Such actions are pushed into the TRIGGER_COLLECTOR array,
+ * and is sent to the main thread at the end of eval for execution.
+ * Actions marked a PROMISE, will postMessage back to the main thread immediately
+ * and wait for a response from the main thread.
+ */
 enum ExecutionType {
   PROMISE = "PROMISE",
   TRIGGER = "TRIGGER",
