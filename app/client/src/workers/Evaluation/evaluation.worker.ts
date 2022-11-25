@@ -242,8 +242,16 @@ function eventRequestHandler({
         widgets,
         widgetTypeConfigMap,
       } = requestData as EvalTreeRequestData;
+      /*
+       * Check if an instance of DataTreeEvaluator class is present
+       * if yes, create first tree (Case 1)
+       * if no, but cyclic dependency exists (Case 2)
+       * else update data tree (Case 3)
+       */
       try {
         if (!dataTreeEvaluator) {
+          // Case 1 - no instance of DataTreeEvaluator class is present
+          // so create the first data tree
           isCreateFirstTree = true;
           replayMap = replayMap || {};
           replayMap[CANVAS] = new ReplayCanvas({ widgets, theme });
@@ -269,8 +277,9 @@ function eventRequestHandler({
           dataTree = dataTreeResponse.evalTree;
           dataTree = dataTree && JSON.parse(JSON.stringify(dataTree));
         } else if (dataTreeEvaluator.hasCyclicalDependency) {
+          // Case 2 - data tree has cyclic dependency
           if (dataTreeEvaluator && !isEmpty(allActionValidationConfig)) {
-            //allActionValidationConfigs may not be set in dataTreeEvaluatior. Therefore, set it explicitly via setter method
+            // allActionValidationConfigs may not be set in dataTreeEvaluatior. Therefore, set it explicitly via setter method
             dataTreeEvaluator.setAllActionValidationConfig(
               allActionValidationConfig,
             );
@@ -306,6 +315,8 @@ function eventRequestHandler({
           dataTree = dataTreeResponse.evalTree;
           dataTree = dataTree && JSON.parse(JSON.stringify(dataTree));
         } else {
+          // Case 3 - instance of DataTreeEvaluator class is present
+          // so update data tree
           if (dataTreeEvaluator && !isEmpty(allActionValidationConfig)) {
             dataTreeEvaluator.setAllActionValidationConfig(
               allActionValidationConfig,
