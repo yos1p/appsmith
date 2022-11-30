@@ -40,6 +40,8 @@ const SecretDisplayIndicator = styled.input`
   cursor: text;
   border: none;
   background: none;
+  -webkit-text-security: disc;
+  letter-spacing: -2px;
 `;
 
 const PASSWORD_EXISTS_INDICATOR = "······";
@@ -142,7 +144,7 @@ class InputTextControl extends BaseControl<InputControlProps> {
           <SecretDisplayIndicator
             onClick={this.onClickSecretDisplayIndicator}
             onFocus={this.onClickSecretDisplayIndicator}
-            type="password"
+            type="text"
             value={PASSWORD_EXISTS_INDICATOR}
           />
         )}
