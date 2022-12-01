@@ -314,7 +314,6 @@ const ENTITY_FUNCTIONS: Record<
 export const addDataTreeToContext = (args: {
   EVAL_CONTEXT: GlobalData;
   dataTree: Readonly<DataTree>;
-  isTriggerBased?: boolean;
   requestId?: string;
   skipEntityFunctions?: boolean;
   eventType?: EventType;
@@ -323,7 +322,6 @@ export const addDataTreeToContext = (args: {
     dataTree,
     EVAL_CONTEXT,
     eventType,
-    isTriggerBased = true,
     requestId = "",
     skipEntityFunctions = false,
   } = args;
@@ -354,8 +352,6 @@ export const addDataTreeToContext = (args: {
       );
     }
   }
-
-  if (!isTriggerBased) return;
 
   for (const [name, fn] of platformFunctionEntries) {
     EVAL_CONTEXT[name] = pusher.bind(

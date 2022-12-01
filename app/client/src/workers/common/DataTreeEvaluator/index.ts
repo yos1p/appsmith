@@ -1024,7 +1024,6 @@ export default class DataTreeEvaluator {
         js,
         data,
         resolvedFunctions,
-        isJSAction,
         contextData,
         callbackData,
         skipUserLogsOperations,

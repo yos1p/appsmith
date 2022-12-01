@@ -62,7 +62,6 @@ export function getlintErrorsFromTree(
   const GLOBAL_DATA_WITHOUT_FUNCTIONS = createEvaluationContext({
     dataTree: unEvalTree,
     resolvedFunctions: {},
-    isTriggerBased: false,
   });
   // trigger paths
   const triggerPaths = new Set<string>();
@@ -102,7 +101,6 @@ export function getlintErrorsFromTree(
     const GLOBAL_DATA_WITH_FUNCTIONS = createEvaluationContext({
       dataTree: unEvalTree,
       resolvedFunctions: {},
-      isTriggerBased: true,
       skipEntityFunctions: true,
     });
 
