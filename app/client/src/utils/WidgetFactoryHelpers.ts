@@ -21,10 +21,11 @@ export enum PropertyPaneConfigTypes {
 
 // TODO(aswathkk): Cleanup all the identifiers
 export function manipulateOnlyFirst(config: readonly PropertyPaneConfig[]) {
-  return config.map((configItem) => {
+  return config.map((configItem, index) => {
     if ((configItem as PropertyPaneSectionConfig).sectionName) {
       const obj = {
         ...configItem,
+        isDefaultOpen: index === 0 ? true : false,
       };
       if (configItem.children) {
         obj.children = manipulateOnlyFirst(configItem.children);
