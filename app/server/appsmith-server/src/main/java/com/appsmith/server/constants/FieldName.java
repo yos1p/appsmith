@@ -95,6 +95,7 @@ public class FieldName {
     public static String MONGO_UNESCAPED_CLASS = "_class";
     public static String DATASOURCE_STRUCTURE = "datasource structure";
     public static final String OBJECT_ID = "ObjectId";
+    public static final String ENVIRONMENT_NAME ="environmentName";
     public static final String PLACEHOLDER_TEXT = "placeholderText";
     public static final String IS_DISABLED = "isDisabled";
     public static final String IS_REQUIRED = "isRequired";
@@ -162,6 +163,5 @@ public class FieldName {
     public static final String UNASSIGNED_USER_GROUPS_FROM_PERMISSION_GROUPS = "unAssignedGroups";
     public static final String ASSIGNED_TO_PERMISSION_GROUPS = "assignedUserAndGroups";
     public static final String UNASSIGNED_FROM_PERMISSION_GROUPS = "unAssignedUsersAndGroups";
-    public static final String ENVIRONMENT_NAME ="environmentName";
 
 }
