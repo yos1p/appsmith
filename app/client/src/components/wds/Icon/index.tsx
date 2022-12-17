@@ -3,6 +3,7 @@ import PlusIcon from "remixicon-react/AddFillIcon";
 import PencilIcon from "remixicon-react/PencilFillIcon";
 import SpinnerIcon from "remixicon-react/Loader2FillIcon";
 import CloseIcon from "remixicon-react/CloseFillIcon";
+import ChevronDownIcon from "remixicon-react/ArrowDownSLineIcon";
 
 type IconProps = {
   className?: string;
@@ -10,7 +11,7 @@ type IconProps = {
 };
 
 const Icon: React.FC<IconProps> = ({ children, className, name, ...rest }) => {
-  const ComputedICon = useMemo(() => {
+  const ComputedIcon = useMemo(() => {
     switch (name) {
       case "plus":
         return PlusIcon;
@@ -20,13 +21,17 @@ const Icon: React.FC<IconProps> = ({ children, className, name, ...rest }) => {
         return SpinnerIcon;
       case "close":
         return CloseIcon;
+      case "chevron-down":
+        return ChevronDownIcon;
       default:
-        return PlusIcon;
+        return null;
     }
   }, [name]);
 
+  if (!ComputedIcon) return null;
+
   return (
-    <ComputedICon className={`h-5 w-5 fill-current ${className}`} {...rest} />
+    <ComputedIcon className={`h-5 w-5 fill-current ${className}`} {...rest} />
   );
 };
 

@@ -1,0 +1,13 @@
+.label {
+  display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--wds-color-text);
+    word-break: break-word;
+    cursor: default;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.required {
+  color: var(--wds-color-text-danger);
+}

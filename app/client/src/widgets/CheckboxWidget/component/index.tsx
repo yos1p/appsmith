@@ -86,7 +86,6 @@ class CheckboxComponent extends React.Component<CheckboxComponentProps> {
       >
         <StyledCheckbox
           accentColor={this.props.accentColor || DEFAULT_BACKGROUND_COLOR}
-          alignIndicator={checkboxAlignClass}
           borderRadius={this.props.borderRadius || DEFAULT_BORDER_RADIUS}
           checked={this.props.isChecked}
           className={

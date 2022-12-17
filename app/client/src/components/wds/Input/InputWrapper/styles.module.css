@@ -1,0 +1,32 @@
+.wrapper.horizontal {
+  display: grid;
+  gap: theme('spacing.1');
+  grid-template-columns: auto 1fr;
+  grid-template-rows: repeat(2, auto);
+  grid-template-areas:
+  "label input"
+  ". error"
+}
+
+.wrapper label {
+  grid-area: label;
+  align-items: center;
+}
+
+.wrapper > div {
+  grid-area: input;
+}
+
+.wrapper p[role="alert"] {
+  grid-area: error;
+}
+
+.wrapper.vertical {
+  display: flex;
+  gap: theme('spacing.1');
+  flex-direction: column;
+}
+
+.content {
+
+}

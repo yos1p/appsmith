@@ -1,0 +1,5 @@
+.container {
+  display: inline-flex;
+  gap: theme('spacing.2');
+  align-items: center;
+}

@@ -1,0 +1,94 @@
+.unstyled {
+  border: 0;
+  font-size: inherit;
+  font-family: inherit;
+  background-color: transparent;
+  -webkit-appearance: none;
+  color: inherit;
+  width: 100%;
+}
+
+.unstyled:focus {
+  outline: none;
+}
+
+
+.base {
+  --gutter: theme('spacing.2');
+  --gap: theme('spacing.1');
+
+  font-size: theme("fontSize.sm");
+  line-height: 20px;
+  color: var(--wds-color-text);
+  vertical-align: middle;
+  background-color: white;;
+  border: 1px solid var(--wds-color-border);
+  border-radius: var(--wds-radii);
+  box-shadow: rgb(208 215 222 / 20%) 0px 1px 0px inset;
+  outline: none;
+  display: inline-flex;
+  align-items: stretch;
+  min-height: 32px;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+  gap: var(--gap);
+}
+
+.base input, .base textarea {
+  cursor: text;
+  width: 100%;
+}
+
+.base select {
+  cursor: pointer;
+  width: 100%;
+  appearance: none;
+}
+
+.base::placeholder {
+  color: var(--wds-color-text-tertiary);
+}
+
+.base:focus-within {
+  border-color: var(--wds-color-border-focus);
+  outline: none;
+  box-shadow: 0 0 0 1px var(--wds-color-border-focus);
+}
+
+.base.with-leading-visual {
+  padding-left: theme('spacing.2');
+}
+
+.base.with-leading-visual > input,
+.base.with-leading-visual > select {
+  padding-right: 0;
+}
+
+.base.with-trailing-visual {
+  padding-right: var(--gutter);
+}
+
+.base.with-trailing-visual > input,
+.base.with-trailing-visual > select {
+  padding-left: 0;
+}
+
+.base .icon {
+  align-self: center;
+  flex-shrink: 0;
+  color: var(--wds-color-icon-secondary);
+  user-select: none;
+}
+
+.base.disabled {
+  border-color: var(--wds-color-border-disabled);
+  background-color: var(--wds-color-bg-disabled);
+}
+
+.base.disabled:hover {
+  border-color: var(--wds-color-border-disabled);
+}
+
+.disabled input, .disabled input {
+  cursor: not-allowed;
+}

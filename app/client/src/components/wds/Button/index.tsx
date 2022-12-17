@@ -13,10 +13,12 @@ import {
   getComplementaryGrayscaleColor,
   lightenColor,
 } from "widgets/WidgetUtils";
+import { createPolymorphicComponent } from "@mantine/utils";
 import { getCSSVariables } from "./styles";
 import styles from "./styles.module.css";
 import cx from "clsx";
 import { Spinner } from "../Spinner";
+import { UnstyledButton } from "../UnstyledButton";
 
 export type ButtonProps = {
   accentColor?: string;
@@ -34,7 +36,7 @@ export type ButtonProps = {
   size?: number;
 } & HTMLAttributes<HTMLButtonElement>;
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+const _Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (props, forwardedRef): JSX.Element => {
     const {
       accentColor,
@@ -53,7 +55,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     } = props;
 
     const computedClassnames = cx({
-      [styles.base]: true,
+      [styles.container]: true,
       [styles.disabled]: isDisabled,
       [styles[variant]]: true,
       [className]: true,
@@ -67,30 +69,38 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       return (
         <>
           {leadingIcon && (
-            <span className={styles.leadingIcon}>{leadingIcon}</span>
+            <span className={styles.leadingIcon} data-component="leadingIcon">
+              {leadingIcon}
+            </span>
           )}
-          {children && <span>{children}</span>}
+          {children && <span data-component="text">{children}</span>}
           {trailingIcon && (
-            <span className={styles.trailingIcon}>{trailingIcon}</span>
+            <span className={styles.trailingIcon} data-component="trailingIcon">
+              {trailingIcon}
+            </span>
           )}
         </>
       );
-    }, [isLoading, children]);
+    }, [isLoading, children, trailingIcon, leadingIcon]);
 
     return (
-      <div className={styles.container} data-disabled={isDisabled}>
-        <button
-          {...rest}
-          className={computedClassnames}
-          disabled={isDisabled}
-          ref={forwardedRef}
-          style={cssVariables}
-        >
-          {content}
-        </button>
-      </div>
+      <UnstyledButton
+        {...rest}
+        className={computedClassnames}
+        disabled={isDisabled}
+        ref={forwardedRef}
+        style={cssVariables}
+      >
+        {content}
+      </UnstyledButton>
     );
   },
+);
+
+_Button.displayName = "@appsmith/wds/Button";
+
+export const Button = createPolymorphicComponent<"button", ButtonProps>(
+  _Button,
 );
 
 export default Button;

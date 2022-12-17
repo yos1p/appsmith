@@ -2251,6 +2251,11 @@
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-5.8.0.tgz#9858cffcea8000e893be0b2bdb84e7f759407294"
   integrity sha512-838TKK0jTvU9sy7OcbDYc2P9fXyyca4HQxKRP2kRJnsnL6ZAHWFlFosGIcN97FiWh+8uQA7jCoD8jyrUjrFDXg==
 
+"@mantine/utils@^5.8.3":
+  version "5.8.3"
+  resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.8.3.tgz#2cc4b5eb9fcd0465e1e29f444b0e3f2413fc564f"
+  integrity sha512-MprJbMh/z3TbC8yPF2PQftitRwl58w7hvhp7O9fT+9jrvJHKM8V7r15iHMwBw2jgX6zmlksstO7QfhENc0vMHQ==
+
 "@mswjs/cookies@^0.1.4":
   version "0.1.4"
   resolved "https://registry.npmjs.org/@mswjs/cookies/-/cookies-0.1.4.tgz"
@@ -5327,6 +5332,11 @@ clsx@^1.0.4, clsx@^1.1.0:
   version "1.1.1"
   resolved "https://registry.npmjs.org/clsx/-/clsx-1.1.1.tgz"
 
+clsx@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
+  integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
+
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.npmjs.org/co/-/co-4.6.0.tgz"
@@ -6250,10 +6260,10 @@ depd@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/depd/-/depd-1.1.2.tgz"
 
-"design-system@npm:@appsmithorg/design-system@1.0.32":
-  version "1.0.32"
-  resolved "https://registry.yarnpkg.com/@appsmithorg/design-system/-/design-system-1.0.32.tgz#ea75b83161b11320009ab4f3a9227cf3e6a6992a"
-  integrity sha512-1Fio3mF9KFR409TLWu+6KBXt0TZEv6vXgOA7RSvTH/PYyr8r8RD3G/l8aym4cLx1R1Ksv2YAb5f58tUxyWva4w==
+"design-system@npm:@appsmithorg/design-system@1.0.33-alpha.7":
+  version "1.0.33-alpha.7"
+  resolved "https://registry.yarnpkg.com/@appsmithorg/design-system/-/design-system-1.0.33-alpha.7.tgz#52045299c8fa2ed793ff15f49737a46338e39da7"
+  integrity sha512-RNiWlXZXXJmn/D/j/pyb/ntMxidYmobRJk49O4YX9BRcVlzjOCFEbq6+4Wy/GPiStk2DtdHNKtqHwf15JfYlOg==
   dependencies:
     "@blueprintjs/datetime" "3.23.6"
     copy-to-clipboard "^3.3.1"

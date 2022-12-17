@@ -6,9 +6,13 @@ import {
 } from "constants/ThemeConstants";
 import CloseLineIcon from "remixicon-react/CloseLineIcon";
 import ButtonShowCase from "./Button";
+import CheckboxShowcase from "./Checkbox";
+import InputShowcase from "./Input";
 
 function Showcase() {
-  const [borderRadius, setBorderRadius] = useState<string | undefined>("0px");
+  const [borderRadius, setBorderRadius] = useState<string | undefined>(
+    "0.25rem",
+  );
   const [boxShadow, setBoxShadow] = useState<string | undefined>("none");
   const [primaryColor, setPrimaryColor] = useState("#553DE9");
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,6 +24,7 @@ function Showcase() {
       style={
         {
           "--wds-radii": borderRadius,
+          "--wds-shadow": boxShadow,
         } as CSSProperties
       }
     >
@@ -80,6 +85,8 @@ function Showcase() {
       <div className="space-y-5">
         {/* buttons */}
         <ButtonShowCase loading={loading} primaryColor={primaryColor} />
+        <CheckboxShowcase loading={loading} primaryColor={primaryColor} />
+        <InputShowcase loading={loading} primaryColor={primaryColor} />
         {/*button end */}
       </div>
     </div>

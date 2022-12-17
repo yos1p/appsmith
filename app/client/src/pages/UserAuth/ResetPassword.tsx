@@ -101,7 +101,7 @@ export function ResetPassword(props: ResetPasswordProps) {
         url: FORGOT_PASSWORD_URL,
         text: createMessage(RESET_PASSWORD_FORGOT_PASSWORD_LINK),
         intent: "primary",
-      },
+      } as any,
     ];
   }
   if (showExpiredMessage) {
@@ -118,7 +118,7 @@ export function ResetPassword(props: ResetPasswordProps) {
         url: AUTH_LOGIN_URL,
         text: createMessage(RESET_PASSWORD_RESET_SUCCESS_LOGIN_LINK),
         intent: "success",
-      },
+      } as any,
     ];
   }
   if (showFailureMessage) {
@@ -135,7 +135,7 @@ export function ResetPassword(props: ResetPasswordProps) {
           url: FORGOT_PASSWORD_URL,
           text: createMessage(RESET_PASSWORD_FORGOT_PASSWORD_LINK),
           intent: "primary",
-        },
+        } as any,
       ];
     }
   }

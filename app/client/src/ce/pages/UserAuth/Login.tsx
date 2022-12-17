@@ -150,7 +150,7 @@ export function Login(props: LoginFormProps) {
                       LOGIN_PAGE_INVALID_CREDS_FORGOT_PASSWORD_LINK,
                     ),
                     intent: "success",
-                  },
+                  } as any,
                 ]
           }
           intent="danger"

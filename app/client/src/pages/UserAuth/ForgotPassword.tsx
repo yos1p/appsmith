@@ -106,7 +106,7 @@ export const ForgotPassword = withTheme(
                   url: "https://docs.appsmith.com/v/v1.2.1/setup/docker/email",
                   text: "Configure Email service",
                   intent: "primary",
-                },
+                } as any,
               ]}
               intent="warning"
               message={
