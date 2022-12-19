@@ -79,10 +79,13 @@
   cursor: not-allowed;
 }
 
-.input:checked:disabled + .icon,
-.input:indeterminate:disabled + .icon {
+.input:disabled + .icon {
   background-color: var(--wds-color-bg-disabled);
   border-color: var(--wds-color-border-disabled);
+}
+
+.input:checked:disabled + .icon,
+.input:indeterminate:disabled + .icon {
   color: var(--wds-color-bg-disabled-strong);
 }
 
@@ -110,3 +113,22 @@
   outline-offset: 2px;
 }
 
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * CHECKBOX GROUP
+ *-----------------------------------------------------------------------------
+ */
+ .inputs-group {
+  display: flex;
+  gap: theme('spacing.2');
+ }
+
+ .inputs-group.horizontal {
+  flex-direction: row;
+ }
+
+ .inputs-group.vertical {
+  flex-direction: column;
+ }

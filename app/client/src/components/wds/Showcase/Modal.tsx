@@ -7,14 +7,16 @@ import { Input } from "../Input/Input";
 import { TextInput } from "../TextInput/TextInput";
 import { NativeSelect } from "../NativeSelect";
 import Showcase, { useControls } from "./Showcase";
+import { Modal } from "../Modal/Modal";
 
 type Props = {
   primaryColor: string;
   loading: boolean;
 };
 
-const ButtonShowcase = (props: Props) => {
+const ModalShowcase = (props: Props) => {
   const { primaryColor } = props;
+  const [opened, setOpened] = useState(false);
   const { controls, state } = useControls({
     controls: [
       [
@@ -49,7 +51,10 @@ const ButtonShowcase = (props: Props) => {
           width: 180,
         }}
       >
-        <Button {...commonProps} {...rest}>
+        <Modal onClose={() => setOpened(false)} opened={opened}>
+          Hello world
+        </Modal>
+        <Button {...commonProps} {...rest} onClick={() => setOpened(true)}>
           {label}
         </Button>
       </div>
@@ -57,4 +62,4 @@ const ButtonShowcase = (props: Props) => {
   );
 };
 
-export default ButtonShowcase;
+export default ModalShowcase;

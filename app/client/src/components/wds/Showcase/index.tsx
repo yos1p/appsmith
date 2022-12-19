@@ -8,6 +8,8 @@ import CloseLineIcon from "remixicon-react/CloseLineIcon";
 import ButtonShowCase from "./Button";
 import CheckboxShowcase from "./Checkbox";
 import InputShowcase from "./Input";
+import CheckboxGroupShowcase from "./CheckboxGroup";
+import ModalShowcase from "./Modal";
 
 function Showcase() {
   const [borderRadius, setBorderRadius] = useState<string | undefined>(
@@ -86,7 +88,9 @@ function Showcase() {
         {/* buttons */}
         <ButtonShowCase loading={loading} primaryColor={primaryColor} />
         <CheckboxShowcase loading={loading} primaryColor={primaryColor} />
+        <CheckboxGroupShowcase loading={loading} primaryColor={primaryColor} />
         <InputShowcase loading={loading} primaryColor={primaryColor} />
+        <ModalShowcase loading={loading} primaryColor={primaryColor} />
         {/*button end */}
       </div>
     </div>

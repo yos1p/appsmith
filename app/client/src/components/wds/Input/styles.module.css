@@ -13,7 +13,7 @@
 }
 
 
-.base {
+.container {
   --gutter: theme('spacing.2');
   --gap: theme('spacing.1');
 
@@ -34,58 +34,62 @@
   gap: var(--gap);
 }
 
-.base input, .base textarea {
+.container input, .container textarea {
   cursor: text;
   width: 100%;
 }
 
-.base select {
+.container input:disabled {
+  background: transparent;
+}
+
+.container select {
   cursor: pointer;
   width: 100%;
   appearance: none;
 }
 
-.base::placeholder {
+.container::placeholder {
   color: var(--wds-color-text-tertiary);
 }
 
-.base:focus-within {
+.container:focus-within {
   border-color: var(--wds-color-border-focus);
   outline: none;
   box-shadow: 0 0 0 1px var(--wds-color-border-focus);
 }
 
-.base.with-leading-visual {
+.container.with-leading-visual {
   padding-left: theme('spacing.2');
 }
 
-.base.with-leading-visual > input,
-.base.with-leading-visual > select {
+.container.with-leading-visual > input,
+.container.with-leading-visual > select {
   padding-right: 0;
 }
 
-.base.with-trailing-visual {
+.container.with-trailing-visual {
   padding-right: var(--gutter);
 }
 
-.base.with-trailing-visual > input,
-.base.with-trailing-visual > select {
+.container.with-trailing-visual > input,
+.container.with-trailing-visual > select {
   padding-left: 0;
 }
 
-.base .icon {
+.container .icon {
   align-self: center;
   flex-shrink: 0;
   color: var(--wds-color-icon-secondary);
   user-select: none;
 }
 
-.base.disabled {
+.container.disabled {
   border-color: var(--wds-color-border-disabled);
   background-color: var(--wds-color-bg-disabled);
 }
 
-.base.disabled:hover {
+.container.disabled:hover {
   border-color: var(--wds-color-border-disabled);
 }
 

@@ -54,13 +54,6 @@ const _Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ...rest
     } = props;
 
-    const computedClassnames = cx({
-      [styles.container]: true,
-      [styles.disabled]: isDisabled,
-      [styles[variant]]: true,
-      [className]: true,
-      [styles.loading]: isLoading,
-    });
     const cssVariables = getCSSVariables(props);
 
     const content = useMemo(() => {
@@ -86,8 +79,10 @@ const _Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <UnstyledButton
         {...rest}
-        className={computedClassnames}
-        disabled={isDisabled}
+        className={`${cx(styles.container, className, styles[variant])}`}
+        data-disabled={isDisabled || undefined}
+        data-loading={isLoading || undefined}
+        disabled={isDisabled || undefined}
         ref={forwardedRef}
         style={cssVariables}
       >

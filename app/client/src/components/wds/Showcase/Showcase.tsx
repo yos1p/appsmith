@@ -36,7 +36,7 @@ export const useControls = (props: ControlProps) => {
       return (
         <NativeSelect
           data={control[3]}
-          defaultValue={control[1]}
+          defaultValue={control[2]}
           label={control[1]}
           onChange={(e) =>
             setState({

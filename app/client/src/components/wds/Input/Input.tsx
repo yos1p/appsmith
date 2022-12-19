@@ -40,12 +40,12 @@ export interface InputSharedProps {
   variant?: InputVariant;
 
   /** Disabled input state */
-  disabled?: boolean;
+  isDisabled?: boolean;
 
   /** Class for input */
   className?: string;
 
-  loading?: boolean;
+  isLoading?: boolean;
 }
 
 export interface InputProps extends InputSharedProps {
@@ -65,13 +65,13 @@ export interface InputProps extends InputSharedProps {
 export const _Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const {
     className,
-    disabled,
     icon,
     iconWidth,
     invalid,
+    isDisabled: disabled,
+    isLoading: loading,
     leadingVisual,
     loaderPosition = "auto",
-    loading,
     multiline,
     pointer,
     radius,
@@ -92,7 +92,13 @@ export const _Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       Boolean(loaderPosition === "auto" && !leadingVisual));
 
   return (
-    <Box className={styles.base}>
+    <Box
+      className={clsx(styles.container, {
+        [styles.withIcon]: icon,
+        [styles.invalid]: invalid,
+        [styles.disabled]: disabled,
+      })}
+    >
       {icon && <div className={styles.icon}>{icon}</div>}
       <InputInnerVisualSlot
         hasLoadingIndicator={
@@ -108,11 +114,7 @@ export const _Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         component="input"
         {...others}
         aria-invalid={invalid}
-        className={clsx(styles.input, {
-          [styles.withIcon]: icon,
-          [styles.invalid]: invalid,
-          [styles.disabled]: disabled,
-        })}
+        className={clsx(styles.input)}
         disabled={disabled}
         ref={ref}
         required={required}

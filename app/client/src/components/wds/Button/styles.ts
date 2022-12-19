@@ -22,8 +22,8 @@ export const getCSSVariables = (
     "--wds-color-text-button": accentColor,
     "--wds-color-text-onbutton": getComplementaryGrayscaleColor(accentColor),
     "--wds-color-border-button": accentColor,
-    "--wds-radii": borderRadius ? borderRadius : undefined,
-    "--wds-shadow": boxShadow ? boxShadow : undefined,
+    "--wds-radii": borderRadius || undefined,
+    "--wds-shadow": boxShadow || undefined,
   };
 
   // If the button is a light, subtitle or outline button, we need to change the colors

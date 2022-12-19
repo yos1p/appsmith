@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React from "react";
 
 import styles from "./styles.module.css";
@@ -14,6 +15,7 @@ export interface InlineInputProps
 
 export function InlineInput({
   children,
+  className,
   description,
   disabled,
   error,
@@ -22,24 +24,28 @@ export function InlineInput({
   labelPosition,
   ...others
 }: InlineInputProps) {
+  const containerClasses = clsx(
+    styles.container,
+    className,
+    labelPosition === "left" && styles["label-left"],
+  );
+
   return (
-    <div {...others}>
-      <div className={styles.container}>
-        {children}
+    <div className={containerClasses} {...others}>
+      {children}
 
-        <div className="labelWrapper">
-          {label && (
-            <label className="label" data-disabled={disabled} htmlFor={id}>
-              {label}
-            </label>
-          )}
+      <div className="labelWrapper">
+        {label && (
+          <label className="label" data-disabled={disabled} htmlFor={id}>
+            {label}
+          </label>
+        )}
 
-          {description && <p className={styles.description}>{description}</p>}
+        {description && <p className={styles.description}>{description}</p>}
 
-          {error && error !== "boolean" && (
-            <span className={styles.error}>{error}</span>
-          )}
-        </div>
+        {error && error !== "boolean" && (
+          <span className={styles.error}>{error}</span>
+        )}
       </div>
     </div>
   );

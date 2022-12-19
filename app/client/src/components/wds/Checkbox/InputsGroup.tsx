@@ -1,6 +1,8 @@
 import React from "react";
 import cx from "clsx";
 
+import styles from "./styles.module.css";
+
 type InputsGroupProps = {
   orientation: "horizontal" | "vertical";
   role?: string;
@@ -14,11 +16,11 @@ export function InputsGroup({
   orientation,
   role,
 }: InputsGroupProps) {
-  const computedClassnames = cx({
-    flex: true,
-    "flex-col": orientation === "vertical",
-    [className]: true,
-  });
+  const computedClassnames = cx(
+    styles["inputs-group"],
+    styles[orientation],
+    className,
+  );
 
   return (
     <div className={computedClassnames} role={role}>

@@ -150,7 +150,7 @@
   background: var(--wds-color-bg-hover);
 }
 
-.loading {
+.container[data-loading] {
   cursor: not-allowed;
   opacity: 0.8;
 }
@@ -163,11 +163,10 @@
 .container[data-disabled] {
   cursor: not-allowed;
   opacity: 0.8;
-}
-
- .disabled {
   pointer-events: none;
   background: var(--wds-color-bg-disabled);
   color: var(--wds-color-text-disabled);
   border: 1px solid var(--wds-color-border-disabled);
- }
+}
+
+

@@ -3,3 +3,7 @@
   gap: theme('spacing.2');
   align-items: center;
 }
+
+.container.label-left {
+  flex-direction: row-reverse;
+}

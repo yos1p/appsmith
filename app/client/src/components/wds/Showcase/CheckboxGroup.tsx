@@ -13,12 +13,13 @@ type Props = {
   loading: boolean;
 };
 
-const CheckboxShowcase = (props: Props) => {
+const CheckboxGroupShowcase = (props: Props) => {
   const { primaryColor } = props;
   const { controls, state } = useControls({
     controls: [
       ["input", "label", "Label"],
       ["select", "labelPosition", "right", ["left", "right"]],
+      ["select", "orientation", "horizontal", ["horizontal", "vertical"]],
       ["checkbox", "isLoading", false],
       ["checkbox", "isDisabled", false],
     ],
@@ -28,13 +29,32 @@ const CheckboxShowcase = (props: Props) => {
     accentColor: primaryColor,
   };
 
-  const { ...rest } = state;
+  const { label, orientation, ...rest } = state;
 
   return (
     <Showcase settings={controls} title="Checkbox">
-      <Checkbox {...commonProps} {...rest} />
+      <Checkbox.Group label={label} orientation={orientation}>
+        <Checkbox
+          accentColor={primaryColor}
+          label="Option 1"
+          value="1"
+          {...rest}
+        />
+        <Checkbox
+          accentColor={primaryColor}
+          label="Option 2"
+          value="2"
+          {...rest}
+        />
+        <Checkbox
+          accentColor={primaryColor}
+          label="Option 3"
+          value="3"
+          {...rest}
+        />
+      </Checkbox.Group>
     </Showcase>
   );
 };
 
-export default CheckboxShowcase;
+export default CheckboxGroupShowcase;

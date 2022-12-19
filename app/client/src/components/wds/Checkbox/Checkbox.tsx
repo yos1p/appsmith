@@ -11,7 +11,7 @@ import styles from "./styles.module.css";
 import { darkenColor } from "widgets/WidgetUtils";
 
 export interface CheckboxProps
-  extends Omit<React.ComponentPropsWithRef<"input">, "type" | "size"> {
+  extends Omit<React.ComponentPropsWithRef<"input">, "type"> {
   /** Key of theme.radius or number to set border-radius in px */
 
   /** Checkbox label */
@@ -42,7 +42,7 @@ export interface CheckboxProps
   error?: React.ReactNode;
 
   /** sets the input disabled */
-  disabled?: boolean;
+  isDisabled?: boolean;
 
   /** sets the checkbox raidus */
   borderRadius?: string;
@@ -54,10 +54,9 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (props, ref) => {
     const {
       checked,
-      children,
       className,
       description,
-      disabled,
+      isDisabled: disabled,
       error,
       icon = <CheckIcon />,
       id,

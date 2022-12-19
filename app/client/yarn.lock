@@ -6234,17 +6234,10 @@ depd@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/depd/-/depd-1.1.2.tgz"
 
-<<<<<<< HEAD
-"design-system@npm:@appsmithorg/design-system@1.0.33-alpha.7":
-  version "1.0.33-alpha.7"
-  resolved "https://registry.yarnpkg.com/@appsmithorg/design-system/-/design-system-1.0.33-alpha.7.tgz#52045299c8fa2ed793ff15f49737a46338e39da7"
-  integrity sha512-RNiWlXZXXJmn/D/j/pyb/ntMxidYmobRJk49O4YX9BRcVlzjOCFEbq6+4Wy/GPiStk2DtdHNKtqHwf15JfYlOg==
-=======
 "design-system@npm:@appsmithorg/design-system@1.0.39":
   version "1.0.39"
   resolved "https://registry.yarnpkg.com/@appsmithorg/design-system/-/design-system-1.0.39.tgz#8f735ddca6768d647bb6187c8754e07b98a56f1b"
   integrity sha512-ronzjAJyR1nc0Amya1jD1vsyrWKf+iSgOSg9mfRLfWBO52gn6fOStEAs9h+7FS8qvlXnww1MDGWfeK69pIXYRQ==
->>>>>>> 760738a4309a8d1fdbda572a341388836fab9b03
   dependencies:
     emoji-mart "3.0.1"
 
@@ -13160,21 +13153,17 @@ regenerator-runtime@^0.11.0:
   version "0.11.1"
   resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz"
 
-<<<<<<< HEAD
 regenerator-runtime@^0.13.10:
   version "0.13.10"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.10.tgz#ed07b19616bcbec5da6274ebc75ae95634bfc2ee"
   integrity sha512-KepLsg4dU12hryUO7bp/axHAKvwGOCV0sGloQtpagJ12ai+ojVDqkeGSiRX1zlq+kjIMZ1t7gpze+26QqtdGqw==
 
-regenerator-runtime@^0.13.2, regenerator-runtime@^0.13.3, regenerator-runtime@^0.13.4:
-=======
 regenerator-runtime@^0.13.11:
   version "0.13.11"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz#f6dca3e7ceec20590d07ada785636a90cdca17f9"
   integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
 
 regenerator-runtime@^0.13.3, regenerator-runtime@^0.13.4:
->>>>>>> 760738a4309a8d1fdbda572a341388836fab9b03
   version "0.13.7"
   resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.7.tgz"
 
