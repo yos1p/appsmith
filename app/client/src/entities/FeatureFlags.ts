@@ -8,6 +8,8 @@ type FeatureFlags = {
   CONTEXT_SWITCHING?: boolean;
   USAGE?: boolean;
   DATASOURCE_ENVIRONMENTS?: boolean;
+
+  BILLING?: boolean;
 };
 
 export default FeatureFlags;

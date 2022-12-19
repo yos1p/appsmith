@@ -11,6 +11,7 @@ import { USAGE_AND_BILLING } from "@appsmith/constants/messages";
 import { useSelector } from "react-redux";
 import { selectFeatureFlags } from "selectors/usersSelectors";
 import AnalyticsUtil from "utils/AnalyticsUtil";
+import { UPGRADE_PAGE } from "../../constants/messages";
 
 export const Wrapper = styled.div`
   flex-basis: ${(props) =>
@@ -199,6 +200,22 @@ export default function LeftPane() {
               </StyledLink>
             </CategoryItem>
           )}
+          {features.BILLING ||
+            (true && (
+              <CategoryItem>
+                <StyledLink
+                  $active={category === "upgrade"}
+                  data-testid="t--enterprise-settings-category-item-upgrade"
+                  onClick={() => triggerAnalytics("Usage")}
+                  to="/settings/upgrade"
+                >
+                  <div>
+                    <Icon name="lock-2-line" size={IconSize.XL} />
+                  </div>
+                  <div>{createMessage(UPGRADE_PAGE.upgrade)}</div>
+                </StyledLink>
+              </CategoryItem>
+            ))}
         </CategoryList>
       </>
     </Wrapper>

@@ -15,16 +15,16 @@ export const Container = styled.div`
   width: 100%;
 `;
 
-export default function UpgradePage(props: UpgradePageProps) {
-  const { carousel, footer, header } = props;
+export default function UpgradePageComponent(props: UpgradePageProps) {
+  const { carousel = null, footer = null, header = null } = props;
   return (
     <Container
       className="upgrade-page-container"
       data-testid="t--upgrade-page-container"
     >
-      <Header {...header} />
-      <Carousel {...carousel} />
-      <Footer {...footer} />
+      {header && <Header {...header} />}
+      {carousel && <Carousel {...carousel} />}
+      {footer && <Footer {...footer} />}
     </Container>
   );
 }

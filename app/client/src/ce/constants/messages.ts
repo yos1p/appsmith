@@ -1434,3 +1434,8 @@ export const USAGE_AND_BILLING = {
   exclusive: () =>
     "These features are exclusively available on business edition.",
 };
+
+export const UPGRADE_PAGE = {
+  upgrade: () => "Upgrade",
+  prompt: () => "Move to business edition?",
+};

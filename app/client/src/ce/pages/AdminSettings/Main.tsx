@@ -10,6 +10,7 @@ import { getDefaultAdminSettingsPath } from "@appsmith/utils/adminSettingsHelper
 import { useSelector } from "react-redux";
 import { getCurrentUser } from "selectors/usersSelectors";
 import { getTenantPermissions } from "@appsmith/selectors/tenantSelectors";
+import { BusinessUpgrade } from "../Upgrade/BusinessUpgrade";
 
 const Main = () => {
   const params = useParams() as any;
@@ -31,6 +32,9 @@ const Main = () => {
   }
   if (category === "usage") {
     return <UsageUpgradePage />;
+  }
+  if (category === "upgrade") {
+    return <BusinessUpgrade />;
   }
 
   /* Old, still working flow; config, factory based */

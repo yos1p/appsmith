@@ -1,6 +1,6 @@
 import React from "react";
 import { Carousel, Header } from "./types";
-import UpgradePage from "./UpgradePage";
+import UpgradePageComponent from "./UpgradePageComponent";
 import SecureAppsLeastPrivilegeImage from "assets/svg/upgrade/access-control/secure-apps-least-privilege.png";
 import RestrictPublicExposureImage from "assets/svg/upgrade/access-control/restrict-public-exposure.png";
 import PreventAccidentalDamageImage from "assets/svg/upgrade/access-control/prevent-accidental-damage.png";
@@ -81,5 +81,5 @@ export function AccessControlUpgradePage() {
     message: createMessage(ACCESS_CONTROL_UPGRADE_PAGE_FOOTER),
   };
   const props = { header, carousel, footer };
-  return <UpgradePage {...props} />;
+  return <UpgradePageComponent {...props} />;
 }

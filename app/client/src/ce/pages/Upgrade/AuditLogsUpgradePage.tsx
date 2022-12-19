@@ -1,6 +1,6 @@
 import React from "react";
 import { Carousel, Header } from "./types";
-import UpgradePage from "./UpgradePage";
+import UpgradePageComponent from "./UpgradePageComponent";
 import DebuggingImage from "assets/svg/upgrade/audit-logs/debugging.svg";
 import IncidentManagementImage from "assets/svg/upgrade/audit-logs/incident-management.svg";
 import SecurityAndComplianceImage from "assets/svg/upgrade/audit-logs/security-and-compliance.svg";
@@ -76,5 +76,5 @@ export function AuditLogsUpgradePage() {
     message: createMessage(EXCLUSIVE_TO_BUSINESS, ["audit logs"]),
   };
   const props = { header, carousel, footer };
-  return <UpgradePage {...props} />;
+  return <UpgradePageComponent {...props} />;
 }

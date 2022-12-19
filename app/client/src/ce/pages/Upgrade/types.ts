@@ -23,12 +23,13 @@ export type Carousel = {
 
 export type Footer = {
   onClick: ((event: React.MouseEvent<HTMLElement>) => void) | undefined;
-  message: string;
+  message?: string;
+  heading?: string;
 };
 export type UpgradePageProps = {
-  header: Header;
-  carousel: Carousel;
-  footer: Footer;
+  header?: Header;
+  carousel?: Carousel;
+  footer?: Footer;
 };
 
 export type HeaderProps = Header;
