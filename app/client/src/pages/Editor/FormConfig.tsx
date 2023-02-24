@@ -32,7 +32,6 @@ const FlexWrapper = styled.div`
   display: flex;
   width: fit-content;
   margin-right: 16px;
-
   & .t--js-toggle {
     margin-bottom: 0px;
   }
@@ -64,7 +63,6 @@ interface FormConfigProps extends FormControlProps {
   configErrors: EvaluationError[];
   changesViewType: boolean;
 }
-
 // top contains label, subtitle, urltext, tooltip, dispaly type
 // bottom contains the info and error text
 // props.children will render the form element
@@ -72,7 +70,10 @@ export default function FormConfig(props: FormConfigProps) {
   let top, bottom;
   const controlRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
-  const entityInfo = identifyEntityFromPath(window.location.pathname);
+  const entityInfo = identifyEntityFromPath(
+    window.location.pathname,
+    window.location.hash,
+  );
 
   const handleOnFocus = () => {
     if (props.config.configProperty) {
@@ -167,7 +168,6 @@ export default function FormConfig(props: FormConfigProps) {
     </div>
   );
 }
-
 function renderFormConfigTop(props: {
   config: ControlProps;
   formName: string;

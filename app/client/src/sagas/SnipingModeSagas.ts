@@ -1,7 +1,7 @@
-import { all, call, put, select, takeLeading } from "redux-saga/effects";
+import { takeLeading, all, put, select, call } from "redux-saga/effects";
 import {
-  ReduxAction,
   ReduxActionTypes,
+  ReduxAction,
 } from "@appsmith/constants/ReduxActionConstants";
 import { snipingModeBindToSelector } from "selectors/editorSelectors";
 import { ActionData } from "reducers/entityReducers/actionsReducer";
@@ -21,8 +21,6 @@ import {
 import WidgetFactory from "utils/WidgetFactory";
 import { CanvasWidgetsReduxState } from "reducers/entityReducers/canvasWidgetsReducer";
 import { setSnipingMode } from "actions/propertyPaneActions";
-import { selectWidgetInitAction } from "actions/widgetSelectionActions";
-import { SelectionRequestType } from "sagas/WidgetSelectUtils";
 
 const WidgetTypes = WidgetFactory.widgetTypes;
 
@@ -158,8 +156,15 @@ export function* bindDataToWidgetSaga(
     yield put(
       updateWidgetPropertyRequest(widgetId, propertyPath, propertyValue),
     );
+    yield put({
+      type: ReduxActionTypes.SHOW_PROPERTY_PANE,
+      payload: {
+        widgetId: widgetId,
+        callForDragOrResize: undefined,
+        force: true,
+      },
+    });
     yield call(resetSnipingModeSaga);
-    yield put(selectWidgetInitAction(SelectionRequestType.One, [widgetId]));
   } else {
     queryId &&
       Toaster.show({

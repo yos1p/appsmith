@@ -13,6 +13,7 @@ import { MemoryRouter } from "react-router-dom";
 import * as widgetRenderUtils from "utils/widgetRenderUtils";
 import * as utilities from "selectors/editorSelectors";
 import * as dataTreeSelectors from "selectors/dataTreeSelectors";
+import * as sagaSelectors from "sagas/selectors";
 import store, { runSagaMiddleware } from "store";
 import {
   buildChildren,
@@ -34,10 +35,6 @@ import { act, fireEvent, render, waitFor } from "test/testUtils";
 import { generateReactKey } from "utils/generators";
 import MainContainer from "../MainContainer";
 import GlobalHotKeys from "./GlobalHotKeys";
-import * as widgetSelectionsActions from "actions/widgetSelectionActions";
-import { SelectionRequestType } from "sagas/WidgetSelectUtils";
-import * as widgetActions from "actions/widgetActions";
-import * as uiSelectors from "selectors/ui";
 
 jest.mock("constants/routes", () => {
   return {
@@ -99,28 +96,14 @@ describe("Canvas Hot Keys", () => {
 
     it("Cmd + A - select all widgets on canvas", async () => {
       const children: any = buildChildren([
-        {
-          type: "TABS_WIDGET",
-          parentId: MAIN_CONTAINER_WIDGET_ID,
-          widgetId: "tabsWidgetId",
-        },
-        {
-          type: "SWITCH_WIDGET",
-          parentId: MAIN_CONTAINER_WIDGET_ID,
-          widgetId: "switchWidgetId",
-        },
+        { type: "TABS_WIDGET", parentId: MAIN_CONTAINER_WIDGET_ID },
+        { type: "SWITCH_WIDGET", parentId: MAIN_CONTAINER_WIDGET_ID },
       ]);
       const dsl: any = widgetCanvasFactory.build({
         children,
       });
       spyGetCanvasWidgetDsl.mockImplementation(mockGetCanvasWidgetDsl);
       mockGetIsFetchingPage.mockImplementation(() => false);
-      const spyWidgetSelection = jest.spyOn(
-        widgetSelectionsActions,
-        "selectWidgetInitAction",
-      );
-
-      const spyPaste = jest.spyOn(widgetActions, "pasteWidget");
 
       const component = render(
         <MemoryRouter
@@ -138,6 +121,8 @@ describe("Canvas Hot Keys", () => {
         </MemoryRouter>,
         { initialState: store.getState(), sagasToRun: sagasToRunForTests },
       );
+      let propPane = component.queryByTestId("t--propertypane");
+      expect(propPane).toBeNull();
       const canvasWidgets = component.queryAllByTestId("test-widget");
       expect(canvasWidgets.length).toBe(2);
       act(() => {
@@ -150,21 +135,12 @@ describe("Canvas Hot Keys", () => {
         `span.t--widget-name`,
       );
       fireEvent.click(tabsWidgetName);
-      expect(spyWidgetSelection).toHaveBeenCalledWith(
-        SelectionRequestType.One,
-        ["tabsWidgetId"],
-        undefined,
-        undefined,
-      );
-      spyWidgetSelection.mockClear();
+      propPane = component.queryByTestId("t--propertypane");
+      expect(propPane).not.toBeNull();
 
       const artBoard: any = component.queryByTestId("t--canvas-artboard");
       // deselect all other widgets
       fireEvent.click(artBoard);
-      expect(spyWidgetSelection).toHaveBeenCalledWith(
-        SelectionRequestType.Empty,
-      );
-      spyWidgetSelection.mockClear();
 
       dispatchTestKeyboardEventWithCode(
         component.container,
@@ -174,8 +150,8 @@ describe("Canvas Hot Keys", () => {
         false,
         true,
       );
-      expect(spyWidgetSelection).toHaveBeenCalledWith(SelectionRequestType.All);
-      spyWidgetSelection.mockClear();
+      let selectedWidgets = component.queryAllByTestId("t--selected");
+      expect(selectedWidgets.length).toBe(2);
       dispatchTestKeyboardEventWithCode(
         component.container,
         "keydown",
@@ -184,10 +160,8 @@ describe("Canvas Hot Keys", () => {
         false,
         false,
       );
-      expect(spyWidgetSelection).toHaveBeenCalledWith(
-        SelectionRequestType.Empty,
-      );
-      spyWidgetSelection.mockClear();
+      selectedWidgets = component.queryAllByTestId("t--selected");
+      expect(selectedWidgets.length).toBe(0);
       act(() => {
         dispatchTestKeyboardEventWithCode(
           component.container,
@@ -199,8 +173,8 @@ describe("Canvas Hot Keys", () => {
         );
       });
 
-      expect(spyWidgetSelection).toHaveBeenCalledWith(SelectionRequestType.All);
-      spyWidgetSelection.mockClear();
+      selectedWidgets = component.queryAllByTestId("t--selected");
+      expect(selectedWidgets.length).toBe(2);
       act(() => {
         dispatchTestKeyboardEventWithCode(
           component.container,
@@ -221,10 +195,10 @@ describe("Canvas Hot Keys", () => {
           true,
         );
       });
-
-      expect(spyPaste).toHaveBeenCalled();
+      selectedWidgets = component.queryAllByTestId("t--selected");
+      expect(selectedWidgets.length).toBe(2);
     });
-    it.skip("Cmd + A - select all widgets inside last selected container", async () => {
+    it("Cmd + A - select all widgets inside last selected container", async () => {
       const containerId = generateReactKey();
       const canvasId = generateReactKey();
       const children: any = buildChildren([
@@ -254,10 +228,6 @@ describe("Canvas Hot Keys", () => {
       });
       spyGetCanvasWidgetDsl.mockImplementation(mockGetCanvasWidgetDsl);
       mockGetIsFetchingPage.mockImplementation(() => false);
-      const spyWidgetSelection = jest.spyOn(
-        widgetSelectionsActions,
-        "selectWidgetInitAction",
-      );
 
       const component = render(
         <MemoryRouter
@@ -275,18 +245,14 @@ describe("Canvas Hot Keys", () => {
         </MemoryRouter>,
         { initialState: store.getState(), sagasToRun: sagasToRunForTests },
       );
+      const propPane = component.queryByTestId("t--propertypane");
+      expect(propPane).toBeNull();
       const canvasWidgets = component.queryAllByTestId("test-widget");
       expect(canvasWidgets.length).toBe(5);
       if (canvasWidgets[0].firstChild) {
         fireEvent.mouseOver(canvasWidgets[0].firstChild);
         fireEvent.click(canvasWidgets[0].firstChild);
       }
-      expect(spyWidgetSelection).toHaveBeenCalledWith(
-        SelectionRequestType.One,
-        ["tabsWidgetId"],
-        undefined,
-      );
-      spyWidgetSelection.mockClear();
 
       dispatchTestKeyboardEventWithCode(
         component.container,
@@ -296,16 +262,10 @@ describe("Canvas Hot Keys", () => {
         false,
         true,
       );
-
-      expect(spyWidgetSelection).toHaveBeenCalledWith(
-        SelectionRequestType.One,
-        ["tabsWidgetId"],
-        undefined,
-        undefined,
-      );
-      spyWidgetSelection.mockClear();
+      const selectedWidgets = component.queryAllByTestId("t--selected");
+      expect(selectedWidgets.length).toBe(children.length);
     });
-    it.skip("Cmd + A - select all widgets inside a form", async () => {
+    it("Cmd + A - select all widgets inside a form", async () => {
       spyGetChildWidgets.mockImplementation(mockGetChildWidgets);
       const children: any = buildChildren([
         { type: "FORM_WIDGET", parentId: MAIN_CONTAINER_WIDGET_ID },
@@ -353,7 +313,7 @@ describe("Canvas Hot Keys", () => {
       const selectedWidgets = component.queryAllByTestId("t--selected");
       expect(selectedWidgets.length).toBe(3);
     });
-    it.skip("Cmd + A - select all widgets inside a list", async () => {
+    it("Cmd + A - select all widgets inside a list", async () => {
       const listId = generateReactKey();
       const containerId = generateReactKey();
       const canvasId = generateReactKey();
@@ -450,22 +410,6 @@ describe("Canvas Hot Keys", () => {
 });
 
 describe("Cut/Copy/Paste hotkey", () => {
-  const spyWidgetSelection = jest.spyOn(
-    widgetSelectionsActions,
-    "selectWidgetInitAction",
-  );
-  const spyCut = jest.spyOn(widgetActions, "cutWidget");
-  const spyCopy = jest.spyOn(widgetActions, "copyWidget");
-  const spyPaste = jest.spyOn(widgetActions, "pasteWidget");
-
-  jest.spyOn(uiSelectors, "getSelectedWidgets").mockReturnValue(["testWidget"]);
-
-  beforeEach(() => {
-    spyWidgetSelection.mockClear();
-    spyCut.mockClear();
-    spyCopy.mockClear();
-    spyPaste.mockClear();
-  });
   it("Should copy and paste all selected widgets with hotkey cmd + c and cmd + v ", async () => {
     const children: any = buildChildren([
       {
@@ -513,13 +457,9 @@ describe("Cut/Copy/Paste hotkey", () => {
       );
     });
 
-    expect(spyWidgetSelection).toBeCalledWith(SelectionRequestType.All);
-
-    // jest.spyOn(sagaSelectors, "getWidgetMetaProps").mockReturnValue({});
-    //
-    // let selectedWidgets = await component.queryAllByTestId("t--selected");
-    // expect(selectedWidgets.length).toBe(2);
-    // jest.spyOn(sagaSelectors, "getWidgetMetaProps").mockReturnValue({});
+    let selectedWidgets = await component.queryAllByTestId("t--selected");
+    expect(selectedWidgets.length).toBe(2);
+    jest.spyOn(sagaSelectors, "getWidgetMetaProps").mockReturnValue({});
     act(() => {
       dispatchTestKeyboardEventWithCode(
         component.container,
@@ -530,7 +470,6 @@ describe("Cut/Copy/Paste hotkey", () => {
         true,
       );
     });
-    expect(spyCopy).toBeCalled();
     act(() => {
       dispatchTestKeyboardEventWithCode(
         component.container,
@@ -541,7 +480,7 @@ describe("Cut/Copy/Paste hotkey", () => {
         true,
       );
     });
-    expect(spyPaste).toBeCalled();
+    await component.findByTestId("t--selection-box");
 
     act(() => {
       dispatchTestKeyboardEventWithCode(
@@ -554,7 +493,8 @@ describe("Cut/Copy/Paste hotkey", () => {
       );
     });
 
-    expect(spyWidgetSelection).toBeCalledWith(SelectionRequestType.All);
+    selectedWidgets = await component.queryAllByTestId("t--selected");
+    expect(selectedWidgets.length).toBe(4);
   });
   it("Should cut and paste all selected widgets with hotkey cmd + x and cmd + v ", async () => {
     const children: any = buildChildren([
@@ -603,8 +543,8 @@ describe("Cut/Copy/Paste hotkey", () => {
       );
     });
 
-    expect(spyWidgetSelection).toBeCalledWith(SelectionRequestType.All);
-
+    let selectedWidgets = await component.queryAllByTestId("t--selected");
+    expect(selectedWidgets.length).toBe(2);
     act(() => {
       dispatchTestKeyboardEventWithCode(
         component.container,
@@ -615,8 +555,14 @@ describe("Cut/Copy/Paste hotkey", () => {
         true,
       );
     });
-    expect(spyCut).toBeCalled();
-
+    await component.findByTestId("canvas-selection-0");
+    selectedWidgets = await component.queryAllByTestId("t--selected");
+    //adding extra time to let cut cmd works
+    jest.useFakeTimers();
+    setTimeout(() => {
+      expect(selectedWidgets.length).toBe(0);
+    }, 500);
+    jest.runAllTimers();
     act(() => {
       dispatchTestKeyboardEventWithCode(
         component.container,
@@ -627,8 +573,20 @@ describe("Cut/Copy/Paste hotkey", () => {
         true,
       );
     });
+    await component.findByTestId("t--selection-box");
+    act(() => {
+      dispatchTestKeyboardEventWithCode(
+        component.container,
+        "keydown",
+        "A",
+        65,
+        false,
+        true,
+      );
+    });
 
-    expect(spyPaste).toBeCalled();
+    selectedWidgets = await component.queryAllByTestId("t--selected");
+    expect(selectedWidgets.length).toBe(2);
   });
 });
 

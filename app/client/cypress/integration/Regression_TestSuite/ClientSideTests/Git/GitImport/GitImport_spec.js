@@ -187,8 +187,10 @@ describe("Git import flow ", function() {
       "response.body.responseMeta.status",
       201,
     );
+    cy.CheckAndUnfoldEntityItem("Queries/JS");
     // verify jsObject is not duplicated
-    _.ee.SelectEntityByName(jsObject, "Queries/JS"); //Also checking jsobject exists after cloning the page
+    cy.get(`.t--entity-name:contains(${jsObject})`).should("have.length", 1);
+    _.ee.SelectEntityByName(jsObject);
     _.jsEditor.RunJSObj(); //Running sync function due to open bug
     _.ee.SelectEntityByName("Page1 Copy");
     cy.xpath("//input[@class='bp3-input' and @value='Success']").should(
@@ -209,8 +211,8 @@ describe("Git import flow ", function() {
     cy.wait(2000);
     cy.latestDeployPreview();
     cy.get(".tbody")
-      .last()
-      .should("contain.text", "New Config");
+      .first()
+      .should("contain.text", "Test user 7");
     // verify api response binded to input widget
     cy.xpath("//input[@value='this is a test']");
     // verify js object binded to input widget
@@ -220,8 +222,8 @@ describe("Git import flow ", function() {
       .contains("Page1")
       .click({ force: true });
     cy.get(".tbody")
-      .last()
-      .should("contain.text", "New Config");
+      .first()
+      .should("contain.text", "Test user 7");
     // verify api response binded to input widget
     cy.xpath("//input[@value='this is a test']");
     // verify js object binded to input widget

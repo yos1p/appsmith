@@ -55,6 +55,7 @@ import { getCopiedWidgets, saveCopiedWidgets } from "utils/storage";
 import { generateReactKey } from "utils/generators";
 import AnalyticsUtil from "utils/AnalyticsUtil";
 import log from "loglevel";
+import { navigateToCanvas } from "pages/Editor/Explorer/Widgets/utils";
 import {
   getCurrentPageId,
   getContainerWidgetSpacesSelector,
@@ -1823,11 +1824,9 @@ function* addSuggestedWidget(action: ReduxAction<Partial<WidgetProps>>) {
       payload: newWidget,
     });
 
-    yield take(ReduxActionTypes.UPDATE_LAYOUT);
+    const pageId: string = yield select(getCurrentPageId);
 
-    yield put(
-      selectWidgetInitAction(SelectionRequestType.One, [newWidget.newWidgetId]),
-    );
+    navigateToCanvas(pageId);
   } catch (error) {
     log.error(error);
   }

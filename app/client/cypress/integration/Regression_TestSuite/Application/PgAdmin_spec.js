@@ -1,5 +1,4 @@
 import * as _ from "../../../support/Objects/ObjectsCore";
-
 const dsl = require("../../../fixtures/PgAdmindsl.json");
 const queryLocators = require("../../../locators/QueryEditor.json");
 const widgetsPage = require("../../../locators/Widgets.json");
@@ -41,9 +40,7 @@ describe("PgAdmin Clone App", function() {
     cy.get(queryLocators.templateMenu).click();
     // writing query to get all the tables
     _.dataSources.EnterQuery(
-      `select *
-       from pg_catalog.pg_tables
-       where schemaname = {{schema_select.selectedOptionValue || "public"}};`,
+      `select * from pg_catalog.pg_tables where schemaname = {{schema_select.selectedOptionValue || "public"}} ;`,
       2000,
     );
     _.dataSources.RunQuery();
@@ -56,8 +53,7 @@ describe("PgAdmin Clone App", function() {
     cy.get(queryLocators.templateMenu).click();
     // creating query to get the columns of the table
     _.dataSources.EnterQuery(
-      `SELECT column_name, data_type, table_name, ordinal_position, is_nullable
-       FROM information_schema.COLUMNS`,
+      `SELECT column_name, data_type, table_name, ordinal_position, is_nullable FROM information_schema.COLUMNS`,
     );
     _.dataSources.RunQuery();
 
@@ -69,31 +65,7 @@ describe("PgAdmin Clone App", function() {
     cy.get(queryLocators.templateMenu).click();
     // writing query to create new table
     _.dataSources.EnterQuery(
-      `CREATE TABLE {{schema_select.selectedOptionValue}}.{{nt_name.text.replaceAll
-       (
-         " ",
-         "_"
-       )}}
-       (
-         {
-         {
-         appsmith.store.nt_col.map(
-       (
-         c
-       )=> c.name.replaceAll
-       (
-         " ",
-         "_"
-       ) + " " + c.dtype +
-       (
-         c.nnull ? " NOT NULL " : ""
-       ) +
-       (
-         c.pkey ? " PRIMARY KEY " : ""
-       )).join
-       (
-         " , "
-       )}})`,
+      `CREATE TABLE {{schema_select.selectedOptionValue}}.{{nt_name.text.replaceAll(" ","_")}}({{appsmith.store.nt_col.map((c)=>c.name.replaceAll(" ","_") + " " + c.dtype + (c.nnull ? " NOT NULL " :  "") + (c.pkey ? " PRIMARY KEY " : "")).join(" , ")}})`,
     );
     // clicking on chevron icon to go back to the _.dataSources page
     cy.get(appPage.dropdownChevronLeft).click();

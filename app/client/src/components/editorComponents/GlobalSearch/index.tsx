@@ -102,7 +102,6 @@ const StyledContainer = styled.div<{ category: SearchCategory; query: string }>`
   padding: ${(props) => props.theme.spaces[5]}px;
   flex-direction: column;
   position: relative;
-
   & .main {
     display: flex;
     flex: 1;
@@ -111,7 +110,6 @@ const StyledContainer = styled.div<{ category: SearchCategory; query: string }>`
     background-color: ${(props) =>
       props.theme.colors.globalSearch.primaryBgColor};
   }
-
   ${algoliaHighlightTag},
   & .ais-Highlight-highlighted,
   & .search-highlighted {
@@ -409,9 +407,6 @@ function GlobalSearch() {
       activeItem.pageId,
       NavigationMethod.Omnibar,
       lastSelectedWidgetId === activeItem.widgetId,
-      false,
-      false,
-      activeItem.pageId !== currentPageId,
     );
   };
 

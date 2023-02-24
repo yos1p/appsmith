@@ -50,14 +50,16 @@ export enum SelectionRequestType {
   /**
    * Unselect specific widgets */
   Unselect = "Unselect",
-  /** Skip checks and just try to select. Page ID can be supplied to select a
-   * widget on another page */
-  UnsafeSelect = "UnsafeSelect",
 }
 
 export type SelectionPayload = string[];
 
-export type SetSelectionResult = string[] | undefined;
+export type SetSelectionResult =
+  | {
+      widgets: string[];
+      lastWidgetSelected?: string;
+    }
+  | undefined;
 
 // Main container cannot be a selection, dont honour this request
 export const isInvalidSelectionRequest = (id: unknown) =>
@@ -87,7 +89,7 @@ export const deselectAll = (request: SelectionPayload): SetSelectionResult => {
       SelectionRequestType.Empty,
     );
   }
-  return [];
+  return { widgets: [], lastWidgetSelected: "" };
 };
 
 export const selectOneWidget = (
@@ -100,7 +102,7 @@ export const selectOneWidget = (
       SelectionRequestType.One,
     );
   }
-  return request;
+  return { widgets: request, lastWidgetSelected: request[0] };
 };
 
 export const selectMultipleWidgets = (
@@ -112,7 +114,7 @@ export const selectMultipleWidgets = (
     return allWidgets[each]?.parentId === parentToMatch;
   });
   if (!areSiblings) return;
-  return request;
+  return { widgets: request, lastWidgetSelected: request[0] };
 };
 
 export const shiftSelectWidgets = (
@@ -126,12 +128,15 @@ export const shiftSelectWidgets = (
     lastSelectedWidget,
   );
   if (siblingIndexOfLastSelectedWidget === -1) {
-    return request;
+    return { widgets: request, lastWidgetSelected: request[0] };
   }
   if (currentlySelectedWidgets.includes(request[0])) {
-    return currentlySelectedWidgets.filter((w) => request[0] !== w);
+    return {
+      widgets: currentlySelectedWidgets.filter((w) => request[0] !== w),
+      lastWidgetSelected: "",
+    };
   }
-  let widgets: string[] = [...currentlySelectedWidgets, ...request];
+  let widgets: string[] = [...request, ...currentlySelectedWidgets];
   const start =
     siblingIndexOfLastSelectedWidget < selectedWidgetIndex
       ? siblingIndexOfLastSelectedWidget
@@ -144,7 +149,7 @@ export const shiftSelectWidgets = (
   if (unSelectedSiblings && unSelectedSiblings.length) {
     widgets = widgets.concat(...unSelectedSiblings);
   }
-  return uniq(widgets);
+  return { widgets: uniq(widgets), lastWidgetSelected: widgets[0] };
 };
 
 export const pushPopWidgetSelection = (
@@ -156,11 +161,18 @@ export const pushPopWidgetSelection = (
   const alreadySelected = currentlySelectedWidgets.includes(widgetId);
 
   if (alreadySelected) {
-    return currentlySelectedWidgets.filter((each) => each !== widgetId);
+    return {
+      lastWidgetSelected: "",
+      widgets: currentlySelectedWidgets.filter((each) => each !== widgetId),
+    };
   } else if (!!widgetId) {
-    return [...currentlySelectedWidgets, widgetId].filter((w) =>
+    const widgets = [...currentlySelectedWidgets, widgetId].filter((w) =>
       siblingWidgets.includes(w),
     );
+    return {
+      widgets,
+      lastWidgetSelected: widgetId,
+    };
   }
 };
 
@@ -168,7 +180,11 @@ export const unselectWidget = (
   request: SelectionPayload,
   currentlySelectedWidgets: string[],
 ): SetSelectionResult => {
-  return currentlySelectedWidgets.filter((w) => !request.includes(w));
+  const widgets = currentlySelectedWidgets.filter((w) => !request.includes(w));
+  return {
+    widgets,
+    lastWidgetSelected: widgets[0],
+  };
 };
 
 const WidgetTypes = WidgetFactory.widgetTypes;
@@ -308,7 +324,10 @@ export function* selectAllWidgetsInCanvasSaga() {
           duration: 3000,
         });
       }
-      return allSelectableChildren;
+      return {
+        widgets: allSelectableChildren,
+        lastWidgetSelected: allSelectableChildren[0],
+      };
     }
   } catch (error) {
     yield put({

@@ -29,7 +29,6 @@ import draggingCanvasSagas from "../src/sagas/CanvasSagas/DraggingCanvasSagas";
 import formEvaluationChangeListener from "../src/sagas/FormEvaluationSaga";
 import LintingSaga from "../src/sagas/LintingSagas";
 import JSLibrarySaga from "../src/sagas/JSLibrarySaga";
-import NavigationSagas from "../src/ee/sagas/NavigationSagas";
 
 export const sagasToRunForTests = [
   initSagas,
@@ -63,5 +62,4 @@ export const sagasToRunForTests = [
   draggingCanvasSagas,
   LintingSaga,
   JSLibrarySaga,
-  NavigationSagas,
 ];
