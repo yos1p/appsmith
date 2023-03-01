@@ -10,6 +10,12 @@ on:
         description: "This is the PR number in case the workflow is being called in a pull request"
         required: false
         type: number
+      skip-tests:
+        description: "This is a boolean value in case the workflow is being called in build deploy-preview"
+        required: false
+        type: string
+        default: "false"
+
 
   pull_request:
     branches: [release, master]
@@ -133,12 +139,22 @@ jobs:
           APPSMITH_ENCRYPTION_SALT: "salt"
           APPSMITH_IS_SELF_HOSTED: false
           APPSMITH_ENVFILE_PATH: /tmp/dummy.env
+          APPSMITH_SKIP_TESTS: ${{ inputs.skip-tests }}
         run: |
-          mvn --batch-mode versions:set \
-            -DnewVersion=${{ steps.vars.outputs.version }} \
-            -DgenerateBackupPoms=false \
-            -DprocessAllModules=true
-          ./build.sh
+          if [[ $APPSMITH_SKIP_TESTS == "true" ]]
+          then
+            mvn --batch-mode versions:set \
+              -DnewVersion=${{ steps.vars.outputs.version }} \
+              -DgenerateBackupPoms=false \
+              -DprocessAllModules=true
+            ./build.sh -DskipTests
+          else
+            mvn --batch-mode versions:set \
+              -DnewVersion=${{ steps.vars.outputs.version }} \
+              -DgenerateBackupPoms=false \
+              -DprocessAllModules=true
+            ./build.sh
+          fi
 
       # Restore the previous built bundle if present. If not push the newly built into the cache
       - name: Restore the previous bundle
