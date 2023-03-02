@@ -19,6 +19,7 @@ import _, {
   findIndex,
   orderBy,
   filter,
+  isEqual,
 } from "lodash";
 
 import BaseWidget, { WidgetState } from "widgets/BaseWidget";
@@ -237,6 +238,15 @@ const getColumnsPureFn = (
 };
 const memoisedGetColumns = memoizeOne(getColumnsPureFn, shallowEqual);
 
+const memoiseWithLocalStorage = memoizeOne(
+  //we are not using this argument it is used by the memoisation comparator
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  (widgetLocalStorageState) => {
+    memoisedGetColumns.clear();
+    return memoisedGetColumns;
+  },
+  isEqual,
+);
 const transformDataPureFn = (
   editableCell: EditableCell | undefined,
   tableData: Array<Record<string, unknown>>,
@@ -468,7 +478,11 @@ class TableWidgetV2 extends BaseWidget<TableWidgetProps, WidgetState> {
       widgetId,
     } = this.props;
     const { componentWidth } = this.getPaddingAdjustedDimensions();
-    return memoisedGetColumns(
+    const widgetLocalStorageState = getColumnOrderByWidgetIdFromLS(widgetId);
+    const memoisdGetColumnsWithLocalStorage = memoiseWithLocalStorage(
+      widgetLocalStorageState,
+    );
+    return memoisdGetColumnsWithLocalStorage(
       this.renderCell,
       columnWidthMap,
       orderedTableColumns,
