@@ -1,6 +1,8 @@
 import React, { lazy, Suspense } from "react";
 import log from "loglevel";
 import moment, { MomentInput } from "moment";
+import memoizeOne from "memoize-one";
+
 import _, {
   isNumber,
   isString,
@@ -21,6 +23,7 @@ import _, {
 
 import BaseWidget, { WidgetState } from "widgets/BaseWidget";
 import {
+  RenderMode,
   RenderModes,
   WidgetType,
   WIDGET_PADDING,
@@ -104,11 +107,257 @@ import { Stylesheet } from "entities/AppTheming";
 import { DateCell } from "../component/cellComponents/DateCell";
 import { MenuItem, MenuItemsSource } from "widgets/MenuButtonWidget/constants";
 import { TimePrecision } from "widgets/DatePickerWidget2/constants";
+import shallowEqual from "shallowequal";
 
 const ReactTableComponent = lazy(() =>
   retryPromise(() => import("../component")),
 );
 
+const emptyArr: any = [];
+
+const getColumnsPureFn = (
+  renderCell: any,
+  columnWidthMap: { [key: string]: number } = {},
+  orderedTableColumns = [],
+  componentWidth: number,
+  primaryColumns: Record<string, ColumnProperties>,
+  renderMode: RenderMode,
+  widgetId: string,
+) => {
+  let columns: ReactTableColumnProps[] = [];
+  const hiddenColumns: ReactTableColumnProps[] = [];
+
+  let totalColumnWidth = 0;
+
+  if (isArray(orderedTableColumns)) {
+    orderedTableColumns.forEach((column: any) => {
+      const isHidden = !column.isVisible;
+
+      const columnData = {
+        id: column.id,
+        Header:
+          column.hasOwnProperty("label") && typeof column.label === "string"
+            ? column.label
+            : DEFAULT_COLUMN_NAME,
+        alias: column.alias,
+        accessor: (row: any) => row[column.alias],
+        width: columnWidthMap[column.id] || DEFAULT_COLUMN_WIDTH,
+        minWidth: COLUMN_MIN_WIDTH,
+        draggable: true,
+        isHidden: false,
+        isAscOrder: column.isAscOrder,
+        isDerived: column.isDerived,
+        sticky: fetchSticky(column.id, primaryColumns, renderMode, widgetId),
+        metaProperties: {
+          isHidden: isHidden,
+          type: column.columnType,
+          format: column.outputFormat || "",
+          inputFormat: column.inputFormat || "",
+        },
+        columnProperties: column,
+        Cell: renderCell,
+      };
+
+      const isAllCellVisible: boolean | boolean[] = column.isCellVisible;
+
+      /*
+       * If all cells are not visible or column itself is not visible,
+       * set isHidden and push it to hiddenColumns array else columns array
+       */
+      if (
+        (isBoolean(isAllCellVisible) && !isAllCellVisible) ||
+        (isArray(isAllCellVisible) &&
+          isAllCellVisible.every((visibility) => visibility === false)) ||
+        isHidden
+      ) {
+        columnData.isHidden = true;
+        hiddenColumns.push(columnData);
+      } else {
+        totalColumnWidth += columnData.width;
+        columns.push(columnData);
+      }
+    });
+  }
+
+  const lastColumnIndex = columns.length - 1;
+  if (totalColumnWidth < componentWidth) {
+    /*
+      This "if" block is responsible for upsizing the last column width
+      if there is space left in the table container towards the right
+    */
+    if (columns[lastColumnIndex]) {
+      const lastColumnWidth =
+        columns[lastColumnIndex].width || DEFAULT_COLUMN_WIDTH;
+      const remainingWidth = componentWidth - totalColumnWidth;
+      // Adding the remaining width i.e. space left towards the right, to the last column width
+      columns[lastColumnIndex].width = lastColumnWidth + remainingWidth;
+    }
+  } else if (totalColumnWidth > componentWidth) {
+    /*
+      This "else-if" block is responsible for downsizing the last column width
+      if the last column spills over resulting in horizontal scroll
+    */
+    const extraWidth = totalColumnWidth - componentWidth;
+    const lastColWidth = columns[lastColumnIndex].width || DEFAULT_COLUMN_WIDTH;
+    /*
+      Below if condition explanation:
+      Condition 1: (lastColWidth > COLUMN_MIN_WIDTH)
+        We will downsize the last column only if its greater than COLUMN_MIN_WIDTH
+      Condition 2: (extraWidth < lastColWidth)
+        This condition checks whether the last column is the only column that is spilling over.
+        If more than one columns are spilling over we won't downsize the last column
+    */
+    if (lastColWidth > COLUMN_MIN_WIDTH && extraWidth < lastColWidth) {
+      const availableWidthForLastColumn = lastColWidth - extraWidth;
+      /*
+        Below we are making sure last column width doesn't go lower than COLUMN_MIN_WIDTH again
+        as availableWidthForLastColumn might go lower than COLUMN_MIN_WIDTH in some cases
+      */
+      columns[lastColumnIndex].width =
+        availableWidthForLastColumn < COLUMN_MIN_WIDTH
+          ? COLUMN_MIN_WIDTH
+          : availableWidthForLastColumn;
+    }
+  }
+
+  if (hiddenColumns.length && renderMode === RenderModes.CANVAS) {
+    // Get the index of the first column that is frozen to right
+    const rightFrozenColumnIdx = findIndex(
+      columns,
+      (col) => col.sticky === StickyType.RIGHT,
+    );
+    if (rightFrozenColumnIdx !== -1) {
+      columns.splice(rightFrozenColumnIdx, 0, ...hiddenColumns);
+    } else {
+      columns = columns.concat(hiddenColumns);
+    }
+  }
+
+  return columns.filter((column: ReactTableColumnProps) => !!column.id);
+};
+const memoisedGetColumns = memoizeOne(getColumnsPureFn, shallowEqual);
+
+const transformDataPureFn = (
+  editableCell: EditableCell | undefined,
+  tableData: Array<Record<string, unknown>>,
+  columns: ReactTableColumnProps[],
+) => {
+  if (isArray(tableData)) {
+    return tableData.map((row, rowIndex) => {
+      const newRow: { [key: string]: any } = {};
+
+      columns.forEach((column) => {
+        const { alias } = column;
+        let value = row[alias];
+
+        if (column.metaProperties) {
+          switch (column.metaProperties.type) {
+            case ColumnTypes.DATE:
+              let isValidDate = true;
+              const outputFormat = _.isArray(column.metaProperties.format)
+                ? column.metaProperties.format[rowIndex]
+                : column.metaProperties.format;
+              let inputFormat;
+
+              try {
+                const type = _.isArray(column.metaProperties.inputFormat)
+                  ? column.metaProperties.inputFormat[rowIndex]
+                  : column.metaProperties.inputFormat;
+
+                if (
+                  type !== DateInputFormat.EPOCH &&
+                  type !== DateInputFormat.MILLISECONDS
+                ) {
+                  inputFormat = type;
+                  moment(value as MomentInput, inputFormat);
+                } else if (!isNumber(value)) {
+                  isValidDate = false;
+                }
+              } catch (e) {
+                isValidDate = false;
+              }
+
+              if (isValidDate && value) {
+                try {
+                  if (
+                    column.metaProperties.inputFormat ===
+                    DateInputFormat.MILLISECONDS
+                  ) {
+                    value = Number(value);
+                  } else if (
+                    column.metaProperties.inputFormat === DateInputFormat.EPOCH
+                  ) {
+                    value = 1000 * Number(value);
+                  }
+
+                  newRow[alias] = moment(
+                    value as MomentInput,
+                    inputFormat,
+                  ).format(outputFormat);
+                } catch (e) {
+                  log.debug("Unable to parse Date:", { e });
+                  newRow[alias] = "";
+                }
+              } else if (value) {
+                newRow[alias] = "Invalid Value";
+              } else {
+                newRow[alias] = "";
+              }
+              break;
+            default:
+              let data;
+
+              if (
+                _.isString(value) ||
+                _.isNumber(value) ||
+                _.isBoolean(value)
+              ) {
+                data = value;
+              } else if (isNil(value)) {
+                data = "";
+              } else {
+                data = JSON.stringify(value);
+              }
+
+              newRow[alias] = data;
+              break;
+          }
+        }
+      });
+
+      /*
+       * Inject the edited cell value from the editableCell object
+       */
+      if (editableCell?.index === rowIndex) {
+        const { column, inputValue } = editableCell;
+
+        newRow[column] = inputValue;
+      }
+
+      return newRow;
+    });
+  } else {
+    return [];
+  }
+};
+const memoizedTransformData = memoizeOne(
+  transformDataPureFn,
+  (prev: Array<any>, next: Array<any>) => {
+    const [prevCellEditable, ...prevRest] = prev;
+    const [nextCellEditable, ...nextRest] = next;
+    if (!shallowEqual(prevCellEditable, nextCellEditable)) return false;
+    return shallowEqual(nextRest, prevRest);
+  },
+);
+const memoisedAddNewRow = memoizeOne(
+  (tableData, isAddRowInProgress, newRowContent) => {
+    if (isAddRowInProgress) {
+      return [newRowContent, ...tableData];
+    }
+    return tableData;
+  },
+  shallowEqual,
+);
 class TableWidgetV2 extends BaseWidget<TableWidgetProps, WidgetState> {
   inlineEditTimer: number | null = null;
 
@@ -211,228 +460,30 @@ class TableWidgetV2 extends BaseWidget<TableWidgetProps, WidgetState> {
    * based on columnType
    */
   getTableColumns = () => {
-    const { columnWidthMap = {}, orderedTableColumns = [] } = this.props;
-    let columns: ReactTableColumnProps[] = [];
-    const hiddenColumns: ReactTableColumnProps[] = [];
-
+    const {
+      columnWidthMap,
+      orderedTableColumns,
+      primaryColumns,
+      renderMode,
+      widgetId,
+    } = this.props;
     const { componentWidth } = this.getPaddingAdjustedDimensions();
-    let totalColumnWidth = 0;
-
-    if (isArray(orderedTableColumns)) {
-      orderedTableColumns.forEach((column: any) => {
-        const isHidden = !column.isVisible;
-
-        const columnData = {
-          id: column.id,
-          Header:
-            column.hasOwnProperty("label") && typeof column.label === "string"
-              ? column.label
-              : DEFAULT_COLUMN_NAME,
-          alias: column.alias,
-          accessor: (row: any) => row[column.alias],
-          width: columnWidthMap[column.id] || DEFAULT_COLUMN_WIDTH,
-          minWidth: COLUMN_MIN_WIDTH,
-          draggable: true,
-          isHidden: false,
-          isAscOrder: column.isAscOrder,
-          isDerived: column.isDerived,
-          sticky: fetchSticky(
-            column.id,
-            this.props.primaryColumns,
-            this.props.renderMode,
-            this.props.widgetId,
-          ),
-          metaProperties: {
-            isHidden: isHidden,
-            type: column.columnType,
-            format: column.outputFormat || "",
-            inputFormat: column.inputFormat || "",
-          },
-          columnProperties: column,
-          Cell: this.renderCell,
-        };
-
-        const isAllCellVisible: boolean | boolean[] = column.isCellVisible;
-
-        /*
-         * If all cells are not visible or column itself is not visible,
-         * set isHidden and push it to hiddenColumns array else columns array
-         */
-        if (
-          (isBoolean(isAllCellVisible) && !isAllCellVisible) ||
-          (isArray(isAllCellVisible) &&
-            isAllCellVisible.every((visibility) => visibility === false)) ||
-          isHidden
-        ) {
-          columnData.isHidden = true;
-          hiddenColumns.push(columnData);
-        } else {
-          totalColumnWidth += columnData.width;
-          columns.push(columnData);
-        }
-      });
-    }
-
-    const lastColumnIndex = columns.length - 1;
-    if (totalColumnWidth < componentWidth) {
-      /*
-        This "if" block is responsible for upsizing the last column width
-        if there is space left in the table container towards the right
-      */
-      if (columns[lastColumnIndex]) {
-        const lastColumnWidth =
-          columns[lastColumnIndex].width || DEFAULT_COLUMN_WIDTH;
-        const remainingWidth = componentWidth - totalColumnWidth;
-        // Adding the remaining width i.e. space left towards the right, to the last column width
-        columns[lastColumnIndex].width = lastColumnWidth + remainingWidth;
-      }
-    } else if (totalColumnWidth > componentWidth) {
-      /*
-        This "else-if" block is responsible for downsizing the last column width
-        if the last column spills over resulting in horizontal scroll
-      */
-      const extraWidth = totalColumnWidth - componentWidth;
-      const lastColWidth =
-        columns[lastColumnIndex].width || DEFAULT_COLUMN_WIDTH;
-      /*
-        Below if condition explanation:
-        Condition 1: (lastColWidth > COLUMN_MIN_WIDTH)
-          We will downsize the last column only if its greater than COLUMN_MIN_WIDTH
-        Condition 2: (extraWidth < lastColWidth)
-          This condition checks whether the last column is the only column that is spilling over.
-          If more than one columns are spilling over we won't downsize the last column
-      */
-      if (lastColWidth > COLUMN_MIN_WIDTH && extraWidth < lastColWidth) {
-        const availableWidthForLastColumn = lastColWidth - extraWidth;
-        /*
-          Below we are making sure last column width doesn't go lower than COLUMN_MIN_WIDTH again
-          as availableWidthForLastColumn might go lower than COLUMN_MIN_WIDTH in some cases
-        */
-        columns[lastColumnIndex].width =
-          availableWidthForLastColumn < COLUMN_MIN_WIDTH
-            ? COLUMN_MIN_WIDTH
-            : availableWidthForLastColumn;
-      }
-    }
-
-    if (hiddenColumns.length && this.props.renderMode === RenderModes.CANVAS) {
-      // Get the index of the first column that is frozen to right
-      const rightFrozenColumnIdx = findIndex(
-        columns,
-        (col) => col.sticky === StickyType.RIGHT,
-      );
-      if (rightFrozenColumnIdx !== -1) {
-        columns.splice(rightFrozenColumnIdx, 0, ...hiddenColumns);
-      } else {
-        columns = columns.concat(hiddenColumns);
-      }
-    }
-
-    return columns.filter((column: ReactTableColumnProps) => !!column.id);
+    return memoisedGetColumns(
+      this.renderCell,
+      columnWidthMap,
+      orderedTableColumns,
+      componentWidth,
+      primaryColumns,
+      renderMode,
+      widgetId,
+    );
   };
 
   transformData = (
     tableData: Array<Record<string, unknown>>,
     columns: ReactTableColumnProps[],
   ) => {
-    if (isArray(tableData)) {
-      return tableData.map((row, rowIndex) => {
-        const newRow: { [key: string]: any } = {};
-
-        columns.forEach((column) => {
-          const { alias } = column;
-          let value = row[alias];
-
-          if (column.metaProperties) {
-            switch (column.metaProperties.type) {
-              case ColumnTypes.DATE:
-                let isValidDate = true;
-                const outputFormat = _.isArray(column.metaProperties.format)
-                  ? column.metaProperties.format[rowIndex]
-                  : column.metaProperties.format;
-                let inputFormat;
-
-                try {
-                  const type = _.isArray(column.metaProperties.inputFormat)
-                    ? column.metaProperties.inputFormat[rowIndex]
-                    : column.metaProperties.inputFormat;
-
-                  if (
-                    type !== DateInputFormat.EPOCH &&
-                    type !== DateInputFormat.MILLISECONDS
-                  ) {
-                    inputFormat = type;
-                    moment(value as MomentInput, inputFormat);
-                  } else if (!isNumber(value)) {
-                    isValidDate = false;
-                  }
-                } catch (e) {
-                  isValidDate = false;
-                }
-
-                if (isValidDate && value) {
-                  try {
-                    if (
-                      column.metaProperties.inputFormat ===
-                      DateInputFormat.MILLISECONDS
-                    ) {
-                      value = Number(value);
-                    } else if (
-                      column.metaProperties.inputFormat ===
-                      DateInputFormat.EPOCH
-                    ) {
-                      value = 1000 * Number(value);
-                    }
-
-                    newRow[alias] = moment(
-                      value as MomentInput,
-                      inputFormat,
-                    ).format(outputFormat);
-                  } catch (e) {
-                    log.debug("Unable to parse Date:", { e });
-                    newRow[alias] = "";
-                  }
-                } else if (value) {
-                  newRow[alias] = "Invalid Value";
-                } else {
-                  newRow[alias] = "";
-                }
-                break;
-              default:
-                let data;
-
-                if (
-                  _.isString(value) ||
-                  _.isNumber(value) ||
-                  _.isBoolean(value)
-                ) {
-                  data = value;
-                } else if (isNil(value)) {
-                  data = "";
-                } else {
-                  data = JSON.stringify(value);
-                }
-
-                newRow[alias] = data;
-                break;
-            }
-          }
-        });
-
-        /*
-         * Inject the edited cell value from the editableCell object
-         */
-        if (this.props.editableCell?.index === rowIndex) {
-          const { column, inputValue } = this.props.editableCell;
-
-          newRow[column] = inputValue;
-        }
-
-        return newRow;
-      });
-    } else {
-      return [];
-    }
+    return memoizedTransformData(this.props.editableCell, tableData, columns);
   };
 
   updateDerivedColumnsIndex = (
@@ -689,6 +740,7 @@ class TableWidgetV2 extends BaseWidget<TableWidgetProps, WidgetState> {
         );
       }
     }
+
     // Check if tableData is modifed
     const isTableDataModified = !equal(
       this.props.tableData,
@@ -938,7 +990,7 @@ class TableWidgetV2 extends BaseWidget<TableWidgetProps, WidgetState> {
       isVisiblePagination,
       isVisibleSearch,
     } = this.props;
-    const tableColumns = this.getTableColumns() || [];
+    const tableColumns = this.getTableColumns() || emptyArr;
     const transformedData = this.transformData(filteredTableData, tableColumns);
     const isVisibleHeaderOptions =
       isVisibleDownload ||
@@ -950,10 +1002,11 @@ class TableWidgetV2 extends BaseWidget<TableWidgetProps, WidgetState> {
       componentHeight,
       componentWidth,
     } = this.getPaddingAdjustedDimensions();
-
-    if (this.props.isAddRowInProgress) {
-      transformedData.unshift(this.props.newRowContent);
-    }
+    const finalTableData = memoisedAddNewRow(
+      transformedData,
+      this.props.isAddRowInProgress,
+      this.props.newRowContent,
+    );
 
     return (
       <Suspense fallback={<Skeleton />}>
@@ -1015,7 +1068,7 @@ class TableWidgetV2 extends BaseWidget<TableWidgetProps, WidgetState> {
           selectedRowIndices={this.getSelectedRowIndices()}
           serverSidePaginationEnabled={!!this.props.serverSidePaginationEnabled}
           sortTableColumn={this.handleColumnSorting}
-          tableData={transformedData}
+          tableData={finalTableData}
           totalRecordsCount={totalRecordsCount}
           triggerRowSelection={this.props.triggerRowSelection}
           unSelectAllRow={this.unSelectAllRow}

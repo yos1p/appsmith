@@ -174,6 +174,8 @@ function ReactTableComponent(props: ReactTableComponentProps) {
   }, [columns]);
 
   useEffect(() => {
+    //useEffect shouldn't be used like this to change props
+    //useMemo
     let dragged = -1;
     const leftOrder: string[] = [];
     const rightOrder: string[] = [];
@@ -292,27 +294,27 @@ function ReactTableComponent(props: ReactTableComponentProps) {
     }
   };
 
-  const selectTableRow = (row: {
-    original: Record<string, unknown>;
-    index: number;
-  }) => {
-    if (allowRowSelection) {
-      onRowClick(row.original, row.index);
-    }
-  };
-
-  const toggleAllRowSelect = (
-    isSelect: boolean,
-    pageData: Row<Record<string, unknown>>[],
-  ) => {
-    if (allowRowSelection) {
-      if (isSelect) {
-        selectAllRow(pageData);
-      } else {
-        unSelectAllRow(pageData);
+  const selectTableRow = useCallback(
+    (row: { original: Record<string, unknown>; index: number }) => {
+      if (allowRowSelection) {
+        onRowClick(row.original, row.index);
       }
-    }
-  };
+    },
+    [allowRowSelection, onRowClick],
+  );
+
+  const toggleAllRowSelect = useCallback(
+    (isSelect: boolean, pageData: Row<Record<string, unknown>>[]) => {
+      if (allowRowSelection) {
+        if (isSelect) {
+          selectAllRow(pageData);
+        } else {
+          unSelectAllRow(pageData);
+        }
+      }
+    },
+    [allowRowSelection, selectAllRow, unSelectAllRow],
+  );
 
   const memoziedDisableDrag = useCallback(() => disableDrag(true), [
     disableDrag,
@@ -420,11 +422,13 @@ export default React.memo(ReactTableComponent, (prev, next) => {
     prev.borderWidth === next.borderWidth &&
     prev.borderColor === next.borderColor &&
     prev.accentColor === next.accentColor &&
+    //shallow equal possible
     equal(prev.columnWidthMap, next.columnWidthMap) &&
-    equal(prev.tableData, next.tableData) &&
+    //static reference
+    prev.tableData === next.tableData &&
     // Using JSON stringify becuase isEqual doesnt work with functions,
     // and we are not changing the columns manually.
-    JSON.stringify(prev.columns) === JSON.stringify(next.columns) &&
+    prev.columns === next.columns &&
     equal(prev.editableCell, next.editableCell) &&
     prev.variant === next.variant &&
     prev.primaryColumnId === next.primaryColumnId &&

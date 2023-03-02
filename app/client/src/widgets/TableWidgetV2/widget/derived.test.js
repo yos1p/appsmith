@@ -2087,7 +2087,7 @@ describe("validate getUpdatedRow", () => {
         { id: 234, name: "Jane Doe", extra: "Extra2", __originalIndex__: 2 },
         { id: 123, name: "John Doe", extra: "Extra1", __originalIndex__: 1 },
       ],
-    }
+    };
     expect(getUpdatedRow(input1, moment, _)).toStrictEqual({
       id: 123,
       name: "John Doe1",
@@ -2160,7 +2160,7 @@ describe("validate getUpdatedRow", () => {
       status: "--",
     });
   });
-})
+});
 describe("getEditableCellValidity", () => {
   const { getEditableCellValidity } = derivedProperty;
 
