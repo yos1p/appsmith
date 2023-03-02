@@ -20,7 +20,7 @@ type RenderEditActionsProps = BaseCellComponentProps & {
   onDiscard: () => void;
 };
 
-export function EditActionCell(props: RenderEditActionsProps) {
+function EditActionCellComponent(props: RenderEditActionsProps) {
   const {
     allowCellWrapping,
     cellBackground,
@@ -93,3 +93,4 @@ export function EditActionCell(props: RenderEditActionsProps) {
     </CellWrapper>
   );
 }
+export const EditActionCell = React.memo(EditActionCellComponent);

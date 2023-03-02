@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import { CellWrapper } from "../TableStyledWrappers";
 import { BaseCellComponentProps, TABLE_SIZES } from "../Constants";
@@ -17,7 +17,7 @@ export interface RenderActionProps extends BaseCellComponentProps {
   onCommandClick: (dynamicTrigger: string, onComplete: () => void) => void;
 }
 
-export function ButtonCell(props: RenderActionProps) {
+function ButtonCellComponent(props: RenderActionProps) {
   const {
     allowCellWrapping,
     cellBackground,
@@ -83,3 +83,4 @@ export function ButtonCell(props: RenderActionProps) {
     </CellWrapper>
   );
 }
+export const ButtonCell = memo(ButtonCellComponent);

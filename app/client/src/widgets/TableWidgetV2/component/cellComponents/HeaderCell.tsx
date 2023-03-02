@@ -112,7 +112,7 @@ function Title(props: TitleProps) {
 
 const ICON_SIZE = 16;
 
-export function HeaderCell(props: {
+function HeaderCellComponent(props: {
   canFreezeColumn?: boolean;
   columnName: string;
   columnIndex: number;
@@ -266,3 +266,4 @@ export function HeaderCell(props: {
     </div>
   );
 }
+export const HeaderCell = React.memo(HeaderCellComponent);
