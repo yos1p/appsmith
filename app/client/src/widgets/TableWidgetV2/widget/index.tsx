@@ -1279,20 +1279,34 @@ class TableWidgetV2 extends BaseWidget<TableWidgetProps, WidgetState> {
      * Clear rowSelection to avoid selecting filtered rows
      * based on stale selection indices
      */
-    if (multiRowSelection) {
-      this.props.updateWidgetMetaProperty("selectedRowIndices", []);
-    } else {
-      this.props.updateWidgetMetaProperty("selectedRowIndex", -1);
-    }
-
-    this.props.updateWidgetMetaProperty("pageNo", 1);
-    this.props.updateWidgetMetaProperty("searchText", searchKey, {
-      triggerPropertyName: "onSearchTextChanged",
-      dynamicString: onSearchTextChanged,
-      event: {
-        type: EventType.ON_SEARCH,
+    const searchUpdateActions = [
+      multiRowSelection
+        ? {
+            propertyName: "selectedRowIndices",
+            propertyValue: [],
+          }
+        : {
+            propertyName: "selectedRowIndex",
+            propertyValue: -1,
+          },
+      {
+        propertyName: "pageNo",
+        propertyValue: 1,
       },
-    });
+      {
+        propertyName: "searchText",
+        propertyValue: searchKey,
+        actionExecution: {
+          triggerPropertyName: "onSearchTextChanged",
+          dynamicString: onSearchTextChanged,
+          event: {
+            type: EventType.ON_SEARCH,
+          },
+        },
+      },
+    ];
+
+    this.props.updateBatchUpdateWidgetMetaProperties(searchUpdateActions);
   };
 
   /*

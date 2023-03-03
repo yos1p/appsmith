@@ -16,8 +16,16 @@ export type DebouncedExecuteActionPayload = Omit<
 > & {
   dynamicString?: string;
 };
+type batchUpdateWidgetMetaPropertyType = {
+  propertyName: string;
+  propertyValue: unknown;
+  actionExecution?: DebouncedExecuteActionPayload;
+}[];
 
 export interface WithMeta {
+  updateBatchUpdateWidgetMetaProperties: (
+    batchActions: batchUpdateWidgetMetaPropertyType,
+  ) => void;
   updateWidgetMetaProperty: (
     propertyName: string,
     propertyValue: unknown,
@@ -139,6 +147,68 @@ function withMeta(WrappedWidget: typeof BaseWidget) {
         actionExecution,
       );
     };
+    updateBatchUpdateWidgetMetaProperties = (
+      batchActions: batchUpdateWidgetMetaPropertyType,
+    ): void => {
+      const metaUpdates = batchActions.reduce(
+        (acc: any, { propertyName, propertyValue }) => {
+          acc[propertyName] = propertyValue;
+          return acc;
+        },
+        {},
+      );
+      AppsmithConsole.info({
+        logType: LOG_TYPE.WIDGET_UPDATE,
+        text: "Widget property was updated",
+        source: {
+          type: ENTITY_TYPE.WIDGET,
+          id: this.props.widgetId,
+          name: this.props.widgetName,
+        },
+        meta: metaUpdates,
+      });
+      this.handleBatchUpdateWidgetMetaProperties(batchActions);
+    };
+    getMetaPropPath = (propertyName: string | undefined) => {
+      // look at this.props.__metaOptions, check for metaPropPath value
+      // if they exist, then update the propertyName
+      // Below code of updating metaOptions can be removed once we have ListWidget v2 where we better manage meta values of ListWidget.
+      const metaOptions = this.props.__metaOptions;
+      if (!metaOptions) return;
+      return `${metaOptions.metaPropPrefix}.${this.props.widgetName}.${propertyName}[${metaOptions.index}]`;
+    };
+    handleBatchUpdateWidgetMetaProperties = (
+      batchActions: batchUpdateWidgetMetaPropertyType,
+    ) => {
+      const { syncBatchUpdateWidgetMetaProperties } = this.context;
+      const widgetId = this.props.metaWidgetId || this.props.widgetId;
+      if (syncBatchUpdateWidgetMetaProperties) {
+        const metaOptions = this.props.__metaOptions;
+        const consolidatedUpdates = batchActions.reduce(
+          (acc: any, { propertyName, propertyValue }) => {
+            acc.push({ widgetId, propertyName, propertyValue });
+            if (metaOptions) {
+              acc.push({
+                widgetId: metaOptions.widgetId,
+                propertyName: this.getMetaPropPath(propertyName),
+                propertyValue,
+              });
+            }
+            return acc;
+          },
+          [],
+        );
+        syncBatchUpdateWidgetMetaProperties(consolidatedUpdates);
+      }
+      batchActions.forEach(({ actionExecution, propertyName }) =>
+        this.addPropertyForEval(propertyName, actionExecution),
+      );
+      this.setState({}, () => {
+        // react batches the setState call
+        // this will result in batching multiple updateWidgetMetaProperty calls.
+        this.debouncedTriggerEvalOnMetaUpdate();
+      });
+    };
 
     handleUpdateWidgetMetaProperty = (
       propertyName: string,
@@ -164,10 +234,11 @@ function withMeta(WrappedWidget: typeof BaseWidget) {
         // if they exist, then update the propertyName
         // Below code of updating metaOptions can be removed once we have ListWidget v2 where we better manage meta values of ListWidget.
         const metaOptions = this.props.__metaOptions;
-        if (metaOptions) {
+        const metaPropPath = this.getMetaPropPath(propertyName);
+        if (metaOptions && metaPropPath) {
           syncUpdateWidgetMetaProperty(
             metaOptions.widgetId,
-            `${metaOptions.metaPropPrefix}.${this.props.widgetName}.${propertyName}[${metaOptions.index}]`,
+            metaPropPath,
             propertyValue,
           );
         }
@@ -193,6 +264,9 @@ function withMeta(WrappedWidget: typeof BaseWidget) {
       return (
         <WrappedWidget
           {...this.updatedProps()}
+          updateBatchUpdateWidgetMetaProperties={
+            this.updateBatchUpdateWidgetMetaProperties
+          }
           updateWidgetMetaProperty={this.updateWidgetMetaProperty}
         />
       );
