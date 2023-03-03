@@ -346,7 +346,7 @@ export function Table(props: TableProps) {
       // loop over subPage rows and toggleRowSelected if required
       e.stopPropagation();
     },
-    [page, props.toggleAllRowSelect, page],
+    [page, props.toggleAllRowSelect, rowSelectionState, page],
   );
   const isHeaderVisible =
     props.isVisibleSearch ||
