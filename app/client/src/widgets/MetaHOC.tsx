@@ -16,7 +16,7 @@ export type DebouncedExecuteActionPayload = Omit<
 > & {
   dynamicString?: string;
 };
-type batchUpdateWidgetMetaPropertyType = {
+export type batchUpdateWidgetMetaPropertyType = {
   propertyName: string;
   propertyValue: unknown;
   actionExecution?: DebouncedExecuteActionPayload;
