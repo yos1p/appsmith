@@ -40,7 +40,7 @@ import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import { createGlobalStyle } from "styled-components";
 import { Classes as PopOver2Classes } from "@blueprintjs/popover2";
-import useTraceUpdate from "use-trace-update";
+// import useTraceUpdate from "use-trace-update";
 const SCROLL_BAR_OFFSET = 2;
 const HEADER_MENU_PORTAL_CLASS = ".header-menu-portal";
 
@@ -247,7 +247,7 @@ export function Table(props: TableProps) {
   const data = props.data;
 
   const columns = props.columns;
-  useTraceUpdate({ data, columns });
+  // useTraceUpdate({ data, columns });useTraceUpdate
   const tableHeadercolumns = React.useMemo(
     () =>
       props.columns.filter((column: ReactTableColumnProps) => {
