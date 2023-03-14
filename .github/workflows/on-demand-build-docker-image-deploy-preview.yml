@@ -87,8 +87,8 @@ jobs:
     if: success() && github.event.client_payload.slash_command.args.named.env != 'release'
     steps:
 
-      - name: Set up Depot CLI
-        uses: depot/setup-action@v1
+      - name: Set up Docker buildx CLI
+        uses: docker/setup-buildx-action@v2
 
       # Check out merge commit
       - name: Checkout PR
