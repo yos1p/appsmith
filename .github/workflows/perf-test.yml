@@ -18,7 +18,7 @@ defaults:
 
 jobs:
   perf-test:
-    runs-on: ubuntu-latest-4-cores
+    runs-on: ubuntu-latest
     # Only run this workflow for internally triggered events
     if: |
       github.event.pull_request.head.repo.full_name == github.repository ||
@@ -233,7 +233,7 @@ jobs:
           APPSMITH_DISABLE_TELEMETRY: true
           POSTGRES_PASSWORD: postgres
           NODE_TLS_REJECT_UNAUTHORIZED: "0"
-          MACHINE: ubuntu-latest-4-cores
+          MACHINE: ubuntu-latest
 
         run: ./start-test.sh
 
