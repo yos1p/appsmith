@@ -140,15 +140,11 @@ jobs:
           APPSMITH_IS_SELF_HOSTED: false
           APPSMITH_ENVFILE_PATH: /tmp/dummy.env
         run: |
-          if [[ "${{ inputs.skip-tests }}" == "true" ]]
-          then
-            args=-DskipTests
-          fi
           mvn --batch-mode versions:set \
             -DnewVersion=${{ steps.vars.outputs.version }} \
             -DgenerateBackupPoms=false \
             -DprocessAllModules=true
-          ./build.sh $args
+          ./build.sh -DskipTests
 
       # Restore the previous built bundle if present. If not push the newly built into the cache
       - name: Restore the previous bundle
