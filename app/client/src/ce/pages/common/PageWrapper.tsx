@@ -61,7 +61,7 @@ export function PageWrapper(props: PageWrapperProps) {
       <Helmet>
         <title>{`${
           props.displayName ? `${props.displayName} | ` : ""
-        }Appsmith`}</title>
+        }GoNow.cx`}</title>
       </Helmet>
       <PageBody isSavable={isSavable}>{props.children}</PageBody>
     </Wrapper>
