@@ -442,9 +442,9 @@ class FilePickerWidget extends BaseWidget<
             isTriggerProperty: true,
           },
           {
-            helpText: "Triggers an action when the user click 'Confirm' button",
-            propertyName: "onFilesConfirmed",
-            label: "onFilesConfirmed",
+            helpText: "Triggers an action when files is removed.",
+            propertyName: "onFilesRemoved",
+            label: "onFilesRemoved",
             controlType: "ACTION_SELECTOR",
             isJSConvertible: true,
             isBindProperty: true,
