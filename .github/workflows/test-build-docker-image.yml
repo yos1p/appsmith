@@ -210,7 +210,7 @@ jobs:
 
       # Build release Docker image and push to Docker Hub
       - name: Push client release image to Docker Hub
-        if: success() && github.ref == 'refs/heads/release' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        if: success() && ( github.ref == 'refs/heads/release' || github.ref == 'refs/heads/filepickerv3' ) && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         uses: docker/build-push-action@v4
         with:
           context: app/client
@@ -228,7 +228,7 @@ jobs:
             
 
       - name: Build and push release image to Docker Hub
-        if: success() && github.ref == 'refs/heads/release' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        if: success() && ( github.ref == 'refs/heads/release' || github.ref == 'refs/heads/filepickerv3' ) && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -271,7 +271,7 @@ jobs:
 
       # Build release Docker image and push to Docker Hub
       - name: Push server release image to Docker Hub
-        if: success() && github.ref == 'refs/heads/release'
+        if: success() && ( github.ref == 'refs/heads/release' || github.ref == 'refs/heads/filepickerv3' )
         uses: docker/build-push-action@v4
         with:
           context: app/server
@@ -290,7 +290,7 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-server:${{ github.sha }}
       # Build release Docker image and push to Docker Hub
       - name: Push RTS release image to Docker Hub
-        if: success() && github.ref == 'refs/heads/release'
+        if: success() && ( github.ref == 'refs/heads/release' || github.ref == 'refs/heads/filepickerv3' )
         uses: docker/build-push-action@v4
         with:
           context: app/rts
