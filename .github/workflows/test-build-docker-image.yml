@@ -296,11 +296,6 @@ jobs:
         with:
           context: app/server
           push: true
-          build-args: |
-            APPSMITH_SEGMENT_CE_KEY=${{ secrets.APPSMITH_SEGMENT_CE_KEY }}
-          tags: |
-            ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-server:${{ github.sha }}
-            ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-server:nightly
           build-args: APPSMITH_SEGMENT_CE_KEY=${{ secrets.APPSMITH_SEGMENT_CE_KEY }}
           tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-server:${{ github.sha }}
       # Build release Docker image and push to Docker Hub
