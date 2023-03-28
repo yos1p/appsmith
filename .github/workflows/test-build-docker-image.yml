@@ -298,20 +298,3 @@ jobs:
           push: true
           build-args: APPSMITH_SEGMENT_CE_KEY=${{ secrets.APPSMITH_SEGMENT_CE_KEY }}
           tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-server:${{ github.sha }}
-      # Build release Docker image and push to Docker Hub
-      - name: Push RTS release image to Docker Hub
-        if: success() && github.ref == 'refs/heads/release'
-        uses: docker/build-push-action@v4
-        with:
-          context: app/rts
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-rts:${{steps.vars.outputs.tag}}
-
-      # Build master Docker image and push to Docker Hub
-      - name: Push RTS master image to Docker Hub with commit tag
-        if: success() && github.ref == 'refs/heads/master'
-        uses: docker/build-push-action@v4
-        with:
-          context: app/rts
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-rts:${{ github.sha }}
