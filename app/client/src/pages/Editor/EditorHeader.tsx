@@ -17,7 +17,6 @@ import { APPLICATIONS_URL } from "constants/routes";
 import AppInviteUsersForm from "pages/workspace/AppInviteUsersForm";
 import AnalyticsUtil from "utils/AnalyticsUtil";
 import { FormDialogComponent } from "components/editorComponents/form/FormDialogComponent";
-import AppsmithLogo from "assets/images/appsmith_logo_square.png";
 import { Link } from "react-router-dom";
 import { AppState } from "@appsmith/reducers";
 import {
@@ -422,11 +421,7 @@ export function EditorHeader(props: EditorHeaderProps) {
             position="bottom-left"
           >
             <AppsmithLink to={APPLICATIONS_URL}>
-              <img
-                alt="Appsmith logo"
-                className="t--appsmith-logo"
-                src={AppsmithLogo}
-              />
+              <h1>Convo.CX Tool</h1>
             </AppsmithLink>
           </TooltipComponent>
 
