@@ -147,7 +147,8 @@ jobs:
       github.event.pull_request.head.repo.full_name == github.repository
       )
       ) &&
-      github.ref == 'refs/heads/release'
+      (github.ref == 'refs/heads/release' || startsWith(github.ref, 'convo/'))
+      )
       )
 
     steps:
