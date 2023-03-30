@@ -147,7 +147,7 @@ jobs:
       github.event.pull_request.head.repo.full_name == github.repository
       )
       ) &&
-        (github.ref == 'refs/heads/release' || startsWith(github.ref, 'convo/'))
+        (github.ref == 'refs/heads/release' || startsWith(github.ref, 'refs/heads/convo/'))
       )
 
     steps:
@@ -213,7 +213,7 @@ jobs:
 
       # Build master Docker image and push to Docker Hub
       - name: Push client master image to Docker Hub with commit tag
-        if: success() && startsWith(github.ref, 'convo/') && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        if: success() && startsWith(github.ref, 'refs/heads/convo/') && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         uses: docker/build-push-action@v4
         with:
           context: app/client
@@ -233,7 +233,7 @@ jobs:
             ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-ce:${{steps.vars.outputs.tag}}
 
       - name: Build and push master image to Docker Hub with commit tag
-        if: success() && startsWith(github.ref, 'convo/') && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        if: success() && startsWith(github.ref, 'refs/heads/convo/') && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -279,7 +279,7 @@ jobs:
 
       # Build master Docker image and push to Docker Hub
       - name: Push server master image to Docker Hub with commit tag
-        if: success() && startsWith(github.ref, 'convo/')
+        if: success() && startsWith(github.ref, 'refs/heads/convo/')
         uses: docker/build-push-action@v4
         with:
           context: app/server
@@ -299,7 +299,7 @@ jobs:
 
       # Build master Docker image and push to Docker Hub
       - name: Push RTS master image to Docker Hub with commit tag
-        if: success() && startsWith(github.ref, 'convo/')
+        if: success() && startsWith(github.ref, 'refs/heads/convo/')
         uses: docker/build-push-action@v4
         with:
           context: app/rts
