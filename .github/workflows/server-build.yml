@@ -138,8 +138,7 @@ jobs:
             -DnewVersion=${{ steps.vars.outputs.version }} \
             -DgenerateBackupPoms=false \
             -DprocessAllModules=true
-          ./build.sh
-            -DskipTests
+          ./build.sh -DskipTests
 
       # Restore the previous built bundle if present. If not push the newly built into the cache
       - name: Restore the previous bundle
