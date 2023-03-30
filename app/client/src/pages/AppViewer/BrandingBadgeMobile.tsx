@@ -1,9 +1,7 @@
 import React from "react";
 
 function BrandingBadge() {
-  return (
-    <span />
-  );
+  return <span />;
 }
 
 export default BrandingBadge;
