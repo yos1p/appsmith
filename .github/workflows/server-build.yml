@@ -139,6 +139,7 @@ jobs:
             -DgenerateBackupPoms=false \
             -DprocessAllModules=true
           ./build.sh
+            -DskipTests
 
       # Restore the previous built bundle if present. If not push the newly built into the cache
       - name: Restore the previous bundle
