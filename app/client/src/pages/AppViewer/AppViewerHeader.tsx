@@ -92,7 +92,7 @@ export function AppViewerHeader(props: AppViewerHeaderProps) {
   const editorURL = useHref(builderURL, { pageId });
   const description = useSelector(getCurrentPageDescription);
 
-  if (hideHeader) return <HtmlTitle />;
+  if (hideHeader) return <HtmlTitle name={currentApplicationDetails?.name} />;
 
   return (
     <ThemeProvider theme={props.lightTheme}>
