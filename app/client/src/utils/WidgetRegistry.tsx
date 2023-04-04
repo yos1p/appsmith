@@ -23,6 +23,9 @@ import CanvasWidget, {
 import ChartWidget, {
   CONFIG as CHART_WIDGET_CONFIG,
 } from "widgets/ChartWidget";
+import ChartWidgetV2, {
+  CONFIG as CHART_WIDGET_V2_CONFIG,
+} from "widgets/ChartWidgetV2";
 import CheckboxGroupWidget, {
   CONFIG as CHECKBOX_GROUP_WIDGET_CONFIG,
 } from "widgets/CheckboxGroupWidget";
@@ -215,6 +218,9 @@ export const ALL_WIDGETS_AND_CONFIG: [any, WidgetConfiguration][] = [
   [CategorySliderWidget, CATEGORY_SLIDER_WIDGET_CONFIG],
   [CodeScannerWidget, CODE_SCANNER_WIDGET_CONFIG],
   [ListWidgetV2, LIST_WIDGET_CONFIG_V2],
+
+  //New
+  [ChartWidgetV2, CHART_WIDGET_V2_CONFIG],
 
   //Deprecated Widgets
   [InputWidget, INPUT_WIDGET_CONFIG],
