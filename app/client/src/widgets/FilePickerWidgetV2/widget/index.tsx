@@ -440,6 +440,15 @@ class FilePickerWidget extends BaseWidget<
             isBindProperty: true,
             isTriggerProperty: true,
           },
+          {
+            helpText: "Triggers an action when files is removed.",
+            propertyName: "onFilesRemoved",
+            label: "onFilesRemoved",
+            controlType: "ACTION_SELECTOR",
+            isJSConvertible: true,
+            isBindProperty: true,
+            isTriggerProperty: true,
+          },
         ],
       },
     ];
@@ -656,6 +665,7 @@ class FilePickerWidget extends BaseWidget<
           "selectedFiles",
           updatedFiles ?? [],
         );
+        this.onFilesRemoved();
       }
 
       if (reason === "cancel-all" && !this.isWidgetUnmounting) {
@@ -754,6 +764,19 @@ class FilePickerWidget extends BaseWidget<
       });
 
       this.setState({ isLoading: true });
+    }
+  };
+
+  onFilesRemoved = () => {
+    if (this.props.onFilesRemoved) {
+      this.executeAction({
+        triggerPropertyName: "onFilesRemoved",
+        dynamicString: this.props.onFilesRemoved,
+        event: {
+          type: EventType.ON_FILES_REMOVED,
+          callback: this.handleActionComplete,
+        },
+      });
     }
   };
 
@@ -914,6 +937,7 @@ interface FilePickerWidgetProps extends WidgetProps {
   selectedFiles?: any[];
   allowedFileTypes: string[];
   onFilesSelected?: string;
+  onFilesRemoved?: string;
   fileDataType: FileDataTypes;
   isRequired?: boolean;
   backgroundColor: string;
