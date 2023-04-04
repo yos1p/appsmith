@@ -157,20 +157,6 @@ const HeaderSection = styled.div`
   }
 `;
 
-const AppsmithLink = styled((props) => {
-  // we are removing non input related props before passing them in the components
-  // eslint-disable @typescript-eslint/no-unused-vars
-  return <Link {...props} />;
-})`
-  height: 24px;
-  width: 24px;
-  display: inline-block;
-  img {
-    width: 24px;
-    height: 24px;
-  }
-`;
-
 const DeploySection = styled.div`
   display: flex;
   align-items: center;
@@ -420,9 +406,11 @@ export function EditorHeader(props: EditorHeaderProps) {
             hoverOpenDelay={TOOLTIP_HOVER_ON_DELAY}
             position="bottom-left"
           >
-            <AppsmithLink to={APPLICATIONS_URL}>
-              <h1>Convo.CX Tool</h1>
-            </AppsmithLink>
+            <Link style={{ width: "202px" }} to={APPLICATIONS_URL}>
+              <h1 className="font-bold text-lg" style={{ color: "black" }}>
+                Convo.CX Tool
+              </h1>
+            </Link>
           </TooltipComponent>
 
           <TooltipComponent

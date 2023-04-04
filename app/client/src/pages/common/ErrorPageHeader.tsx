@@ -62,9 +62,10 @@ export function ErrorPageHeader(props: ErrorPageHeaderProps) {
             onClick={() => {
               if (safeCrash) flushErrors();
             }}
+            style={{ width: "202px" }}
             to={APPLICATIONS_URL}
           >
-            <img alt="Logo" className="h-6" src={tenantConfig.brandLogoUrl} />
+            <h1 className="font-bold text-lg">Convo.CX Tool</h1>
           </Link>
         )}
       </HeaderSection>

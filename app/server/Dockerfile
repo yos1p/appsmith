@@ -1,12 +1,4 @@
-#When you are building, name it appsmith-server which is how it is referenced in docker-compose.yml
-
-FROM eclipse-temurin:17-jdk-alpine as jdk-image
-
-RUN ${JAVA_HOME}/bin/jlink --module-path jmods --add-modules jdk.jcmd --output /jcmd
-
-FROM eclipse-temurin:17-jre-alpine
-
-COPY --from=jdk-image /jcmd /jcmd
+FROM bellsoft/liberica-openjre-alpine:17
 
 LABEL maintainer="tech@appsmith.com"
 

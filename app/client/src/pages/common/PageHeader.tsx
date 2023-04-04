@@ -155,8 +155,10 @@ export function PageHeader(props: PageHeaderProps) {
     >
       <HeaderSection>
         {tenantConfig.brandLogoUrl && (
-          <Link className="t--appsmith-logo" to={APPLICATIONS_URL}>
-            <img alt="Logo" className="h-6" src={tenantConfig.brandLogoUrl} />
+          <Link style={{ width: "202px" }} to={APPLICATIONS_URL}>
+            <h1 className="font-bold text-lg" style={{ color: "black" }}>
+              Convo.CX Tool
+            </h1>
           </Link>
         )}
       </HeaderSection>
