@@ -17,7 +17,7 @@ export const contentConfig = [
             value: "LINE_CHART",
           },
         ],
-        isJSConvertible: true,
+        isJSConvertible: false,
         isBindProperty: true,
         isTriggerProperty: false,
         validation: {

@@ -12,6 +12,7 @@ export const CONFIG = {
     rows: 32,
     columns: 24,
     version: 1,
+    chartName: "Sales",
     data: {
       labels: ["January", "February", "March", "April", "May", "June", "July"],
       datasets: [

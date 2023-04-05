@@ -28,28 +28,29 @@ ChartJS.register(
   Filler,
 );
 
-const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top" as const,
-      display: false,
-    },
-    title: {
-      display: true,
-      text: "Sales",
-    },
-  },
-};
-
 class ChartComponent extends React.Component<ChartComponentProps> {
   render() {
+    const options = {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "top" as const,
+          display: false,
+        },
+        title: {
+          display: true,
+          text: this.props.chartName,
+        },
+      },
+    };
+
     return <Line data={this.props.data} options={options} />;
   }
 }
 
 export interface ChartComponentProps {
   data: any;
+  chartName: string;
 }
 
 export default ChartComponent;
