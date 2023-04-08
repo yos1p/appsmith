@@ -480,12 +480,14 @@ class ChartComponent extends React.Component<ChartComponentProps> {
         }
       }
     });
+    require("./styles.css");
   }
 
   componentWillUnmount() {
     if (this.chartInstance) {
       this.chartInstance = null;
     }
+    require("./styles.css");
   }
 
   componentDidUpdate(prevProps: ChartComponentProps) {
@@ -505,6 +507,7 @@ class ChartComponent extends React.Component<ChartComponentProps> {
         this.chartInstance.setChartData(this.getChartDataSource());
       }
     }
+    require("./styles.css");
   }
 
   render() {
