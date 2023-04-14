@@ -28,24 +28,42 @@ ChartJS.register(
   Filler,
 );
 
-class ChartComponent extends React.Component<ChartComponentProps> {
-  render() {
-    const options = {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: "top" as const,
-          display: false,
-        },
-        title: {
-          display: true,
-          text: this.props.chartName,
-        },
-      },
-    };
+function ChartComponent(props: ChartComponentProps) {
+  let { data } = props;
+  const { chartName } = props;
 
-    return <Line data={this.props.data} options={options} />;
-  }
+  data = JSON.parse(data);
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" as const,
+        display: false,
+      },
+      title: {
+        display: true,
+        text: chartName,
+      },
+    },
+  };
+
+  const mydata = {
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    datasets: [
+      {
+        label: "Sales Data Last Year",
+        data: [-3, 3, 2],
+      },
+    ],
+  };
+
+  return <Line data={data} options={options} />;
+}
+
+interface DataObj {
+  labels: string[];
+  datasets: { label: string; data: number[] }[];
 }
 
 export interface ChartComponentProps {

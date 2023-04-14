@@ -28,53 +28,13 @@ export const contentConfig = [
         },
       },
       {
-        helpText: "Configure a Custom ChartJS",
-        placeholderText: `ChartJS Config`,
-        propertyName: "customChartJSConfig",
-        label: "Custom ChartJS",
+        helpText: "Populates the chart.js with the data",
+        propertyName: "data",
+        label: "Series Data",
         controlType: "INPUT_TEXT",
         isBindProperty: true,
         isTriggerProperty: false,
-        dependencies: ["chartType"],
-        evaluationSubstitutionType: EvaluationSubstitutionType.SMART_SUBSTITUTE,
-      },
-      {
-        helpText: "Populates the chart.js with the data",
-        propertyName: "chartData",
-        label: "Series Data",
-        controlType: "INPUT_TEXT_AREA",
-        isBindProperty: true,
-        isTriggerProperty: false,
-        evaluationSubstitutionType: EvaluationSubstitutionType.SMART_SUBSTITUTE,
-        validation: {
-          type: ValidationTypes.ARRAY,
-          params: {
-            children: {
-              type: ValidationTypes.OBJECT,
-              params: {
-                required: true,
-                allowedKeys: [
-                  {
-                    name: "x",
-                    type: ValidationTypes.TEXT,
-                    params: {
-                      required: true,
-                      default: "",
-                    },
-                  },
-                  {
-                    name: "y",
-                    type: ValidationTypes.NUMBER,
-                    params: {
-                      required: true,
-                      default: 10,
-                    },
-                  },
-                ],
-              },
-            },
-          },
-        },
+        isJSConvertible: true,
       },
     ],
   },
