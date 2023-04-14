@@ -11,6 +11,17 @@ services:
       - "9080:80"
     networks:
       - appsmith
+    restart: unless-stopped
+  appsmith-rts:
+    build: 
+      context: ./../rts/
+      dockerfile: Dockerfile
+    environment:
+      - APPSMITH_API_BASE_URL="http://appsmith-internal-server:8080"
+    depends_on:
+      - appsmith-internal-server
+    networks:
+      - appsmith
   appsmith-internal-server:
     build: .
     env_file: envs/docker.env
@@ -20,25 +31,27 @@ services:
     depends_on:
       - mongo
       - redis
+    ports:
+      - "8080:8080"
     networks:
       - appsmith
     volumes:
       - ./container-volumes/git-storage:/data/git-storage
-
+    restart: unless-stopped
   mongo:
-    image: mongo:4.4.6
+    image: mongo:6.0.5
     environment:
       - MONGO_INITDB_DATABASE=appsmith
     volumes:
       - ./container-volumes/mongo:/data/db
     networks:
       - appsmith
-
+    restart: unless-stopped
   redis:
     image: redis
     networks:
       - appsmith
-
+    restart: unless-stopped
 networks:
   appsmith:
     driver: bridge
