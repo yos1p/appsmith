@@ -23,9 +23,8 @@ class ChartWidgetV2 extends BaseWidget<ChartWidgetProps, WidgetState> {
   }
 
   getPageView() {
-    return (
-      <ChartComponent chartName={this.props.chartName} data={this.props.data} />
-    );
+    const { chartName, data } = this.props;
+    return <ChartComponent chartName={chartName} data={data} />;
   }
 
   static getWidgetType(): string {
@@ -33,8 +32,13 @@ class ChartWidgetV2 extends BaseWidget<ChartWidgetProps, WidgetState> {
   }
 }
 
+interface DataObj {
+  labels: string[];
+  datasets: { label: string; data: number[] }[];
+}
+
 export interface ChartWidgetProps extends WidgetProps {
-  data: any;
+  data: DataObj;
   chartName: string;
 }
 
