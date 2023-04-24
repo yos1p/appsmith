@@ -1,5 +1,4 @@
 import { ValidationTypes } from "constants/WidgetValidation";
-import { EvaluationSubstitutionType } from "entities/DataTree/dataTreeFactory";
 import { getResponsiveLayoutConfig } from "utils/layoutPropertiesUtils";
 
 export const contentConfig = [
@@ -16,6 +15,22 @@ export const contentConfig = [
             label: "Line Chart",
             value: "LINE_CHART",
           },
+          {
+            label: "Bar Chart",
+            value: "BAR_CHART",
+          },
+          {
+            label: "Pie Chart",
+            value: "PIE_CHART",
+          },
+          {
+            label: "Doughnut Chart",
+            value: "DOUGHNUT_CHART",
+          },
+          {
+            label: "Radar Chart",
+            value: "RADAR_CHART",
+          },
         ],
         isJSConvertible: false,
         isBindProperty: true,
@@ -23,7 +38,13 @@ export const contentConfig = [
         validation: {
           type: ValidationTypes.TEXT,
           params: {
-            allowedValues: ["LINE_CHART"],
+            allowedValues: [
+              "LINE_CHART",
+              "BAR_CHART",
+              "PIE_CHART",
+              "DOUGHNUT_CHART",
+              "RADAR_CHART",
+            ],
           },
         },
       },
