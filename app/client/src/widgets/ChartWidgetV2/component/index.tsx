@@ -5,6 +5,8 @@ import {
   ArcElement,
   CategoryScale,
   LinearScale,
+  RadialLinearScale,
+  BarElement,
   PointElement,
   LineElement,
   Title,
@@ -13,33 +15,33 @@ import {
   Filler,
 } from "chart.js";
 
-import { Line } from "react-chartjs-2";
+import { Line, Bar, Pie, Doughnut, Radar } from "react-chartjs-2";
 
 ChartJS.register(
   ArcElement,
-  Colors,
+  RadialLinearScale,
   CategoryScale,
   LinearScale,
+  BarElement,
   PointElement,
   LineElement,
   Title,
   Tooltip,
   Legend,
   Filler,
+  Colors,
 );
 
 function ChartComponent(props: ChartComponentProps) {
-  let { data } = props;
-  const { chartName } = props;
+  const { chartName, chartType, data } = props;
 
-  data = JSON.parse(data);
+  const parsedData = typeof data === "string" ? JSON.parse(data) : data;
 
   const options = {
     responsive: true,
     plugins: {
       legend: {
         position: "top" as const,
-        display: false,
       },
       title: {
         display: true,
@@ -48,27 +50,32 @@ function ChartComponent(props: ChartComponentProps) {
     },
   };
 
-  const mydata = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-      {
-        label: "Sales Data Last Year",
-        data: [-3, 3, 2],
-      },
-    ],
-  };
-
-  return <Line data={data} options={options} />;
-}
-
-interface DataObj {
-  labels: string[];
-  datasets: { label: string; data: number[] }[];
+  return (
+    <>
+      {(() => {
+        switch (chartType) {
+          case "LINE_CHART":
+            return <Line data={parsedData} options={options} />;
+          case "BAR_CHART":
+            return <Bar data={parsedData} options={options} />;
+          case "PIE_CHART":
+            return <Pie data={parsedData} options={options} />;
+          case "DOUGHNUT_CHART":
+            return <Doughnut data={parsedData} options={options} />;
+          case "RADAR_CHART":
+            return <Radar data={parsedData} options={options} />;
+          default:
+            return <Line data={parsedData} options={options} />;
+        }
+      })()}
+    </>
+  );
 }
 
 export interface ChartComponentProps {
-  data: any;
   chartName: string;
+  chartType: string;
+  data: any;
 }
 
 export default ChartComponent;

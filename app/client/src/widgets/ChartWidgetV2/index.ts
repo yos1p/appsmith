@@ -9,8 +9,9 @@ export const CONFIG = {
   isCanvas: false, // Defines if this widget has a canvas within in which we can drop other widgets
   defaults: {
     widgetName: "Chart",
-    rows: 28,
-    columns: 24,
+    chartType: "LINE_CHART",
+    rows: 25,
+    columns: 45,
     version: 1,
     chartName: "Profit Report",
     data: {
