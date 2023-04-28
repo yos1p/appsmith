@@ -1,4 +1,6 @@
 import React from "react";
+import styled from "styled-components";
+import { invisible } from "constants/DefaultTheme";
 import {
   Chart as ChartJS,
   Colors,
@@ -33,7 +35,7 @@ ChartJS.register(
 );
 
 function ChartComponent(props: ChartComponentProps) {
-  const { chartName, chartType, data } = props;
+  const { chartName, chartType, data, isVisible } = props;
 
   const parsedData = typeof data === "string" ? JSON.parse(data) : data;
 
@@ -48,27 +50,71 @@ function ChartComponent(props: ChartComponentProps) {
         text: chartName,
       },
     },
+    maintainAspectRatio: false,
   };
 
+  const CanvasContainer = styled.div<{ isVisible?: boolean }>`
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    ${(props) => (!props.isVisible ? invisible : "")};
+    padding: 10px 0 0 0;
+  `;
+
   return (
-    <>
+    <CanvasContainer isVisible={isVisible}>
       {(() => {
         switch (chartType) {
-          case "LINE_CHART":
-            return <Line data={parsedData} options={options} />;
           case "BAR_CHART":
-            return <Bar data={parsedData} options={options} />;
+            return (
+              <Bar
+                data={parsedData}
+                height="100%"
+                options={options}
+                width="100%"
+              />
+            );
           case "PIE_CHART":
-            return <Pie data={parsedData} options={options} />;
+            return (
+              <Pie
+                data={parsedData}
+                height="100%"
+                options={options}
+                width="100%"
+              />
+            );
           case "DOUGHNUT_CHART":
-            return <Doughnut data={parsedData} options={options} />;
+            return (
+              <Doughnut
+                data={parsedData}
+                height="100%"
+                options={options}
+                width="100%"
+              />
+            );
           case "RADAR_CHART":
-            return <Radar data={parsedData} options={options} />;
+            return (
+              <Radar
+                data={parsedData}
+                height="100%"
+                options={options}
+                width="100%"
+              />
+            );
+          case "LINE_CHART":
           default:
-            return <Line data={parsedData} options={options} />;
+            return (
+              <Line
+                data={parsedData}
+                height="100%"
+                options={options}
+                width="100%"
+              />
+            );
         }
       })()}
-    </>
+    </CanvasContainer>
   );
 }
 
@@ -76,6 +122,7 @@ export interface ChartComponentProps {
   chartName: string;
   chartType: string;
   data: any;
+  isVisible?: boolean;
 }
 
 export default ChartComponent;

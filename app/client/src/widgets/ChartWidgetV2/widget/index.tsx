@@ -23,9 +23,14 @@ class ChartWidgetV2 extends BaseWidget<ChartWidgetProps, WidgetState> {
   }
 
   getPageView() {
-    const { chartName, chartType, data } = this.props;
+    const { chartName, chartType, data, isVisible } = this.props;
     return (
-      <ChartComponent chartName={chartName} chartType={chartType} data={data} />
+      <ChartComponent
+        chartName={chartName}
+        chartType={chartType}
+        data={data}
+        isVisible={isVisible}
+      />
     );
   }
 
@@ -43,6 +48,7 @@ export interface ChartWidgetProps extends WidgetProps {
   chartName: string;
   chartType: string;
   data: DataObj;
+  isVisible: boolean;
 }
 
 export default ChartWidgetV2;

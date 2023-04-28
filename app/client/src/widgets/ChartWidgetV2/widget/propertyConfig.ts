@@ -82,83 +82,9 @@ export const contentConfig = [
         isTriggerProperty: false,
         validation: { type: ValidationTypes.BOOLEAN },
       },
-      {
-        propertyName: "animateLoading",
-        label: "Animate Loading",
-        controlType: "SWITCH",
-        helpText: "Controls the loading of the widget",
-        defaultValue: true,
-        isJSConvertible: true,
-        isBindProperty: true,
-        isTriggerProperty: false,
-        validation: { type: ValidationTypes.BOOLEAN },
-      },
-    ],
-  },
-  {
-    sectionName: "Axis",
-    children: [
-      {
-        propertyName: "setAdaptiveYMin",
-        label: "Adaptive Axis",
-        helpText: "Define the minimum scale for X/Y axis",
-        controlType: "SWITCH",
-        isBindProperty: true,
-        isTriggerProperty: false,
-        validation: { type: ValidationTypes.BOOLEAN },
-      },
-      {
-        helpText: "Specifies the label of the x-axis",
-        propertyName: "xAxisName",
-        placeholderText: "Dates",
-        label: "x-axis Label",
-        controlType: "INPUT_TEXT",
-        isBindProperty: true,
-        isTriggerProperty: false,
-        validation: { type: ValidationTypes.TEXT },
-        dependencies: ["chartType"],
-      },
-      {
-        helpText: "Specifies the label of the y-axis",
-        propertyName: "yAxisName",
-        placeholderText: "Revenue",
-        label: "y-axis Label",
-        controlType: "INPUT_TEXT",
-        isBindProperty: true,
-        isTriggerProperty: false,
-        validation: { type: ValidationTypes.TEXT },
-        dependencies: ["chartType"],
-      },
     ],
   },
   ...getResponsiveLayoutConfig("CHART_WIDGET"),
 ];
 
-export const styleConfig = [
-  {
-    sectionName: "Border and Shadow",
-    children: [
-      {
-        propertyName: "borderRadius",
-        label: "Border Radius",
-        helpText: "Rounds the corners of the icon button's outer border edge",
-        controlType: "BORDER_RADIUS_OPTIONS",
-        isJSConvertible: true,
-        isBindProperty: true,
-        isTriggerProperty: false,
-        validation: { type: ValidationTypes.TEXT },
-      },
-      {
-        propertyName: "boxShadow",
-        label: "Box Shadow",
-        helpText:
-          "Enables you to cast a drop shadow from the frame of the widget",
-        controlType: "BOX_SHADOW_OPTIONS",
-        isJSConvertible: true,
-        isBindProperty: true,
-        isTriggerProperty: false,
-        validation: { type: ValidationTypes.TEXT },
-      },
-    ],
-  },
-];
+export const styleConfig = [];
