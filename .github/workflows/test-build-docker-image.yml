@@ -218,6 +218,7 @@ jobs:
         with:
           context: app/client
           push: true
+          platforms: linux/arm64,linux/amd64
           tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-editor:nightly
 
       - name: Build and push release image to Docker Hub
@@ -283,6 +284,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: app/server
+          platforms: linux/arm64,linux/amd64
           push: true
           build-args: |
             APPSMITH_SEGMENT_CE_KEY=${{ secrets.APPSMITH_SEGMENT_CE_KEY }}
@@ -303,5 +305,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: app/rts
+          platforms: linux/arm64,linux/amd64
           push: true
           tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-rts:nightly
