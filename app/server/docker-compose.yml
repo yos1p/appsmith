@@ -27,7 +27,11 @@ services:
     env_file: envs/docker.env
     environment:
       APPSMITH_REDIS_URL: "redis://redis:6379"
-      APPSMITH_MONGODB_URI: "mongodb://mongo:27017/appsmith"
+      APPSMITH_MONGODB_URI: "mongodb://root:MySecretPassword1234@mongo:27017/appsmith"
+      APPSMITH_ENVFILE_PATH: "/data/envs/docker.env"
+      APPSMITH_ENCRYPTION_PASSWORD: "iYcrbwGeGwLy"
+      APPSMITH_ENCRYPTION_SALT: "iYcrbwGeGwLy"
+      APPSMITH_GIT_ROOT: "/data/git-storage"
     depends_on:
       - mongo
       - redis
@@ -39,9 +43,13 @@ services:
       - ./container-volumes/git-storage:/data/git-storage
     restart: unless-stopped
   mongo:
-    image: mongo:6.0.5
+    image: 'bitnami/mongodb:4.2'
     environment:
-      - MONGO_INITDB_DATABASE=appsmith
+      MONGODB_REPLICA_SET_MODE: primary
+      MONGO_INITDB_DATABASE: appsmith
+      MONGODB_REPLICA_SET_KEY: "iYcrbwGe328ujgsakldjfksldGwLy"
+      MONGODB_ROOT_PASSWORD: "MySecretPassword1234"
+    platform: "linux/amd64"
     volumes:
       - ./container-volumes/mongo:/data/db
     networks:
