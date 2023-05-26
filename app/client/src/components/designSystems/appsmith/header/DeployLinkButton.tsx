@@ -14,6 +14,7 @@ import {
   CURRENT_DEPLOY_PREVIEW_OPTION,
 } from "@appsmith/constants/messages";
 import { Theme } from "constants/DefaultTheme";
+import { getCurrentUser } from "selectors/usersSelectors";
 
 const DeployLinkDialog = styled.div`
   flex-direction: column;
@@ -75,6 +76,7 @@ export const DeployLinkButton = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
   const isGitConnected = useSelector(getIsGitConnected);
+  const user = useSelector(getCurrentUser);
 
   const onClose = () => {
     setIsOpen(false);
@@ -98,7 +100,7 @@ export const DeployLinkButton = (props: Props) => {
       canEscapeKeyClose={false}
       content={
         <DeployLinkDialog>
-          {!isGitConnected && (
+          {!isGitConnected && user?.isSuperUser && (
             <DeployLink
               className="t--connect-to-git-btn"
               onClick={goToGitConnectionPopup}

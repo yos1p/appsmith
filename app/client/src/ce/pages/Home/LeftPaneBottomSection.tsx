@@ -1,21 +1,9 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { MenuItem } from "design-system-old";
-import {
-  ADMIN_SETTINGS,
-  APPSMITH_DISPLAY_VERSION,
-  createMessage,
-  DOCUMENTATION,
-  WELCOME_TOUR,
-} from "@appsmith/constants/messages";
+import { ADMIN_SETTINGS, createMessage } from "@appsmith/constants/messages";
 import { getIsFetchingApplications } from "selectors/applicationSelectors";
-import { getOnboardingWorkspaces } from "selectors/onboardingSelectors";
-import { getAppsmithConfigs } from "@appsmith/configs";
-import AnalyticsUtil from "utils/AnalyticsUtil";
-import { howMuchTimeBeforeText } from "utils/helpers";
-import { onboardingCreateApplication } from "actions/onboardingActions";
-import ProductUpdatesModal from "pages/Applications/ProductUpdatesModal";
 import { Colors } from "constants/Colors";
 import {
   DropdownOnSelectActions,
@@ -56,11 +44,7 @@ export const LeftPaneVersionData = styled.div`
 `;
 
 function LeftPaneBottomSection() {
-  const dispatch = useDispatch();
-  const onboardingWorkspaces = useSelector(getOnboardingWorkspaces);
   const isFetchingApplications = useSelector(getIsFetchingApplications);
-  const { appVersion, cloudHosting } = getAppsmithConfigs();
-  const howMuchTimeBefore = howMuchTimeBeforeText(appVersion.releaseDate);
   const user = useSelector(getCurrentUser);
   const tenantPermissions = useSelector(getTenantPermissions);
 
@@ -81,47 +65,6 @@ function LeftPaneBottomSection() {
           text={createMessage(ADMIN_SETTINGS)}
         />
       )}
-      <MenuItem
-        icon="discord"
-        onSelect={() => {
-          window.open("https://discord.gg/rBTTVJp", "_blank");
-        }}
-        text={"Join our Discord"}
-      />
-      <MenuItem
-        icon="book"
-        onSelect={() => {
-          window.open("https://docs.appsmith.com/", "_blank");
-        }}
-        text={createMessage(DOCUMENTATION)}
-      />
-
-      <MenuItem
-        containerClassName={"t--welcome-tour"}
-        icon="guide"
-        onSelect={() => {
-          if (!isFetchingApplications && !!onboardingWorkspaces.length) {
-            AnalyticsUtil.logEvent("WELCOME_TOUR_CLICK");
-            dispatch(onboardingCreateApplication());
-          }
-        }}
-        text={createMessage(WELCOME_TOUR)}
-      />
-
-      <ProductUpdatesModal />
-      <LeftPaneVersionData>
-        <span>
-          {createMessage(
-            APPSMITH_DISPLAY_VERSION,
-            appVersion.edition,
-            appVersion.id,
-            cloudHosting,
-          )}
-        </span>
-        {howMuchTimeBefore !== "" && (
-          <span>Released {howMuchTimeBefore} ago</span>
-        )}
-      </LeftPaneVersionData>
     </Wrapper>
   );
 }

@@ -14,7 +14,7 @@ function Container(props: ContainerProps) {
   return (
     <div className="flex flex-col items-center gap-4 my-auto min-w-min">
       <div className="bg-white border border-t-4 border-t-[color:var(--ads-color-brand)] py-8 px-6 w-[min(400px,80%)] flex flex-col gap-6 t--login-container">
-        <h1 className="text-lg font-bold text-center">Convo.CX UI Tool</h1>
+        <h1 className="text-lg font-bold text-center">Convo.CX Tool</h1>
         <hr />
         <div className="flex flex-col gap-2 text-center">
           <h1 className="text-2xl font-semibold text-center">{title}</h1>

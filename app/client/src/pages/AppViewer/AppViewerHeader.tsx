@@ -40,6 +40,10 @@ import {
   INVITE_USERS_PLACEHOLDER,
 } from "@appsmith/constants/messages";
 import { getAppsmithConfigs } from "@appsmith/configs";
+import {
+  PERMISSION_TYPE,
+  isPermitted,
+} from "@appsmith/utils/permissionHelpers";
 
 const { cloudHosting } = getAppsmithConfigs();
 
@@ -91,6 +95,12 @@ export function AppViewerHeader(props: AppViewerHeaderProps) {
   const pageId = useSelector(getCurrentPageId);
   const editorURL = useHref(builderURL, { pageId });
   const description = useSelector(getCurrentPageDescription);
+
+  const userPermissions = currentApplicationDetails?.userPermissions ?? [];
+  const hasManageApplicationPermission = isPermitted(
+    userPermissions,
+    PERMISSION_TYPE.MANAGE_APPLICATION,
+  );
 
   if (hideHeader) return <HtmlTitle name={currentApplicationDetails?.name} />;
 
@@ -148,19 +158,22 @@ export function AppViewerHeader(props: AppViewerHeaderProps) {
                     )}
                     title={currentApplicationDetails.name}
                     trigger={
-                      <Button
-                        borderRadius={
-                          selectedTheme.properties.borderRadius.appBorderRadius
-                        }
-                        boxShadow="none"
-                        buttonColor={
-                          selectedTheme.properties.colors.primaryColor
-                        }
-                        buttonVariant="SECONDARY"
-                        className="h-8"
-                        data-cy="viewmode-share"
-                        text="Share"
-                      />
+                      hasManageApplicationPermission && (
+                        <Button
+                          borderRadius={
+                            selectedTheme.properties.borderRadius
+                              .appBorderRadius
+                          }
+                          boxShadow="none"
+                          buttonColor={
+                            selectedTheme.properties.colors.primaryColor
+                          }
+                          buttonVariant="SECONDARY"
+                          className="h-8"
+                          data-cy="viewmode-share"
+                          text="Share"
+                        />
+                      )
                     }
                     workspaceId={currentWorkspaceId}
                   />

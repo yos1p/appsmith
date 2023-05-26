@@ -521,6 +521,10 @@ export function ApplicationCard(props: ApplicationCardProps) {
   const hasDeletePermission = hasDeleteApplicationPermission(
     props.application?.userPermissions,
   );
+  const hasManageWorkspacePermissions = isPermitted(
+    props.application?.userPermissions,
+    PERMISSION_TYPE.MANAGE_WORKSPACE,
+  );
 
   const updateColor = (color: string) => {
     setSelectedColor(color);
@@ -878,10 +882,12 @@ export function ApplicationCard(props: ApplicationCardProps) {
             </div>
           )}
         </Wrapper>
-        <CardFooter>
-          <ModifiedDataComponent>{editedByText()}</ModifiedDataComponent>
-          {!!moreActionItems.length && !props.isMobile && ContextMenu}
-        </CardFooter>
+        {hasManageWorkspacePermissions && (
+          <CardFooter>
+            <ModifiedDataComponent>{editedByText()}</ModifiedDataComponent>
+            {!!moreActionItems.length && !props.isMobile && ContextMenu}
+          </CardFooter>
+        )}
       </NameWrapper>
       {showGitBadge && <GitConnectedBadge />}
     </Container>

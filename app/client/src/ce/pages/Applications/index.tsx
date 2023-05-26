@@ -94,7 +94,6 @@ import {
 import { ReactComponent as NoAppsFoundIcon } from "assets/svg/no-apps-icon.svg";
 
 import { setHeaderMeta } from "actions/themeActions";
-import SharedUserList from "pages/common/SharedUserList";
 import { useIsMobileDevice } from "utils/hooks/useDeviceDetect";
 import { Indices } from "constants/Layers";
 import GitSyncModal from "pages/Editor/gitSync/GitSyncModal";
@@ -107,12 +106,10 @@ import RepoLimitExceededErrorModal from "pages/Editor/gitSync/RepoLimitExceededE
 import { resetEditorRequest } from "actions/initActions";
 import {
   hasCreateNewAppPermission,
-  hasCreateWorkspacePermission,
   hasDeleteWorkspacePermission,
   isPermitted,
   PERMISSION_TYPE,
 } from "@appsmith/utils/permissionHelpers";
-import { getTenantPermissions } from "@appsmith/selectors/tenantSelectors";
 import { getAppsmithConfigs } from "@appsmith/configs";
 
 export const { cloudHosting } = getAppsmithConfigs();
@@ -422,8 +419,8 @@ export function LeftPane(props: LeftPaneProps) {
     userWorkspaces = loadingUserWorkspaces as any;
   }
 
-  const tenantPermissions = useSelector(getTenantPermissions);
-  const canCreateWorkspace = hasCreateWorkspacePermission(tenantPermissions);
+  const user = useSelector(getCurrentUser);
+  const canCreateWorkspace = user?.isSuperUser;
 
   const location = useLocation();
   const urlHash = location.hash.slice(1);
@@ -686,10 +683,8 @@ export function ApplicationsSection(props: any) {
           workspace.userPermissions,
           PERMISSION_TYPE.MANAGE_WORKSPACE,
         );
-        const canInviteToWorkspace = isPermitted(
-          workspace.userPermissions,
-          PERMISSION_TYPE.INVITE_USER_TO_WORKSPACE,
-        );
+        const canInviteToWorkspace =
+          hasCreateNewAppPermission(workspace.userPermissions) && !isMobile;
         const canDeleteWorkspace = hasDeleteWorkspacePermission(
           workspace?.userPermissions || [],
         );
@@ -740,7 +735,6 @@ export function ApplicationsSection(props: any) {
               )}
               {!isFetchingApplications && (
                 <WorkspaceShareUsers>
-                  <SharedUserList workspaceId={workspace.id} />
                   {canInviteToWorkspace && !isMobile && (
                     <FormDialogComponent
                       Form={WorkspaceInviteUsersForm}

@@ -10,14 +10,7 @@ import {
 import { ReduxActionTypes } from "@appsmith/constants/ReduxActionConstants";
 import { useSelector } from "react-redux";
 import { getCurrentUser } from "selectors/usersSelectors";
-import {
-  ADMIN_SETTINGS,
-  APPSMITH_DISPLAY_VERSION,
-  createMessage,
-  DOCUMENTATION,
-} from "@appsmith/constants/messages";
-import { getAppsmithConfigs } from "@appsmith/configs";
-import { howMuchTimeBeforeText } from "utils/helpers";
+import { ADMIN_SETTINGS, createMessage } from "@appsmith/constants/messages";
 import { getDefaultAdminSettingsPath } from "@appsmith/utils/adminSettingsHelpers";
 import { getTenantPermissions } from "@appsmith/selectors/tenantSelectors";
 
@@ -87,20 +80,9 @@ const StyledMenuItem = styled(MenuItem)`
   }
 `;
 
-const LeftPaneVersionData = styled.div`
-  display: flex;
-  justify-content: space-between;
-  color: #121826;
-  font-size: 8px;
-  width: 92%;
-  margin-top: 8px;
-`;
-
 export default function MobileSideBar(props: MobileSideBarProps) {
   const user = useSelector(getCurrentUser);
   const tenantPermissions = useSelector(getTenantPermissions);
-  const { appVersion, cloudHosting } = getAppsmithConfigs();
-  const howMuchTimeBefore = howMuchTimeBeforeText(appVersion.releaseDate);
 
   return (
     <MainContainer isOpen={props.isOpen}>
@@ -144,35 +126,6 @@ export default function MobileSideBar(props: MobileSideBarProps) {
           text="Sign Out"
         />
       </Section>
-      <Section>
-        <StyledMenuItem
-          icon="discord"
-          onSelect={() => {
-            window.open("https://discord.gg/rBTTVJp", "_blank");
-          }}
-          text={"Join our Discord"}
-        />
-        <StyledMenuItem
-          icon="book"
-          onSelect={() => {
-            window.open("https://docs.appsmith.com/", "_blank");
-          }}
-          text={createMessage(DOCUMENTATION)}
-        />
-      </Section>
-      <LeftPaneVersionData>
-        <span>
-          {createMessage(
-            APPSMITH_DISPLAY_VERSION,
-            appVersion.edition,
-            appVersion.id,
-            cloudHosting,
-          )}
-        </span>
-        {howMuchTimeBefore !== "" && (
-          <span>Released {howMuchTimeBefore} ago</span>
-        )}
-      </LeftPaneVersionData>
     </MainContainer>
   );
 }

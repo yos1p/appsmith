@@ -10,8 +10,6 @@ import {
   AUTH_LOGIN_URL,
   APPLICATIONS_URL,
   matchApplicationPath,
-  matchTemplatesPath,
-  TEMPLATES_PATH,
   TEMPLATES_ID_PATH,
   matchTemplatesIdPath,
 } from "constants/routes";
@@ -26,7 +24,6 @@ import { Indices } from "constants/Layers";
 import { Icon, IconSize } from "design-system-old";
 import { getTemplateNotificationSeenAction } from "actions/templateActions";
 import { getTenantConfig } from "@appsmith/selectors/tenantSelectors";
-import AnalyticsUtil from "utils/AnalyticsUtil";
 
 const StyledPageHeader = styled(StyledHeader)<{
   hideShadow?: boolean;
@@ -130,11 +127,6 @@ export function PageHeader(props: PageHeaderProps) {
       matcher: matchApplicationPath,
     },
     {
-      title: "Templates",
-      path: TEMPLATES_PATH,
-      matcher: matchTemplatesPath,
-    },
-    {
       title: "Templates id",
       path: TEMPLATES_ID_PATH,
       matcher: matchTemplatesIdPath,
@@ -165,29 +157,13 @@ export function PageHeader(props: PageHeaderProps) {
 
       <Tabs>
         {showTabs && !isMobile && (
-          <>
-            <TabName
-              className="t--apps-tab"
-              isSelected={matchApplicationPath(location.pathname)}
-              onClick={() => history.push(APPLICATIONS_URL)}
-            >
-              <div>Apps</div>
-            </TabName>
-
-            <TabName
-              className="t--templates-tab"
-              isSelected={
-                matchTemplatesPath(location.pathname) ||
-                matchTemplatesIdPath(location.pathname)
-              }
-              onClick={() => {
-                AnalyticsUtil.logEvent("TEMPLATES_TAB_CLICK");
-                history.push(TEMPLATES_PATH);
-              }}
-            >
-              <div>Templates</div>
-            </TabName>
-          </>
+          <TabName
+            className="t--apps-tab"
+            isSelected={matchApplicationPath(location.pathname)}
+            onClick={() => history.push(APPLICATIONS_URL)}
+          >
+            <div>Apps</div>
+          </TabName>
         )}
       </Tabs>
 

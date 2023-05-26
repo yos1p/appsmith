@@ -5,17 +5,11 @@ function FooterLinks() {
     <div className="flex items-center justify-center gap-4 px-2 py-2">
       <a
         className="text-gray-900 hover:text-inherit"
-        href="/privacy-policy.html"
+        href="https://www.alltitude.com"
+        rel="noreferrer"
         target="_blank"
       >
-        Privacy Policy
-      </a>
-      <a
-        className="text-gray-900 hover:text-inherit"
-        href="/terms-and-conditions.html"
-        target="_blank"
-      >
-        Terms and conditions
+        Powered by convo.cx
       </a>
     </div>
   );

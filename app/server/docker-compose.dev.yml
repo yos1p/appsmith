@@ -1,17 +1,17 @@
 version: "3.7"
 
 services:
-  appsmith-editor:
-    depends_on:
-      - appsmith-internal-server
-    build:
-      context: ./../client/
-      dockerfile: Dockerfile
-    ports: 
-      - "9080:80"
-    networks:
-      - appsmith
-    restart: unless-stopped
+  # appsmith-editor:
+  #   depends_on:
+  #     - appsmith-internal-server
+  #   build:
+  #     context: ./../client/
+  #     dockerfile: Dockerfile
+  #   ports: 
+  #     - "9080:80"
+  #   networks:
+  #     - appsmith
+  #   restart: unless-stopped
   appsmith-rts:
     build: 
       context: ./../rts/
@@ -41,6 +41,7 @@ services:
       - appsmith
     volumes:
       - ./container-volumes/git-storage:/data/git-storage
+      - ./envs:/data/envs
     restart: unless-stopped
   mongo:
     image: 'bitnami/mongodb:4.2'

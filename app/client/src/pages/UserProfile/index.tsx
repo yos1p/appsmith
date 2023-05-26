@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import PageWrapper from "@appsmith/pages/common/PageWrapper";
 import styled from "styled-components";
 import { TabComponent, TabProp, Text, TextType } from "design-system-old";
@@ -8,6 +9,7 @@ import { Colors } from "constants/Colors";
 import GitConfig from "./GitConfig";
 import { useLocation } from "react-router";
 import { GIT_PROFILE_ROUTE } from "constants/routes";
+import { getCurrentUser } from "selectors/usersSelectors";
 
 const ProfileWrapper = styled.div`
   width: ${(props) => props.theme.pageContentWidth}px;
@@ -41,15 +43,17 @@ function UserProfile() {
       icon: "general",
     },
   ];
-
-  tabs.push({
-    key: "gitConfig",
-    title: "Git user config",
-    panelComponent: <GitConfig />,
-    icon: "git-branch",
-  });
-  if (location.pathname === GIT_PROFILE_ROUTE) {
-    initialTabIndex = 1;
+  const user = useSelector(getCurrentUser);
+  if (user?.isSuperUser) {
+    tabs.push({
+      key: "gitConfig",
+      title: "Git user config",
+      panelComponent: <GitConfig />,
+      icon: "git-branch",
+    });
+    if (location.pathname === GIT_PROFILE_ROUTE) {
+      initialTabIndex = 1;
+    }
   }
 
   const [selectedTabIndex, setSelectedTabIndex] = useState(initialTabIndex);

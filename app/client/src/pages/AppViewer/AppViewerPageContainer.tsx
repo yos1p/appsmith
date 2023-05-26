@@ -55,7 +55,7 @@ function AppViewerPageContainer(props: AppViewerPageContainerProps) {
               pageId: props.match.params.pageId as string,
             })}
           >
-            Appsmith Editor
+            Convo.CX Editor
           </Link>
         </p>
       );
