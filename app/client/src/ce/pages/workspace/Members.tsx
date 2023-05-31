@@ -193,20 +193,6 @@ export const UserCard = styled(Card)`
   }
 `;
 
-export const EachUser = styled.div`
-  display: flex;
-  align-items: center;
-
-  .user-icons {
-    margin-right: 8px;
-    cursor: initial;
-
-    span {
-      color: var(--appsmith-color-black-0);
-    }
-  }
-`;
-
 export const DeleteIcon = styled(Icon)`
   position: absolute;
   top: ${(props) => props.theme.spaces[9]}px;
@@ -327,32 +313,23 @@ export default function MemberSettings(props: PageProps) {
       setFilteredData(membersData);
     }
   }, [searchValue, membersData]);
-
   const columns = [
     {
       Header: createMessage(() =>
         MEMBERS_TAB_TITLE(filteredData?.length, cloudHosting),
       ),
-      accessor: "users",
+      accessor: "usersName",
       Cell: function UserCell(props: any) {
         const member = props.cell.row.original;
-        return (
-          <EachUser>
-            <>
-              <ProfileImage
-                className="user-icons"
-                size={20}
-                source={
-                  member.photoId
-                    ? `/api/${USER_PHOTO_ASSET_URL}/${member.photoId}`
-                    : undefined
-                }
-                userName={member.username}
-              />
-              <HighlightText highlight={searchValue} text={member.username} />
-            </>
-          </EachUser>
-        );
+        return <HighlightText highlight={searchValue} text={member.name} />;
+      },
+    },
+    {
+      Header: "Email",
+      accessor: "usersEmail",
+      Cell: function UserCell(props: any) {
+        const member = props.cell.row.original;
+        return <HighlightText highlight={searchValue} text={member.username} />;
       },
     },
     {
@@ -476,10 +453,7 @@ export default function MemberSettings(props: PageProps) {
                       }
                       userName={member.username}
                     />
-                    <HighlightText
-                      highlight={searchValue}
-                      text={member.username}
-                    />
+                    <HighlightText highlight={searchValue} text={member.name} />
                     <Text className="user-email" type={TextType.P1}>
                       {member.username}
                     </Text>

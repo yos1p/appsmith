@@ -39,7 +39,7 @@ const SentryRoute = Sentry.withSentryRouting(Route);
 const SettingsWrapper = styled.div<{
   isMobile?: boolean;
 }>`
-  width: ${(props) => (props.isMobile ? "345px" : "916px")};
+  width: ${(props) => (props.isMobile ? "345px" : "1000px")};
   margin: 0 auto;
   height: 100%;
   &::-webkit-scrollbar {
@@ -62,7 +62,7 @@ const StyledStickyHeader = styled(StickyHeader)<{ isMobile?: boolean }>`
     `
   top: 48px;
   position: fixed;
-  width: 916px;
+  width: 980px;
   `}
 `;
 

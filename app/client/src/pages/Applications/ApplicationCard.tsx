@@ -69,6 +69,7 @@ import { CONNECTED_TO_GIT, createMessage } from "@appsmith/constants/messages";
 import { builderURL, viewerURL } from "RouteBuilder";
 import history from "utils/history";
 import urlBuilder from "entities/URLRedirect/URLAssembly";
+import { getCurrentUser } from "selectors/usersSelectors";
 
 type NameWrapperProps = {
   hasReadPermission: boolean;
@@ -521,10 +522,8 @@ export function ApplicationCard(props: ApplicationCardProps) {
   const hasDeletePermission = hasDeleteApplicationPermission(
     props.application?.userPermissions,
   );
-  const hasManageWorkspacePermissions = isPermitted(
-    props.application?.userPermissions,
-    PERMISSION_TYPE.MANAGE_WORKSPACE,
-  );
+  const user = useSelector(getCurrentUser);
+  const hasManageWorkspacePermissions = user?.isSuperUser;
 
   const updateColor = (color: string) => {
     setSelectedColor(color);

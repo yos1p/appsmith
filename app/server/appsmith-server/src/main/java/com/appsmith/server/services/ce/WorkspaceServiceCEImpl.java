@@ -59,12 +59,10 @@ import java.util.stream.Collectors;
 
 import static com.appsmith.server.acl.AclPermission.ASSIGN_PERMISSION_GROUPS;
 import static com.appsmith.server.constants.FieldName.ADMINISTRATOR;
-import static com.appsmith.server.constants.FieldName.DEVELOPER;
 import static com.appsmith.server.constants.FieldName.EMAIL;
 import static com.appsmith.server.constants.FieldName.VIEWER;
 import static com.appsmith.server.constants.FieldName.WEBSITE;
 import static com.appsmith.server.constants.FieldName.WORKSPACE_ADMINISTRATOR_DESCRIPTION;
-import static com.appsmith.server.constants.FieldName.WORKSPACE_DEVELOPER_DESCRIPTION;
 import static com.appsmith.server.constants.FieldName.WORKSPACE_VIEWER_DESCRIPTION;
 import static com.appsmith.server.constants.PatternConstants.EMAIL_PATTERN;
 import static com.appsmith.server.constants.PatternConstants.WEBSITE_PATTERN;
@@ -249,8 +247,6 @@ public class WorkspaceServiceCEImpl extends BaseService<WorkspaceRepository, Wor
     private String generateNewDefaultName(String oldName, String workspaceName) {
         if (oldName.startsWith(ADMINISTRATOR)) {
             return getDefaultNameForGroupInWorkspace(ADMINISTRATOR, workspaceName);
-        } else if (oldName.startsWith(DEVELOPER)) {
-            return getDefaultNameForGroupInWorkspace(DEVELOPER, workspaceName);
         } else if (oldName.startsWith(VIEWER)) {
             return getDefaultNameForGroupInWorkspace(VIEWER, workspaceName);
         }
@@ -276,15 +272,6 @@ public class WorkspaceServiceCEImpl extends BaseService<WorkspaceRepository, Wor
         adminPermissionGroup.setDescription(WORKSPACE_ADMINISTRATOR_DESCRIPTION);
         adminPermissionGroup.setPermissions(Set.of());
 
-        // Developer permission group
-        PermissionGroup developerPermissionGroup = new PermissionGroup();
-        developerPermissionGroup.setName(getDefaultNameForGroupInWorkspace(DEVELOPER, workspaceName));
-        developerPermissionGroup.setDefaultDomainId(workspaceId);
-        developerPermissionGroup.setDefaultDomainType(Workspace.class.getSimpleName());
-        developerPermissionGroup.setTenantId(workspace.getTenantId());
-        developerPermissionGroup.setDescription(WORKSPACE_DEVELOPER_DESCRIPTION);
-        developerPermissionGroup.setPermissions(Set.of());
-
         // App viewer permission group
         PermissionGroup viewerPermissionGroup = new PermissionGroup();
         viewerPermissionGroup.setName(getDefaultNameForGroupInWorkspace(VIEWER, workspaceName));
@@ -294,7 +281,7 @@ public class WorkspaceServiceCEImpl extends BaseService<WorkspaceRepository, Wor
         viewerPermissionGroup.setDescription(WORKSPACE_VIEWER_DESCRIPTION);
         viewerPermissionGroup.setPermissions(Set.of());
 
-        return Flux.fromIterable(List.of(adminPermissionGroup, developerPermissionGroup, viewerPermissionGroup))
+        return Flux.fromIterable(List.of(adminPermissionGroup, viewerPermissionGroup))
                 .flatMap(permissionGroup1 -> permissionGroupService.create(permissionGroup1))
                 .collect(Collectors.toSet());
     }
@@ -303,9 +290,6 @@ public class WorkspaceServiceCEImpl extends BaseService<WorkspaceRepository, Wor
                                                                              Workspace workspace, User user) {
         PermissionGroup adminPermissionGroup = permissionGroups.stream()
                 .filter(permissionGroup -> permissionGroup.getName().startsWith(ADMINISTRATOR))
-                .findFirst().get();
-        PermissionGroup developerPermissionGroup = permissionGroups.stream()
-                .filter(permissionGroup -> permissionGroup.getName().startsWith(DEVELOPER))
                 .findFirst().get();
         PermissionGroup viewerPermissionGroup = permissionGroups.stream()
                 .filter(permissionGroup -> permissionGroup.getName().startsWith(VIEWER))
@@ -339,22 +323,6 @@ public class WorkspaceServiceCEImpl extends BaseService<WorkspaceRepository, Wor
 
         // Assign the user creating the permission group to this permission group
         adminPermissionGroup.setAssignedToUserIds(Set.of(user.getId()));
-
-        // Developer Permissions
-        workspacePermissions = AppsmithRole.ORGANIZATION_DEVELOPER
-                .getPermissions()
-                .stream()
-                .filter(aclPermission -> aclPermission.getEntity().equals(Workspace.class))
-                .map(aclPermission -> new Permission(workspace.getId(), aclPermission))
-                .collect(Collectors.toSet());
-        // The developer should also be able to assign developer & viewer permission groups
-        assignPermissionGroupPermissions = Set.of(developerPermissionGroup, viewerPermissionGroup).stream()
-                .map(permissionGroup -> new Permission(permissionGroup.getId(), ASSIGN_PERMISSION_GROUPS))
-                .collect(Collectors.toSet());
-        permissions = collateAllPermissions(workspacePermissions,
-                                            assignPermissionGroupPermissions,
-                                            readPermissionGroupPermissions);
-        developerPermissionGroup.setPermissions(permissions);
 
         // App Viewer Permissions
         workspacePermissions = AppsmithRole.ORGANIZATION_VIEWER
@@ -532,10 +500,8 @@ public class WorkspaceServiceCEImpl extends BaseService<WorkspaceRepository, Wor
                     list.forEach(item -> {
                         if(item.getName().startsWith(FieldName.ADMINISTRATOR)) {
                             permissionGroupInfoDTOArray[0] = item;
-                        } else if(item.getName().startsWith(FieldName.DEVELOPER)) {
-                            permissionGroupInfoDTOArray[1] = item;
                         } else if(item.getName().startsWith(FieldName.VIEWER)) {
-                            permissionGroupInfoDTOArray[2] = item;
+                            permissionGroupInfoDTOArray[1] = item;
                         }
                     });
 

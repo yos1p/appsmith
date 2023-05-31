@@ -690,15 +690,8 @@ public class DatabaseChangelog1 {
                     .map(role -> role.getUsername())
                     .collect(Collectors.toSet());
 
-            Set<String> developerUsernames = organization.getUserRoles()
-                    .stream()
-                    .filter(role -> (role.getRole().equals(AppsmithRole.ORGANIZATION_DEVELOPER)))
-                    .map(role -> role.getUsername())
-                    .collect(Collectors.toSet());
-
             // All the developers and administrators of the organization should be allowed to get invite permissions
             Set<String> invitePermissionUsernames = new HashSet<>();
-            invitePermissionUsernames.addAll(developerUsernames);
             invitePermissionUsernames.addAll(adminUsernames);
 
             Set<Policy> policies = organization.getPolicies();

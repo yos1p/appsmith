@@ -39,10 +39,8 @@ public class AppsmithComparatorsCE {
             private int getOrder(String name) {
                 if (name.startsWith(FieldName.ADMINISTRATOR)) {
                     return 0;
-                } else if (name.startsWith(FieldName.DEVELOPER)) {
-                    return 1;
                 } else {
-                    return 2;
+                    return 1;
                 }
             }
         };

@@ -42,7 +42,6 @@ import {
   PERMISSION_TYPE,
 } from "@appsmith/utils/permissionHelpers";
 import { getAppsmithConfigs } from "@appsmith/configs";
-import { ReactComponent as NoEmailConfigImage } from "assets/images/email-not-configured.svg";
 import AnalyticsUtil from "utils/AnalyticsUtil";
 import {
   Button,
@@ -65,7 +64,7 @@ import { Tooltip } from "@blueprintjs/core";
 import { isEllipsisActive } from "utils/helpers";
 import { USER_PHOTO_ASSET_URL } from "constants/userConstants";
 
-const { cloudHosting, mailEnabled } = getAppsmithConfigs();
+const { cloudHosting } = getAppsmithConfigs();
 
 export const CommonTitleTextStyle = css`
   color: ${Colors.CHARCOAL};
@@ -331,7 +330,6 @@ function WorkspaceInviteUsersForm(props: any) {
   const {
     allUsers,
     anyTouched,
-    disableEmailSetup = false,
     disableManageUsers = false,
     disableUserList = false,
     error,
@@ -522,66 +520,48 @@ function WorkspaceInviteUsersForm(props: any) {
         {isLoading ? (
           <Loading size={30} />
         ) : (
-          <>
-            {!mailEnabled && !disableEmailSetup && (
-              <MailConfigContainer>
-                {allUsers.length === 0 && <NoEmailConfigImage />}
-                <span>You haven’t setup any email service yet</span>
-                <a
-                  href="https://docs.appsmith.com/v/v1.2.1/setup/docker/email"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Please configure your email service to invite people
-                </a>
-              </MailConfigContainer>
-            )}
-            {!disableUserList && (
-              <UserList
-                ref={userRef}
-                style={{ justifyContent: "space-between" }}
-              >
-                {allUsersProfiles.map(
-                  (user: {
-                    username: string;
-                    name: string;
-                    permissionGroupId: string;
-                    permissionGroupName: string;
-                    initials: string;
-                    photoId?: string;
-                  }) => {
-                    return (
-                      <Fragment key={user.username}>
-                        <User>
-                          <UserInfo>
-                            <ProfileImage
-                              source={
-                                user.photoId
-                                  ? `/api/${USER_PHOTO_ASSET_URL}/${user.photoId}`
-                                  : undefined
-                              }
-                              userName={user.name || user.username}
-                            />
-                            <UserName>
-                              <Text type={TextType.H5}>{user.name}</Text>
-                              <Text type={TextType.P2}>{user.username}</Text>
-                            </UserName>
-                          </UserInfo>
-                          <UserRole>
-                            <Text type={TextType.P1}>
-                              {user.permissionGroupName?.split(" - ")[0]}
-                            </Text>
-                          </UserRole>
-                        </User>
+          !disableUserList && (
+            <UserList ref={userRef} style={{ justifyContent: "space-between" }}>
+              {allUsersProfiles.map(
+                (user: {
+                  username: string;
+                  name: string;
+                  permissionGroupId: string;
+                  permissionGroupName: string;
+                  initials: string;
+                  photoId?: string;
+                }) => {
+                  return (
+                    <Fragment key={user.username}>
+                      <User>
+                        <UserInfo>
+                          <ProfileImage
+                            source={
+                              user.photoId
+                                ? `/api/${USER_PHOTO_ASSET_URL}/${user.photoId}`
+                                : undefined
+                            }
+                            userName={user.name || user.username}
+                          />
+                          <UserName>
+                            <Text type={TextType.H5}>{user.name}</Text>
+                            <Text type={TextType.P2}>{user.username}</Text>
+                          </UserName>
+                        </UserInfo>
+                        <UserRole>
+                          <Text type={TextType.P1}>
+                            {user.permissionGroupName?.split(" - ")[0]}
+                          </Text>
+                        </UserRole>
+                      </User>
 
-                        <RoleDivider />
-                      </Fragment>
-                    );
-                  },
-                )}
-              </UserList>
-            )}
-          </>
+                      <RoleDivider />
+                    </Fragment>
+                  );
+                },
+              )}
+            </UserList>
+          )
         )}
         <ErrorBox message={submitSucceeded || submitFailed}>
           {submitSucceeded && (

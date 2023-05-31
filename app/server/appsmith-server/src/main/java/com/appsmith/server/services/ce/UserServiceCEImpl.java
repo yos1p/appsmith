@@ -500,16 +500,18 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
                                 final UserSignupDTO userSignupDTO = new UserSignupDTO();
                                 userSignupDTO.setUser(savedUser);
 
-                                return workspaceService.createDefault(new Workspace(), savedUser)
-                                        .map(workspace -> {
-                                            log.debug("Created blank default workspace for user '{}'.", savedUser.getEmail());
-                                            userSignupDTO.setDefaultWorkspaceId(workspace.getId());
-                                            return userSignupDTO;
-                                        })
-                                        .onErrorResume(e -> {
-                                            log.debug("Error creating default workspace for user '{}'.", savedUser.getEmail(), e);
-                                            return Mono.just(userSignupDTO);
-                                        });
+                                // Disable creating default workspace for new user
+//                                return workspaceService.createDefault(new Workspace(), savedUser)
+//                                        .map(workspace -> {
+//                                            log.debug("Created blank default workspace for user '{}'.", savedUser.getEmail());
+//                                            userSignupDTO.setDefaultWorkspaceId(workspace.getId());
+//                                            return userSignupDTO;
+//                                        })
+//                                        .onErrorResume(e -> {
+//                                            log.debug("Error creating default workspace for user '{}'.", savedUser.getEmail(), e);
+//                                            return Mono.just(userSignupDTO);
+//                                        });
+                                return Mono.just(userSignupDTO);
                             })
                             .flatMap(userSignupDTO -> findByEmail(userSignupDTO.getUser().getEmail()).map(user1 -> {
                                 userSignupDTO.setUser(user1);

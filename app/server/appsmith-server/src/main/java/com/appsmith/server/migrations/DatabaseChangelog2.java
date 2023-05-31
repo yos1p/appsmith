@@ -1537,17 +1537,6 @@ public class DatabaseChangelog2 {
         adminPermissionGroup.setPermissions(permissions);
         adminPermissionGroup = mongoTemplate.save(adminPermissionGroup);
 
-        // Developer permission group
-        PermissionGroup developerPermissionGroup = new PermissionGroup();
-        developerPermissionGroup.setName(getDefaultNameForGroupInWorkspace(FieldName.DEVELOPER, workspaceName));
-        developerPermissionGroup.setDefaultWorkspaceId(workspaceId);
-        developerPermissionGroup.setTenantId(workspace.getTenantId());
-        developerPermissionGroup.setDescription(FieldName.WORKSPACE_DEVELOPER_DESCRIPTION);
-        developerPermissionGroup = mongoTemplate.save(developerPermissionGroup);
-        // This ensures that a user can leave a permission group
-        permissions = Set.of(new Permission(developerPermissionGroup.getId(), AclPermission.UNASSIGN_PERMISSION_GROUPS));
-        developerPermissionGroup.setPermissions(permissions);
-        developerPermissionGroup = mongoTemplate.save(developerPermissionGroup);
 
         // App viewer permission group
         PermissionGroup viewerPermissionGroup = new PermissionGroup();
@@ -1561,15 +1550,12 @@ public class DatabaseChangelog2 {
         viewerPermissionGroup.setPermissions(permissions);
         viewerPermissionGroup = mongoTemplate.save(viewerPermissionGroup);
 
-        return Set.of(adminPermissionGroup, developerPermissionGroup, viewerPermissionGroup);
+        return Set.of(adminPermissionGroup, viewerPermissionGroup);
     }
 
     private Set<PermissionGroup> generatePermissionsForDefaultPermissionGroups(MongoTemplate mongoTemplate, PolicyUtils policyUtils, Set<PermissionGroup> permissionGroups, Workspace workspace, Map<String, String> userIdForEmail, Set<String> validUserIds) {
         PermissionGroup adminPermissionGroup = permissionGroups.stream()
                 .filter(permissionGroup -> permissionGroup.getName().startsWith(FieldName.ADMINISTRATOR))
-                .findFirst().get();
-        PermissionGroup developerPermissionGroup = permissionGroups.stream()
-                .filter(permissionGroup -> permissionGroup.getName().startsWith(FieldName.DEVELOPER))
                 .findFirst().get();
         PermissionGroup viewerPermissionGroup = permissionGroups.stream()
                 .filter(permissionGroup -> permissionGroup.getName().startsWith(FieldName.VIEWER))
@@ -1628,32 +1614,6 @@ public class DatabaseChangelog2 {
 
         adminPermissionGroup.setAssignedToUserIds(adminUserIds);
 
-        // Developer Permissions
-        workspacePermissions = AppsmithRole.ORGANIZATION_DEVELOPER
-                .getPermissions()
-                .stream()
-                .filter(aclPermission -> aclPermission.getEntity().equals(Workspace.class))
-                .map(aclPermission -> new Permission(workspace.getId(), aclPermission))
-                .collect(Collectors.toSet());
-        // The developer should also be able to assign developer & viewer permission groups
-        assignPermissionGroupPermissions = Set.of(developerPermissionGroup, viewerPermissionGroup).stream()
-                .map(permissionGroup -> new Permission(permissionGroup.getId(), AclPermission.ASSIGN_PERMISSION_GROUPS))
-                .collect(Collectors.toSet());
-        permissions = new HashSet<>(developerPermissionGroup.getPermissions());
-        permissions.addAll(workspacePermissions);
-        permissions.addAll(assignPermissionGroupPermissions);
-        permissions.addAll(readPermissionGroupPermissions);
-        developerPermissionGroup.setPermissions(permissions);
-
-        // Assign developer user ids to the developer permission group
-        Set<String> developerUserIds = userRoles
-                .stream()
-                .filter(userRole -> userRole.getRole().equals(AppsmithRole.ORGANIZATION_DEVELOPER))
-                .map(UserRole::getUserId)
-                .collect(Collectors.toSet());
-
-        developerPermissionGroup.setAssignedToUserIds(developerUserIds);
-
         // App Viewer Permissions
         workspacePermissions = AppsmithRole.ORGANIZATION_VIEWER
                 .getPermissions()
@@ -1680,7 +1640,7 @@ public class DatabaseChangelog2 {
 
         viewerPermissionGroup.setAssignedToUserIds(viewerUserIds);
 
-        Set<PermissionGroup> savedPermissionGroups = Set.of(adminPermissionGroup, developerPermissionGroup, viewerPermissionGroup);
+        Set<PermissionGroup> savedPermissionGroups = Set.of(adminPermissionGroup, viewerPermissionGroup);
 
         // Apply the permissions to the permission groups
         for (PermissionGroup permissionGroup : savedPermissionGroups) {
@@ -1692,10 +1652,9 @@ public class DatabaseChangelog2 {
 
         // Save the permission groups
         adminPermissionGroup = mongoTemplate.save(adminPermissionGroup);
-        developerPermissionGroup = mongoTemplate.save(developerPermissionGroup);
         viewerPermissionGroup = mongoTemplate.save(viewerPermissionGroup);
 
-        return Set.of(adminPermissionGroup, developerPermissionGroup, viewerPermissionGroup);
+        return Set.of(adminPermissionGroup, viewerPermissionGroup);
     }
 
     private void rollbackAddDefaultPermissionGroups(MongoTemplate mongoTemplate, Workspace workspace) {
