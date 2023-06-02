@@ -679,6 +679,9 @@ export function ApplicationsSection(props: any) {
     workspacesListComponent = updatedWorkspaces.map(
       (workspaceObject: any, index: number) => {
         const { applications, workspace } = workspaceObject;
+        applications.sort((a: any, b: any) => {
+          return a.priority - b.priority;
+        });
         const hasManageWorkspacePermissions = isPermitted(
           workspace.userPermissions,
           PERMISSION_TYPE.MANAGE_WORKSPACE,

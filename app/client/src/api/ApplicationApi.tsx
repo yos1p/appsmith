@@ -112,6 +112,7 @@ export type UpdateApplicationPayload = {
   appLayout?: AppLayoutConfig;
   applicationVersion?: number;
   embedSetting?: AppEmbedSetting;
+  priority?: number;
 };
 
 export type UpdateApplicationRequest = UpdateApplicationPayload & {

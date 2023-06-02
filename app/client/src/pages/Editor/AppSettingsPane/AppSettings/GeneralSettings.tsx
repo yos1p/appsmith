@@ -3,6 +3,8 @@ import { UpdateApplicationPayload } from "api/ApplicationApi";
 import {
   GENERAL_SETTINGS_APP_ICON_LABEL,
   GENERAL_SETTINGS_APP_NAME_LABEL,
+  GENERAL_SETTINGS_APP_PRIORITY_INVALID,
+  GENERAL_SETTINGS_APP_PRIORITY_LABEL,
   GENERAL_SETTINGS_NAME_EMPTY_MESSAGE,
 } from "@appsmith/constants/messages";
 import classNames from "classnames";
@@ -55,6 +57,11 @@ function GeneralSettings() {
   const [applicationIcon, setApplicationIcon] = useState(
     application?.icon as AppIconName,
   );
+  const [appPriority, setAppPriority] = useState(application?.priority);
+  if (appPriority === undefined) {
+    setAppPriority(100);
+  }
+  const [isAppPriorityValid, setIsAppPriorityValid] = useState(true);
 
   useEffect(() => {
     !isSavingAppName && setApplicationName(application?.name);
@@ -63,17 +70,21 @@ function GeneralSettings() {
   const updateAppSettings = useCallback(
     debounce((icon?: AppIconName) => {
       const isAppNameUpdated = applicationName !== application?.name;
+      const isAppPriorityUpdated = appPriority !== application?.priority;
 
       const payload: UpdateApplicationPayload = { currentApp: true };
       if (isAppNameUpdated && isAppNameValid) {
         payload.name = applicationName;
       }
       icon ? (payload.icon = icon) : null;
+      if (isAppPriorityUpdated && isAppPriorityValid) {
+        payload.priority = appPriority;
+      }
 
-      (isAppNameUpdated || icon) &&
+      (isAppNameUpdated || icon || isAppPriorityUpdated) &&
         dispatch(updateApplication(applicationId, payload));
     }, 50),
-    [applicationName, application, applicationId],
+    [applicationName, appPriority, application, applicationId],
   );
 
   return (
@@ -136,6 +147,52 @@ function GeneralSettings() {
           selectedIcon={applicationIcon}
         />
       </IconSelectorWrapper>
+
+      <Text type={TextType.P1}>{GENERAL_SETTINGS_APP_PRIORITY_LABEL()}</Text>
+      <div
+        className={classNames({
+          "pt-1 pb-2 relative": true,
+          "pb-4": !isAppNameValid,
+        })}
+      >
+        {isSavingAppName && <TextLoaderIcon />}
+        <TextInput
+          defaultValue={appPriority}
+          fill
+          id="t--general-settings-app-priority"
+          // undefined sent implicitly - parameter "icon"
+          onBlur={() => updateAppSettings()}
+          onChange={(value: string) => setAppPriority(Number(value))}
+          onKeyPress={(ev: React.KeyboardEvent) => {
+            if (ev.key === "Enter") {
+              // undefined sent implicitly - parameter "icon"
+              updateAppSettings();
+            }
+          }}
+          placeholder="App priority (0-1000)"
+          type="input"
+          validator={(value: string) => {
+            let result: { isValid: boolean; message?: string } = {
+              isValid: true,
+            };
+            // check if value is a number between 0 and 1000
+            if (
+              !/^\d+$/.test(value) ||
+              Number(value) < 0 ||
+              Number(value) > 1000
+            ) {
+              setIsAppPriorityValid(false);
+              result = {
+                isValid: false,
+                message: GENERAL_SETTINGS_APP_PRIORITY_INVALID(),
+              };
+            }
+            setIsAppPriorityValid(result.isValid);
+            return result;
+          }}
+          value={appPriority}
+        />
+      </div>
     </>
   );
 }

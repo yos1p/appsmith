@@ -92,6 +92,8 @@ public class Application extends BaseDomain {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Integer evaluationVersion;
 
+    Integer priority;
+
     /**
      * applicationVersion will be used when we've a breaking change in application, and it's not possible to write a
      * migration. User need to update the application manually.
@@ -195,6 +197,7 @@ public class Application extends BaseDomain {
         this.publishedNavigationSetting = application.getPublishedNavigationSetting() == null ? null : new NavigationSetting();
         this.unpublishedCustomJSLibs = application.getUnpublishedCustomJSLibs();
         this.collapseInvisibleWidgets = application.getCollapseInvisibleWidgets();
+        this.priority = application.getPriority() == null? 100 : application.getPriority();
     }
 
     public void exportApplicationPages(final Map<String, String> pageIdToNameMap) {
@@ -224,6 +227,7 @@ public class Application extends BaseDomain {
         this.sanitiseToExportBaseObject();
         this.setDefaultPermissionGroup(null);
         this.setPublishedCustomJSLibs(new HashSet<>());
+        this.setPriority(100);
     }
 
     public List<ApplicationPage> getPages() {

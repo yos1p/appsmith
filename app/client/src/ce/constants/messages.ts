@@ -1400,6 +1400,10 @@ export const GENERAL_SETTINGS_NAME_SPECIAL_CHARACTER_ERROR = () =>
   "Only alphanumeric or '-()' are allowed";
 export const GENERAL_SETTINGS_APP_ICON_LABEL = () => "App Icon";
 
+export const GENERAL_SETTINGS_APP_PRIORITY_LABEL = () => "App Priority";
+export const GENERAL_SETTINGS_APP_PRIORITY_INVALID = () =>
+  "App priority must be between 0 and 1000";
+
 export const THEME_SETTINGS_SECTION_HEADER = () => "Theme";
 export const THEME_SETTINGS_SECTION_CONTENT_HEADER = () => "Theme Settings";
 export const THEME_SETTINGS_SECTION_HEADER_DESC = () =>
