@@ -18,6 +18,7 @@ import {
 import { builderURL } from "RouteBuilder";
 import { getCanvasWidgetsStructure } from "selectors/entitiesSelector";
 import equal from "fast-deep-equal/es6";
+import { getAppsmithConfigs } from "ce/configs";
 
 const Section = styled.section`
   height: 100%;
@@ -38,6 +39,7 @@ function AppViewerPageContainer(props: AppViewerPageContainerProps) {
   const currentApplication = useSelector(getCurrentApplication);
   const { match } = props;
 
+  const { instanceName } = getAppsmithConfigs();
   // get appsmith editr link
   const appsmithEditorLink = useMemo(() => {
     if (
@@ -55,7 +57,7 @@ function AppViewerPageContainer(props: AppViewerPageContainerProps) {
               pageId: props.match.params.pageId as string,
             })}
           >
-            Convo.CX Editor
+            {instanceName}
           </Link>
         </p>
       );

@@ -24,6 +24,7 @@ import { Indices } from "constants/Layers";
 import { Icon, IconSize } from "design-system-old";
 import { getTemplateNotificationSeenAction } from "actions/templateActions";
 import { getTenantConfig } from "@appsmith/selectors/tenantSelectors";
+import { getAppsmithConfigs } from "ce/configs";
 
 const StyledPageHeader = styled(StyledHeader)<{
   hideShadow?: boolean;
@@ -137,6 +138,8 @@ export function PageHeader(props: PageHeaderProps) {
     return tabs.some((tab) => tab.matcher(location.pathname));
   }, [featureFlags, location.pathname]);
 
+  const { instanceName } = getAppsmithConfigs();
+
   return (
     <StyledPageHeader
       data-testid="t--appsmith-page-header"
@@ -149,7 +152,7 @@ export function PageHeader(props: PageHeaderProps) {
         {tenantConfig.brandLogoUrl && (
           <Link style={{ width: "202px" }} to={APPLICATIONS_URL}>
             <h1 className="font-bold text-lg" style={{ color: "black" }}>
-              Convo.CX Tool
+              {instanceName}
             </h1>
           </Link>
         )}

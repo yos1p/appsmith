@@ -16,7 +16,7 @@ import localStorage from "utils/localStorage";
 import isUndefined from "lodash/isUndefined";
 
 export const APPSMITH_INSTANCE_NAME_SETTING_SETTING: Setting = {
-  id: "APPSMITH_INSTANCE_NAME",
+  id: "REACT_APP_APPSMITH_INSTANCE_NAME",
   category: SettingCategories.GENERAL,
   controlType: SettingTypes.TEXTINPUT,
   controlSubType: SettingSubtype.TEXT,

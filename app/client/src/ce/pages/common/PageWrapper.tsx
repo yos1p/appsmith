@@ -1,3 +1,4 @@
+import { getAppsmithConfigs } from "@appsmith/configs";
 import React, { ReactNode } from "react";
 import { Helmet } from "react-helmet";
 import styled from "styled-components";
@@ -56,12 +57,13 @@ export type PageWrapperProps = {
 
 export function PageWrapper(props: PageWrapperProps) {
   const { isFixed = false, isSavable = false } = props;
+  const { instanceName } = getAppsmithConfigs();
   return (
     <Wrapper isFixed={isFixed}>
       <Helmet>
         <title>{`${
           props.displayName ? `${props.displayName} | ` : ""
-        }Convo.CX`}</title>
+        } ${instanceName}`}</title>
       </Helmet>
       <PageBody isSavable={isSavable}>{props.children}</PageBody>
     </Wrapper>

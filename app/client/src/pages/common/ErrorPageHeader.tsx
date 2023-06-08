@@ -14,6 +14,7 @@ import { flushErrorsAndRedirect, flushErrors } from "actions/errorActions";
 import { getSafeCrash } from "selectors/errorSelectors";
 import { Indices } from "constants/Layers";
 import { getTenantConfig } from "@appsmith/selectors/tenantSelectors";
+import { getAppsmithConfigs } from "@appsmith/configs";
 
 const StyledPageHeader = styled(StyledHeader)`
   box-shadow: none;
@@ -53,6 +54,7 @@ export function ErrorPageHeader(props: ErrorPageHeaderProps) {
     loginUrl += `?redirectUrl=${encodeURIComponent(redirectUrl)}`;
   }
 
+  const { instanceName } = getAppsmithConfigs();
   return (
     <StyledPageHeader>
       <HeaderSection>
@@ -65,7 +67,7 @@ export function ErrorPageHeader(props: ErrorPageHeaderProps) {
             style={{ width: "202px" }}
             to={APPLICATIONS_URL}
           >
-            <h1 className="font-bold text-lg">Convo.CX Tool</h1>
+            <h1 className="font-bold text-lg">{instanceName}</h1>
           </Link>
         )}
       </HeaderSection>

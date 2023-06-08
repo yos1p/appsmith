@@ -52,6 +52,7 @@ import TemplatesModal from "pages/Templates/TemplatesModal";
 import ReconnectDatasourceModal from "./gitSync/ReconnectDatasourceModal";
 import MultiPaneContainer from "pages/Editor/MultiPaneContainer";
 import { isMultiPaneActive } from "selectors/multiPaneSelectors";
+import { getAppsmithConfigs } from "@appsmith/configs";
 
 type EditorProps = {
   currentApplicationId?: string;
@@ -206,6 +207,8 @@ class Editor extends Component<Props> {
         </CenteredWrapper>
       );
     }
+
+    const { instanceName } = getAppsmithConfigs();
     return (
       <ThemeProvider theme={theme}>
         <DndProvider
@@ -218,8 +221,8 @@ class Editor extends Component<Props> {
             <Helmet>
               <meta charSet="utf-8" />
               <title>
-                {`${this.props.currentApplicationName} |`} Editor | Convo.CX
-                Tool
+                {`${this.props.currentApplicationName} |`} Editor |{" "}
+                {instanceName}
               </title>
             </Helmet>
             <GlobalHotKeys>

@@ -349,6 +349,8 @@ export function EditorHeader(props: EditorHeaderProps) {
     ];
   }, []);
 
+  const { instanceName } = getAppsmithConfigs();
+
   return (
     <ThemeProvider theme={theme}>
       <HeaderWrapper
@@ -408,7 +410,7 @@ export function EditorHeader(props: EditorHeaderProps) {
           >
             <Link style={{ width: "202px" }} to={APPLICATIONS_URL}>
               <h1 className="font-bold text-lg" style={{ color: "black" }}>
-                Convo.CX Tool
+                {instanceName}
               </h1>
             </Link>
           </TooltipComponent>

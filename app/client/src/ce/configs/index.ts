@@ -5,6 +5,7 @@ import { createBrowserHistory } from "history";
 const history = createBrowserHistory();
 
 export interface INJECTED_CONFIGS {
+  instanceName: string;
   sentry: {
     dsn: string;
     release: string;
@@ -131,6 +132,7 @@ export const getConfigsFromEnvVars = (): INJECTED_CONFIGS => {
       .APPSMITH_DISABLE_IFRAME_WIDGET_SANDBOX
       ? process.env.APPSMITH_DISABLE_IFRAME_WIDGET_SANDBOX.length > 0
       : false,
+    instanceName: "Convo.CX Tool",
   };
 };
 
@@ -198,6 +200,11 @@ export const getAppsmithConfigs = (): AppsmithUIConfigs => {
   const segmentCEKey = getConfig(
     ENV_CONFIG.segment.ceKey,
     APPSMITH_FEATURE_CONFIGS.segment.ceKey,
+  );
+
+  const instanceName = getConfig(
+    ENV_CONFIG.instanceName,
+    APPSMITH_FEATURE_CONFIGS.instanceName,
   );
 
   // We enable segment tracking if either the Cloud API key is set or the self-hosted CE key is set
@@ -273,5 +280,6 @@ export const getAppsmithConfigs = (): AppsmithUIConfigs => {
     disableIframeWidgetSandbox:
       ENV_CONFIG.disableIframeWidgetSandbox ||
       APPSMITH_FEATURE_CONFIGS.disableIframeWidgetSandbox,
+    instanceName: instanceName.value,
   };
 };
