@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { Colors } from "constants/Colors";
-import ProfileImage from "pages/common/ProfileImage";
 import { MenuItem } from "design-system-old";
+import { Text, Avatar } from "design-system";
+import { getInitials } from "utils/AppsmithUtils";
 import {
   DropdownOnSelectActions,
   getOnSelectAction,
@@ -34,14 +35,7 @@ const MainContainer = styled.div<{ isOpen: boolean }>`
 
 const Section = styled.div`
   padding: 20px 0;
-  border-bottom: 1px solid ${Colors.MERCURY};
-
-  & > h4 {
-    color: ${Colors.BLACK};
-    font-size: 13px;
-    font-weight: 600;
-    margin-left: 4px;
-  }
+  border-bottom: 1px solid var(--ads-v2-color-border);
 `;
 
 const ProfileSection = styled(Section)`
@@ -56,27 +50,17 @@ const UserNameSection = styled.div`
   margin-left: 12px;
 `;
 
-const Name = styled.span`
-  font-weight: 600;
-  color: ${Colors.BLACK};
-  font-size: 16px;
-`;
-
-const Email = styled.span`
-  font-size: 14px;
-  color: ${Colors.GREY_8};
-`;
-
 const StyledMenuItem = styled(MenuItem)`
-  svg {
-    width: 16px;
-    height: 16px;
-    fill: ${Colors.DARK_GRAY};
+  svg,
+  .cs-icon svg path {
+    width: 18px;
+    height: 18px;
+    fill: var(--ads-v2-color-fg);
   }
 
   .cs-text {
-    color: ${Colors.BLACK};
-    font-size: 16px;
+    font-size: 14px;
+    color: var(--ads-v2-color-fg);
   }
 `;
 
@@ -87,19 +71,20 @@ export default function MobileSideBar(props: MobileSideBarProps) {
   return (
     <MainContainer isOpen={props.isOpen}>
       <ProfileSection>
-        <ProfileImage
+        <Avatar
           className="t--profile-menu-icon"
-          size={52}
-          source={!!props.photoId ? `/api/v1/assets/${props.photoId}` : ""}
-          userName={props.name || props.userName}
+          firstLetter={getInitials(props.name || props.userName)}
+          image={!!props.photoId ? `/api/v1/assets/${props.photoId}` : ""}
+          label={props.name || props.userName || ""}
+          size="md"
         />
         <UserNameSection>
-          <Name>{props.name}</Name>
-          <Email>{props.userName}</Email>
+          <Text kind="heading-s">{props.name}</Text>
+          <Text kind="body-s">{props.userName}</Text>
         </UserNameSection>
       </ProfileSection>
       <Section>
-        <h4>ACCOUNT</h4>
+        <Text kind="heading-s">Account</Text>
         {user?.isSuperUser && user?.isConfigurable && (
           <StyledMenuItem
             className="admin-settings-menu-option"

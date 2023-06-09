@@ -1,11 +1,12 @@
-import { EventType } from "constants/AppsmithActionConstants/ActionConstants";
-import { TriggerMeta } from "@appsmith/sagas/ActionExecution/ActionExecutionSagas";
+import type { EventType } from "constants/AppsmithActionConstants/ActionConstants";
+import type { TriggerMeta } from "@appsmith/sagas/ActionExecution/ActionExecutionSagas";
 import { call, put, spawn, take } from "redux-saga/effects";
 import { logActionExecutionError } from "sagas/ActionExecution/errorUtils";
 import { setUserCurrentGeoLocation } from "actions/browserRequestActions";
-import { Channel, channel } from "redux-saga";
+import type { Channel } from "redux-saga";
+import { channel } from "redux-saga";
 import { evalWorker } from "sagas/EvaluationsSaga";
-import {
+import type {
   TGetGeoLocationDescription,
   TWatchGeoLocationDescription,
 } from "workers/Evaluation/fns/geolocationFns";
@@ -102,19 +103,11 @@ function* errorCallbackHandler(triggerMeta: TriggerMeta, listenerId?: string) {
         { error: sanitizeGeolocationError(error) },
         listenerId,
       );
-    logActionExecutionError(
-      error.message,
-      triggerMeta.source,
-      triggerMeta.triggerPropertyName,
-    );
+    logActionExecutionError(error.message, true);
   }
 }
 
-export function* getCurrentLocationSaga(
-  action: TGetGeoLocationDescription,
-  _: EventType,
-  triggerMeta: TriggerMeta,
-) {
+export function* getCurrentLocationSaga(action: TGetGeoLocationDescription) {
   const { payload: actionPayload } = action;
   try {
     const location: GeolocationPosition = yield call(
@@ -125,11 +118,7 @@ export function* getCurrentLocationSaga(
     yield put(setUserCurrentGeoLocation(currentLocation));
     return currentLocation;
   } catch (error) {
-    logActionExecutionError(
-      (error as Error).message,
-      triggerMeta.source,
-      triggerMeta.triggerPropertyName,
-    );
+    logActionExecutionError((error as Error).message, true);
     if (error instanceof GeolocationPositionError) {
       const sanitizedError = sanitizeGeolocationError(error);
       throw new GeoLocationError(sanitizedError.message, [sanitizedError]);
@@ -149,8 +138,7 @@ export function* watchCurrentLocation(
     // at a given point in time, only one watch is active
     logActionExecutionError(
       "A watchLocation is already active. Clear it before before starting a new one",
-      triggerMeta.source,
-      triggerMeta.triggerPropertyName,
+      true,
     );
 
     return;
@@ -176,16 +164,9 @@ export function* watchCurrentLocation(
   );
 }
 
-export function* stopWatchCurrentLocation(
-  eventType: EventType,
-  triggerMeta: TriggerMeta,
-) {
+export function* stopWatchCurrentLocation() {
   if (watchId === undefined) {
-    logActionExecutionError(
-      "No location watch active",
-      triggerMeta.source,
-      triggerMeta.triggerPropertyName,
-    );
+    logActionExecutionError("No location watch active", true);
     return;
   }
   navigator.geolocation.clearWatch(watchId);

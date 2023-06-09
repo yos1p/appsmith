@@ -20,6 +20,7 @@ export const WIDGET = {
   RATING: "ratewidget",
   CHECKBOXGROUP: "checkboxgroupwidget",
   CHECKBOX: "checkboxwidget",
+  CHART: "chartwidget",
   AUDIO: "audiowidget",
   AUDIORECORDER: "audiorecorderwidget",
   PHONEINPUT: "phoneinputwidget",
@@ -31,6 +32,7 @@ export const WIDGET = {
   NUMBER_SLIDER: "numbersliderwidget",
   RANGE_SLIDER: "rangesliderwidget",
   IFRAME: "iframewidget",
+  DIVIDER: "dividerwidget",
 } as const;
 
 // property pane element selector are maintained here

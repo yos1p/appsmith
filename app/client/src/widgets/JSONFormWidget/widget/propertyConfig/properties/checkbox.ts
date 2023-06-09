@@ -1,17 +1,14 @@
 import { ValidationTypes } from "constants/WidgetValidation";
 import { FieldType } from "widgets/JSONFormWidget/constants";
-import {
-  HiddenFnParams,
-  getSchemaItem,
-  getAutocompleteProperties,
-} from "../helper";
+import type { HiddenFnParams } from "../helper";
+import { getSchemaItem, getAutocompleteProperties } from "../helper";
 
 const PROPERTIES = {
   content: {
     data: [
       {
         propertyName: "defaultValue",
-        label: "Default State",
+        label: "Default state",
         helpText: "Sets the default checked state of the field",
         controlType: "SWITCH",
         isJSConvertible: true,
@@ -26,7 +23,7 @@ const PROPERTIES = {
     ],
     events: [
       {
-        helpText: "Triggers an action when the check state is changed",
+        helpText: "when the check state is changed",
         propertyName: "onCheckChange",
         label: "onCheckChange",
         controlType: "ACTION_SELECTOR",

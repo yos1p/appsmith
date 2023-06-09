@@ -15,6 +15,7 @@ const datasource = require("../locators/DatasourcesEditor.json");
 const formControls = require("../locators/FormControl.json");
 const queryLocators = require("../locators/QueryEditor.json");
 const { AggregateHelper } = ObjectsRegistry;
+const { PropertyPane } = ObjectsRegistry;
 
 export const initLocalstorage = () => {
   cy.window().then((window) => {
@@ -24,9 +25,7 @@ export const initLocalstorage = () => {
 };
 
 Cypress.Commands.add("NavigateToQueryEditor", () => {
-  cy.get(explorer.addDBQueryEntity)
-    .last()
-    .click({ force: true });
+  cy.get(explorer.addDBQueryEntity).last().click({ force: true });
 });
 
 Cypress.Commands.add("NavigateToQueriesInExplorer", () => {
@@ -64,7 +63,7 @@ Cypress.Commands.add("NavigateToDSGeneratePage", (datasourceName) => {
 });
 
 Cypress.Commands.add("ClickGotIt", () => {
-  cy.get("span:contains('GOT IT')").click();
+  cy.get("span:contains('Got it')").click();
 });
 
 Cypress.Commands.add("fillGoogleSheetsDatasourceForm", () => {
@@ -79,6 +78,7 @@ Cypress.Commands.add("fillAuthenticatedAPIForm", () => {
 Cypress.Commands.add("runQuery", (expectedRes = true) => {
   cy.onlyQueryRun();
   AggregateHelper.CheckForErrorToast("Failed to initialize pool");
+  cy.wait(2000); //for postexecute to go thru
   cy.wait("@postExecute").should(
     "have.nested.property",
     "response.body.data.isExecutionSuccess",
@@ -93,28 +93,20 @@ Cypress.Commands.add("runQuery", (expectedRes = true) => {
 });
 
 Cypress.Commands.add("onlyQueryRun", () => {
-  cy.xpath(queryEditor.runQuery)
-    .last()
-    .click({ force: true })
-    .wait(1000);
-  cy.get(".cs-spinner").should("not.exist");
+  cy.xpath(queryEditor.runQuery).last().click({ force: true }).wait(1000);
+  cy.get(".ads-v2-spinner").should("not.exist");
 });
 
 Cypress.Commands.add("RunQueryWithoutWaitingForResolution", () => {
-  cy.xpath(queryEditor.runQuery)
-    .last()
-    .click({ force: true });
+  cy.xpath(queryEditor.runQuery).last().click({ force: true });
 });
 
-Cypress.Commands.add("hoverAndClick", () => {
-  cy.xpath(apiwidget.popover)
-    .last()
-    .should("be.hidden")
-    .invoke("show")
-    .click({ force: true });
-  cy.xpath(apiwidget.popover)
-    .last()
-    .click({ force: true });
+Cypress.Commands.add("hoverAndClick", (entity) => {
+  cy.xpath(
+    "//div[text()='" +
+      entity +
+      "']/ancestor::div[1]/following-sibling::div//button[contains(@class, 'entity-context-menu')]",
+  ).click({ force: true });
 });
 
 Cypress.Commands.add("hoverAndClickParticularIndex", (index) => {
@@ -137,13 +129,9 @@ Cypress.Commands.add("deleteQuery", () => {
 });
 
 Cypress.Commands.add("deleteQueryUsingContext", () => {
-  cy.get(queryEditor.queryMoreAction)
-    .first()
-    .click();
+  cy.get(queryEditor.queryMoreAction).first().click();
   cy.get(queryEditor.deleteUsingContext).click();
-  cy.get(queryEditor.deleteUsingContext)
-    .contains("Are you sure?")
-    .click();
+  cy.get(queryEditor.deleteUsingContext).contains("Are you sure?").click();
   cy.wait("@deleteAction").should(
     "have.nested.property",
     "response.body.responseMeta.status",
@@ -156,19 +144,21 @@ Cypress.Commands.add("runAndDeleteQuery", () => {
   cy.deleteQueryUsingContext();
 });
 
-Cypress.Commands.add("executeDbQuery", (queryName) => {
-  cy.get(widgetsPage.buttonOnClick)
-    .get(commonlocators.dropdownSelectButton)
-    .eq(0)
-    .click({ force: true })
-    .get("ul.bp3-menu")
-    .children()
-    .contains("Execute a query")
-    .click({ force: true })
-    .get("ul.bp3-menu")
-    .children()
-    .contains(queryName)
-    .click({ force: true });
+Cypress.Commands.add("executeDbQuery", (queryName, eventName) => {
+  PropertyPane.SelectPlatformFunction(eventName, "Execute a query");
+  cy.get(`.single-select:contains(${queryName})`).click({ force: true });
+  // cy.get(widgetsPage.buttonOnClick)
+  //   .get(commonlocators.dropdownSelectButton)
+  //   .eq(0)
+  //   .click({ force: true })
+  //   .get("ul.bp3-menu")
+  //   .children()
+  //   .contains("Execute a query")
+  //   .click({ force: true })
+  //   .get("ul.bp3-menu")
+  //   .children()
+  //   .contains(queryName)
+  //   .click({ force: true });
 });
 
 Cypress.Commands.add("CreateMockQuery", (queryName) => {
@@ -190,9 +180,7 @@ Cypress.Commands.add("CreateMockQuery", (queryName) => {
 });
 
 Cypress.Commands.add("ValidateQueryParams", (param) => {
-  cy.xpath(apiwidget.paramsTab)
-    .should("be.visible")
-    .click({ force: true });
+  cy.xpath(apiwidget.paramsTab).should("be.visible").click({ force: true });
 
   cy.validateCodeEditorContent(apiwidget.paramKey, param.key);
   cy.validateCodeEditorContent(apiwidget.paramValue, param.value);
@@ -215,12 +203,12 @@ Cypress.Commands.add(
       .should("be.visible")
       .contains(option)
       .first()
-      .click();
+      .click({ force: true });
     cy.wait(2000);
   },
 );
 
-// targeting multiselect dropdowns, we target the data-cy value of the options
+// targeting multiselect dropdowns, we target the data-testid value of the options
 Cypress.Commands.add(
   "TargetMultiSelectDropdownAndSelectOptions",
   (dropdownIdentifier, options, isDynamic = false) => {
@@ -246,10 +234,7 @@ Cypress.Commands.add(
 Cypress.Commands.add(
   "TargetFormControlAndSwitchViewType",
   (formControlIdentifier, newViewType) => {
-    cy.get(formControlIdentifier)
-      .scrollIntoView()
-      .should("be.visible")
-      .click();
+    cy.get(formControlIdentifier).scrollIntoView().should("be.visible").click();
 
     if (newViewType === "json") {
       cy.get(formControlIdentifier)
@@ -296,11 +281,7 @@ Cypress.Commands.add("NavigateToAction", (actionName) => {
     .click();
 });
 Cypress.Commands.add("SelecJSFunctionAndRun", (functionName) => {
-  cy.xpath("//span[@name='expand-more']")
-    .first()
-    .click();
-  cy.get(`[data-cy='t--dropdown-option-${functionName}']`).click();
-  cy.get(jsEditorLocators.runButton)
-    .first()
-    .click();
+  cy.xpath("//span[@name='expand-more']").first().click();
+  cy.get(`[data-testid='t--dropdown-option-${functionName}']`).click();
+  cy.get(jsEditorLocators.runButton).first().click();
 });

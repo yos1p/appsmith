@@ -1,8 +1,9 @@
 import React from "react";
-import BaseWidget, { WidgetProps, WidgetState } from "widgets/BaseWidget";
+import type { WidgetProps, WidgetState } from "widgets/BaseWidget";
+import BaseWidget from "widgets/BaseWidget";
 import { contentConfig, styleConfig } from "./propertyConfig";
 import ChartComponent from "../component";
-import { Stylesheet } from "entities/AppTheming";
+import type { Stylesheet } from "entities/AppTheming";
 
 class ChartWidgetV2 extends BaseWidget<ChartWidgetProps, WidgetState> {
   static getPropertyPaneContentConfig() {

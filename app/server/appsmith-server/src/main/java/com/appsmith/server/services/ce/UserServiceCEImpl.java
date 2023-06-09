@@ -69,6 +69,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import static com.appsmith.server.acl.AclPermission.MANAGE_USERS;
 import static com.appsmith.server.helpers.ValidationUtils.LOGIN_PASSWORD_MAX_LENGTH;
@@ -100,6 +101,7 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
     private static final String FORGOT_PASSWORD_CLIENT_URL_FORMAT = "%s/user/resetPassword?token=%s";
     private static final String INVITE_USER_CLIENT_URL_FORMAT = "%s/user/signup?email=%s";
     public static final String INVITE_USER_EMAIL_TEMPLATE = "email/inviteUserTemplate.html";
+    private static final Pattern ALLOWED_ACCENTED_CHARACTERS_PATTERN = Pattern.compile("^[\\p{L} 0-9 .\'\\-]+$");
 
     @Autowired
     public UserServiceCEImpl(Scheduler scheduler,
@@ -407,12 +409,24 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
         return userWithTenantMono
                 .flatMap(this::validateObject)
                 .flatMap(repository::save)
+                .elapsed().map(pair -> {
+                    log.debug("UserServiceCEImpl::Time taken to save user: {} ms", pair.getT1());
+                    return pair.getT2();
+                })
                 .flatMap(savedUser -> addUserPolicies(savedUser, isAdminUser))
+                .elapsed().map(pair -> {
+                    log.debug("UserServiceCEImpl::Time taken to create user role: {} ms", pair.getT1());
+                    return pair.getT2();
+                })
                 .then(Mono.zip(
                         repository.findByEmail(user.getUsername()),
                         userDataService.getForUserEmail(user.getUsername())
                 ))
-                .flatMap(tuple -> analyticsService.identifyUser(tuple.getT1(), tuple.getT2()));
+                .flatMap(tuple -> analyticsService.identifyUser(tuple.getT1(), tuple.getT2()))
+                .elapsed().map(pair -> {
+                    log.debug("UserServiceCEImpl::Time taken to identify user: {} ms", pair.getT1());
+                    return pair.getT2();
+                });
     }
 
     private Mono<User> addUserPolicies(User savedUser, Boolean isAdminUser) {
@@ -516,7 +530,12 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
                             .flatMap(userSignupDTO -> findByEmail(userSignupDTO.getUser().getEmail()).map(user1 -> {
                                 userSignupDTO.setUser(user1);
                                 return userSignupDTO;
-                            }));
+                            }))
+                            .elapsed()
+                            .map(pair -> {
+                                log.debug("UserServiceCEImpl::Time taken to find created user: {} ms", pair.getT1());
+                                return pair.getT2();
+                            });
                 }))
                 .flatMap(userSignupDTO -> {
                             User savedUser = userSignupDTO.getUser();
@@ -557,7 +576,12 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
         }
 
         // No special configurations found, allow signup for the new user.
-        return userCreate(user, isAdminUser);
+        return userCreate(user, isAdminUser)
+                .elapsed()
+                .map(pair -> {
+                    log.debug("UserServiceCEImpl::Time taken for create user: {} ms", pair.getT1());
+                    return pair.getT2();
+                });
     }
 
     public Mono<User> sendWelcomeEmail(User user, String originHeader) {
@@ -570,6 +594,11 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
                         "Welcome to Appsmith",
                         WELCOME_USER_EMAIL_TEMPLATE,
                         updatedParams))
+                .elapsed()
+                .map(pair -> {
+                    log.debug("UserServiceCEImpl::Time taken to send email: {} ms", pair.getT1());
+                    return pair.getT2();
+                })
                 .onErrorResume(error -> {
                     // Swallowing this exception because we don't want this to affect the rest of the flow.
                     log.error(
@@ -593,9 +622,10 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
 
     /**
      * Method to update user without ACL permission. This will be used internally to update the user
-     * @param id        UserId which needs to be updated
-     * @param update    User object
-     * @return          Updated user
+     *
+     * @param id     UserId which needs to be updated
+     * @param update User object
+     * @return Updated user
      */
     @Override
     public Mono<User> updateWithoutPermission(String id, User update) {
@@ -661,6 +691,14 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
         return Flux.error(new AppsmithException(AppsmithError.UNSUPPORTED_OPERATION));
     }
 
+    private boolean validateName(String name) {
+        /*
+            Regex allows for Accented characters and alphanumeric with some special characters dot (.), apostrophe ('),
+            hyphen (-) and spaces
+         */
+        return ALLOWED_ACCENTED_CHARACTERS_PATTERN.matcher(name).matches();
+    }
+
     @Override
     public Mono<User> updateCurrentUser(final UserUpdateDTO allUpdates, ServerWebExchange exchange) {
         List<Mono<Void>> monos = new ArrayList<>();
@@ -670,7 +708,12 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
 
         if (allUpdates.hasUserUpdates()) {
             final User updates = new User();
-            updates.setName(allUpdates.getName());
+            String inputName = allUpdates.getName();
+            boolean isValidName = validateName(inputName);
+            if (!isValidName) {
+                return Mono.error(new AppsmithException(AppsmithError.INVALID_PARAMETER, FieldName.NAME));
+            }
+            updates.setName(inputName);
             updatedUserMono = sessionUserService.getCurrentUser()
                     .flatMap(user ->
                             update(user.getEmail(), updates, fieldName(QUser.user.email))
@@ -688,8 +731,15 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
 
         if (allUpdates.hasUserDataUpdates()) {
             final UserData updates = new UserData();
-            updates.setRole(allUpdates.getRole());
-            updates.setUseCase(allUpdates.getUseCase());
+            if (StringUtils.hasLength(allUpdates.getRole())) {
+                updates.setRole(allUpdates.getRole());
+            }
+            if (StringUtils.hasLength(allUpdates.getUseCase())) {
+                updates.setUseCase(allUpdates.getUseCase());
+            }
+            if (allUpdates.isIntercomConsentGiven()) {
+                updates.setIntercomConsentGiven(true);
+            }
             updatedUserDataMono = userDataService.updateForCurrentUser(updates).cache();
             monos.add(updatedUserDataMono.then());
         } else {
@@ -767,7 +817,8 @@ public class UserServiceCEImpl extends BaseService<UserRepository, User, String>
                     profile.setUseCase(userData.getUseCase());
                     profile.setPhotoId(userData.getProfilePhotoAssetId());
                     profile.setEnableTelemetry(!commonConfig.isTelemetryDisabled());
-
+                    // Intercom consent is defaulted to true on cloud hosting
+                    profile.setIntercomConsentGiven(commonConfig.isCloudHosting() ? true : userData.isIntercomConsentGiven());
                     profile.setSuperUser(isSuperUser);
                     profile.setConfigurable(!StringUtils.isEmpty(commonConfig.getEnvFilePath()));
 

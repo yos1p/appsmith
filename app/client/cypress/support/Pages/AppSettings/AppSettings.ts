@@ -4,7 +4,7 @@ export class AppSettings {
   private theme = ObjectsRegistry.ThemeSettings;
 
   private locators = {
-    _appSettings: "#t--app-settings-cta",
+    _appSettings: ".t--app-settings-cta",
     _closeSettings: "#t--close-app-settings-pane",
     _themeSettingsHeader: "#t--theme-settings-header",
     _generalSettingsHeader: "#t--general-settings-header",
@@ -15,11 +15,11 @@ export class AppSettings {
 
   public errorMessageSelector = (fieldId: string) => {
     fieldId = fieldId[0] === "#" ? fieldId.slice(1, fieldId.length) : fieldId;
-    return `//input[@id='${fieldId}']/following-sibling::div/span`;
+    return `//input[@id='${fieldId}']/parent::div/following-sibling::span`;
   };
 
   public OpenAppSettings() {
-    this.agHelper.GetNClick(this.locators._appSettings);
+    this.agHelper.GetNClick(this.locators._appSettings, 0, true);
   }
 
   public ClosePane() {
@@ -57,6 +57,7 @@ export class AppSettings {
     this.GoToThemeSettings();
     this.theme.ChangeThemeColor(primaryColorIndex, "Primary");
     this.theme.ChangeThemeColor(backgroundColorIndex, "Background");
+    this.agHelper.Sleep();
     this.ClosePane();
   }
 
@@ -68,18 +69,14 @@ export class AppSettings {
   ) {
     cy.location("pathname").then((pathname) => {
       if (customSlug && customSlug.length > 0) {
-        const pageId = pathname
-          .split("/")[2]
-          ?.split("-")
-          .pop();
+        const pageId = pathname.split("/")[2]?.split("-").pop();
         expect(pathname).to.be.equal(
-          `/app/${customSlug}-${pageId}${editMode ? "/edit" : ""}`.toLowerCase(),
+          `/app/${customSlug}-${pageId}${
+            editMode ? "/edit" : ""
+          }`.toLowerCase(),
         );
       } else {
-        const pageId = pathname
-          .split("/")[3]
-          ?.split("-")
-          .pop();
+        const pageId = pathname.split("/")[3]?.split("-").pop();
         expect(pathname).to.be.equal(
           `/app/${appName}/${pageName}-${pageId}${
             editMode ? "/edit" : ""
@@ -87,7 +84,7 @@ export class AppSettings {
         );
       }
     });
-  };
+  }
 
   public AssertErrorMessage(
     fieldId: string,
@@ -117,6 +114,4 @@ export class AppSettings {
       }
     });
   }
-
-
 }

@@ -1,6 +1,8 @@
-import {
+import type {
   EvaluationReduxAction,
   ReduxAction,
+} from "@appsmith/constants/ReduxActionConstants";
+import {
   ReduxActionErrorTypes,
   ReduxActionTypes,
 } from "@appsmith/constants/ReduxActionConstants";
@@ -14,11 +16,17 @@ import {
   takeEvery,
   takeLatest,
 } from "redux-saga/effects";
-import { Datasource } from "entities/Datasource";
-import ActionAPI, { ActionCreateUpdateResponse } from "api/ActionAPI";
-import { ApiResponse } from "api/ApiResponses";
-import PageApi, { FetchPageResponse } from "api/PageApi";
+import type { Datasource } from "entities/Datasource";
+import type { ActionCreateUpdateResponse } from "api/ActionAPI";
+import ActionAPI from "api/ActionAPI";
+import type { ApiResponse } from "api/ApiResponses";
+import type { FetchPageResponse } from "api/PageApi";
+import PageApi from "api/PageApi";
 import { updateCanvasWithDSL } from "sagas/PageSagas";
+import type {
+  FetchActionsPayload,
+  SetActionPropertyPayload,
+} from "actions/pluginActionActions";
 import {
   copyActionError,
   copyActionSuccess,
@@ -26,10 +34,8 @@ import {
   deleteActionSuccess,
   fetchActionsForPage,
   fetchActionsForPageSuccess,
-  FetchActionsPayload,
   moveActionError,
   moveActionSuccess,
-  SetActionPropertyPayload,
   updateAction,
   updateActionProperty,
   updateActionSuccess,
@@ -39,16 +45,18 @@ import { validateResponse } from "./ErrorSagas";
 import { transformRestAction } from "transformers/RestActionTransformer";
 import { getActionById, getCurrentPageId } from "selectors/editorSelectors";
 import AnalyticsUtil from "utils/AnalyticsUtil";
-import {
+import type {
   Action,
   ActionViewMode,
+  SlashCommandPayload,
+} from "entities/Action";
+import {
   isAPIAction,
   PluginPackageName,
   PluginType,
   SlashCommand,
-  SlashCommandPayload,
 } from "entities/Action";
-import { ActionData } from "reducers/entityReducers/actionsReducer";
+import type { ActionData } from "reducers/entityReducers/actionsReducer";
 import {
   getAction,
   getCurrentPageNameByActionId,
@@ -60,7 +68,6 @@ import {
 } from "selectors/entitiesSelector";
 import history from "utils/history";
 import { INTEGRATION_TABS } from "constants/routes";
-import { Toaster, Variant } from "design-system-old";
 import PerformanceTracker, {
   PerformanceTransactionName,
 } from "utils/PerformanceTracker";
@@ -98,8 +105,8 @@ import {
   onApiEditor,
   onQueryEditor,
 } from "components/editorComponents/Debugger/helpers";
-import { Plugin } from "api/PluginApi";
-import { FlattenedWidgetProps } from "reducers/entityReducers/canvasWidgetsReducer";
+import type { Plugin } from "api/PluginApi";
+import type { FlattenedWidgetProps } from "reducers/entityReducers/canvasWidgetsReducer";
 import { SnippetAction } from "reducers/uiReducers/globalSearchReducer";
 import * as log from "loglevel";
 import { shouldBeDefined } from "utils/helpers";
@@ -112,6 +119,12 @@ import {
 } from "RouteBuilder";
 import { checkAndLogErrorsIfCyclicDependency } from "./helper";
 import { setSnipingMode as setSnipingModeAction } from "actions/propertyPaneActions";
+import { toast } from "design-system";
+import { getFormValues } from "redux-form";
+import {
+  API_EDITOR_FORM_NAME,
+  QUERY_EDITOR_FORM_NAME,
+} from "@appsmith/constants/forms";
 
 export function* createActionSaga(
   actionPayload: ReduxAction<
@@ -145,9 +158,8 @@ export function* createActionSaga(
       payload = merge(initialValues, actionPayload.payload);
     }
 
-    const response: ApiResponse<ActionCreateUpdateResponse> = yield ActionAPI.createAction(
-      payload,
-    );
+    const response: ApiResponse<ActionCreateUpdateResponse> =
+      yield ActionAPI.createAction(payload);
     const isValidResponse: boolean = yield validateResponse(response);
     if (isValidResponse) {
       const pageName: string = yield select(
@@ -229,9 +241,8 @@ export function* fetchActionsForViewModeSaga(
     { mode: "VIEWER", appId: applicationId },
   );
   try {
-    const response: ApiResponse<ActionViewMode[]> = yield ActionAPI.fetchActionsForViewMode(
-      applicationId,
-    );
+    const response: ApiResponse<ActionViewMode[]> =
+      yield ActionAPI.fetchActionsForViewMode(applicationId);
     const isValidResponse: boolean = yield validateResponse(response);
     if (isValidResponse) {
       const correctFormatResponse = response.data.map((action) => {
@@ -369,7 +380,7 @@ export function* updateActionSaga(
     );
     yield put({
       type: ReduxActionErrorTypes.UPDATE_ACTION_ERROR,
-      payload: { error, id: actionPayload.payload.id },
+      payload: { error, id: actionPayload.payload.id, show: false },
     });
   }
 }
@@ -482,11 +493,13 @@ function* moveActionSaga(
       response.data.pageId,
     );
     if (isValidResponse) {
-      Toaster.show({
+      toast.show(
         // @ts-expect-error: response is of type unknown
-        text: createMessage(ACTION_MOVE_SUCCESS, response.data.name, pageName),
-        variant: Variant.success,
-      });
+        createMessage(ACTION_MOVE_SUCCESS, response.data.name, pageName),
+        {
+          kind: "success",
+        },
+      );
     }
 
     AnalyticsUtil.logEvent("MOVE_API", {
@@ -499,9 +512,8 @@ function* moveActionSaga(
     // @ts-expect-error: response is of type unknown
     yield put(moveActionSuccess(response.data));
   } catch (e) {
-    Toaster.show({
-      text: createMessage(ERROR_ACTION_MOVE_FAIL, actionObject.name),
-      variant: Variant.danger,
+    toast.show(createMessage(ERROR_ACTION_MOVE_FAIL, actionObject.name), {
+      kind: "error",
     });
     yield put(
       moveActionError({
@@ -524,9 +536,8 @@ function* copyActionSaga(
       pageId: action.payload.destinationPageId,
     }) as Partial<Action>;
     delete copyAction.id;
-    const response: ApiResponse<ActionCreateUpdateResponse> = yield ActionAPI.createAction(
-      copyAction,
-    );
+    const response: ApiResponse<ActionCreateUpdateResponse> =
+      yield ActionAPI.createAction(copyAction);
     const datasources: Datasource[] = yield select(getDatasources);
 
     const isValidResponse: boolean = yield validateResponse(response);
@@ -536,10 +547,12 @@ function* copyActionSaga(
       response.data.pageId,
     );
     if (isValidResponse) {
-      Toaster.show({
-        text: createMessage(ACTION_COPY_SUCCESS, actionObject.name, pageName),
-        variant: Variant.success,
-      });
+      toast.show(
+        createMessage(ACTION_COPY_SUCCESS, actionObject.name, pageName),
+        {
+          kind: "success",
+        },
+      );
     }
 
     AnalyticsUtil.logEvent("DUPLICATE_API", {
@@ -566,9 +579,8 @@ function* copyActionSaga(
     yield put(copyActionSuccess(payload));
   } catch (e) {
     const actionName = actionObject ? actionObject.name : "";
-    Toaster.show({
-      text: createMessage(ERROR_ACTION_COPY_FAIL, actionName),
-      variant: Variant.danger,
+    toast.show(createMessage(ERROR_ACTION_COPY_FAIL, actionName), {
+      kind: "error",
     });
     yield put(copyActionError(action.payload));
   }
@@ -672,9 +684,8 @@ function* saveActionName(action: ReduxAction<{ id: string; name: string }>) {
         oldName: api.config.name,
       },
     });
-    Toaster.show({
-      text: createMessage(ERROR_ACTION_RENAME_FAIL, action.payload.name),
-      variant: Variant.danger,
+    toast.show(createMessage(ERROR_ACTION_RENAME_FAIL, action.payload.name), {
+      kind: "error",
     });
     log.error(e);
   }
@@ -692,12 +703,26 @@ export function* setActionPropertySaga(
     "actionConfiguration",
     "config",
   );
+
+  if (!actionObj) {
+    return;
+  }
+
+  // we use the formData to crosscheck, just in case value is not updated yet.
+  const formData: Action = yield select(
+    getFormValues(
+      actionObj?.pluginType === PluginType.API
+        ? API_EDITOR_FORM_NAME
+        : QUERY_EDITOR_FORM_NAME,
+    ),
+  );
+
   AppsmithConsole.info({
     logType: LOG_TYPE.ACTION_UPDATE,
     text: "Configuration updated",
     source: {
       type: ENTITY_TYPE.ACTION,
-      name: actionObj.name,
+      name: actionObj?.name,
       id: actionId,
       propertyPath: fieldToBeUpdated,
     },
@@ -714,6 +739,7 @@ export function* setActionPropertySaga(
     actionObj,
     value,
     propertyName,
+    formData,
   );
   yield all(
     Object.keys(effects).map((field) =>
@@ -830,10 +856,7 @@ function* buildMetaForSnippets(
     dataType: [`${expectedType}<score=3>`, `UNKNOWN<score=1>`],
   };
   if (propertyPath) {
-    const relevantField = propertyPath
-      .split(".")
-      .slice(-1)
-      .pop();
+    const relevantField = propertyPath.split(".").slice(-1).pop();
     fieldMeta.fields = [`${relevantField}<score=10>`];
   }
   if (entityType === ENTITY_TYPE.ACTION && entityId) {
@@ -955,6 +978,17 @@ function* executeCommandSaga(actionPayload: ReduxAction<SlashCommandPayload>) {
       const API = yield take(ReduxActionTypes.CREATE_ACTION_SUCCESS);
       if (callback) callback(`{{${API.payload.name}.data}}`);
       break;
+    case SlashCommand.ASK_AI: {
+      const context = get(actionPayload, "payload.args", {});
+      yield put({
+        type: ReduxActionTypes.TOGGLE_AI_WINDOW,
+        payload: {
+          show: true,
+          context,
+        },
+      });
+      break;
+    }
   }
 }
 

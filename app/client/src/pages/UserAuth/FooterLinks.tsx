@@ -1,16 +1,12 @@
 import React from "react";
+import { Link } from "design-system";
 
 function FooterLinks() {
   return (
     <div className="flex items-center justify-center gap-4 px-2 py-2">
-      <a
-        className="text-gray-900 hover:text-inherit"
-        href="https://www.alltitude.com"
-        rel="noreferrer"
-        target="_blank"
-      >
-        Powered by convo.cx
-      </a>
+      <Link target="_blank" to="/privacy-policy.html">
+        Powered by Alltitudes
+      </Link>
     </div>
   );
 }

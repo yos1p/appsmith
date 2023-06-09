@@ -3,15 +3,16 @@ import Dashboard from "@uppy/dashboard";
 import GoogleDrive from "@uppy/google-drive";
 import OneDrive from "@uppy/onedrive";
 import Url from "@uppy/url";
-import { UppyFile } from "@uppy/utils";
+import type { UppyFile } from "@uppy/utils";
 import Webcam from "@uppy/webcam";
 import CloseIcon from "assets/icons/ads/cross.svg";
 import UpIcon from "assets/icons/ads/up-arrow.svg";
 import { EventType } from "constants/AppsmithActionConstants/ActionConstants";
 import { Colors } from "constants/Colors";
-import { WidgetType } from "constants/WidgetConstants";
+import type { WidgetType } from "constants/WidgetConstants";
+import { FILE_SIZE_LIMIT_FOR_BLOBS } from "constants/WidgetConstants";
 import { ValidationTypes } from "constants/WidgetValidation";
-import { Stylesheet } from "entities/AppTheming";
+import type { Stylesheet } from "entities/AppTheming";
 import { EvaluationSubstitutionType } from "entities/DataTree/dataTreeFactory";
 import { klona } from "klona";
 import _, { findIndex } from "lodash";
@@ -21,11 +22,13 @@ import React from "react";
 import shallowequal from "shallowequal";
 import { createGlobalStyle } from "styled-components";
 import { createBlobUrl, isBlobUrl } from "utils/AppsmithUtils";
-import { getResponsiveLayoutConfig } from "utils/layoutPropertiesUtils";
-import { DerivedPropertiesMap } from "utils/WidgetFactory";
-import BaseWidget, { WidgetProps, WidgetState } from "widgets/BaseWidget";
+import type { DerivedPropertiesMap } from "utils/WidgetFactory";
+import type { WidgetProps, WidgetState } from "widgets/BaseWidget";
+import BaseWidget from "widgets/BaseWidget";
 import FilePickerComponent from "../component";
 import FileDataTypes from "../constants";
+import { DefaultAutocompleteDefinitions } from "widgets/WidgetUtils";
+import type { AutocompletionDefinitions } from "widgets/constants";
 
 const CSV_ARRAY_LABEL = "Array (CSVs only)";
 const CSV_FILE_TYPE_REGEX = /.+(\/csv)$/;
@@ -218,6 +221,19 @@ class FilePickerWidget extends BaseWidget<
     };
   }
 
+  static getAutocompleteDefinitions(): AutocompletionDefinitions {
+    return {
+      "!doc":
+        "Filepicker widget is used to allow users to upload files from their local machines to any cloud storage via API. Cloudinary and Amazon S3 have simple APIs for cloud storage uploads",
+      "!url": "https://docs.appsmith.com/widget-reference/filepicker",
+      isVisible: DefaultAutocompleteDefinitions.isVisible,
+      files: "[$__file__$]",
+      isDisabled: "bool",
+      isValid: "bool",
+      isDirty: "bool",
+    };
+  }
+
   static getPropertyPaneContentConfig() {
     return [
       {
@@ -226,7 +242,7 @@ class FilePickerWidget extends BaseWidget<
           {
             propertyName: "allowedFileTypes",
             helpText: "Restricts the type of files which can be uploaded",
-            label: "Allowed File Types",
+            label: "Allowed file types",
             controlType: "DROP_DOWN",
             isMultiSelect: true,
             placeholderText: "Select File types",
@@ -282,7 +298,7 @@ class FilePickerWidget extends BaseWidget<
           {
             helpText: "Set the format of the data read from the files",
             propertyName: "fileDataType",
-            label: "Data Format",
+            label: "Data format",
             controlType: "DROP_DOWN",
             helperText: (props: FilePickerWidgetProps) => {
               return props.fileDataType === FileDataTypes.Array
@@ -327,7 +343,7 @@ class FilePickerWidget extends BaseWidget<
           },
           {
             propertyName: "maxNumFiles",
-            label: "Max No. of files",
+            label: "Max no. of files",
             helpText:
               "Sets the maximum number of files that can be uploaded at once",
             controlType: "INPUT_TEXT",
@@ -414,7 +430,7 @@ class FilePickerWidget extends BaseWidget<
           },
           {
             propertyName: "animateLoading",
-            label: "Animate Loading",
+            label: "Animate loading",
             controlType: "SWITCH",
             helpText: "Controls the loading of the widget",
             defaultValue: true,
@@ -425,14 +441,13 @@ class FilePickerWidget extends BaseWidget<
           },
         ],
       },
-      ...getResponsiveLayoutConfig(this.getWidgetType()),
 
       {
         sectionName: "Events",
         children: [
           {
             helpText:
-              "Triggers an action when the user selects a file. Upload files to a CDN and stores their URLs in filepicker.files",
+              "when the user selects a file. Upload files to a CDN and stores their URLs in filepicker.files",
             propertyName: "onFilesSelected",
             label: "onFilesSelected",
             controlType: "ACTION_SELECTOR",
@@ -462,7 +477,7 @@ class FilePickerWidget extends BaseWidget<
           {
             propertyName: "buttonColor",
             helpText: "Changes the color of the button",
-            label: "Button Color",
+            label: "Button color",
             controlType: "COLOR_PICKER",
             isJSConvertible: true,
             isBindProperty: true,
@@ -472,11 +487,11 @@ class FilePickerWidget extends BaseWidget<
         ],
       },
       {
-        sectionName: "Border and Shadow",
+        sectionName: "Border and shadow",
         children: [
           {
             propertyName: "borderRadius",
-            label: "Border Radius",
+            label: "Border radius",
             helpText:
               "Rounds the corners of the icon button's outer border edge",
             controlType: "BORDER_RADIUS_OPTIONS",
@@ -488,7 +503,7 @@ class FilePickerWidget extends BaseWidget<
           },
           {
             propertyName: "boxShadow",
-            label: "Box Shadow",
+            label: "Box shadow",
             helpText:
               "Enables you to cast a drop shadow from the frame of the widget",
             controlType: "BOX_SHADOW_OPTIONS",
@@ -682,7 +697,7 @@ class FilePickerWidget extends BaseWidget<
       const fileCount = this.props.selectedFiles?.length || 0;
       const fileReaderPromises = files.map((file, index) => {
         return new Promise((resolve) => {
-          if (file.size < 5000 * 1000) {
+          if (file.size < FILE_SIZE_LIMIT_FOR_BLOBS) {
             const reader = new FileReader();
             if (this.props.fileDataType === FileDataTypes.Base64) {
               reader.readAsDataURL(file.data);

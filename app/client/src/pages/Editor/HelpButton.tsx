@@ -1,106 +1,209 @@
-import React, { useEffect } from "react";
-import styled, { createGlobalStyle, useTheme } from "styled-components";
-import { Popover, Position } from "@blueprintjs/core";
-
-import DocumentationSearch from "components/designSystems/appsmith/help/DocumentationSearch";
-import { Icon, IconSize, TooltipComponent } from "design-system-old";
+import React, { useEffect, useState } from "react";
 
 import { HELP_MODAL_WIDTH } from "constants/HelpConstants";
 import AnalyticsUtil from "utils/AnalyticsUtil";
 import { getCurrentUser } from "selectors/usersSelectors";
-import { useSelector } from "react-redux";
-import bootIntercom from "utils/bootIntercom";
+import { useDispatch, useSelector } from "react-redux";
+import bootIntercom, { updateIntercomProperties } from "utils/bootIntercom";
 import {
+  APPSMITH_DISPLAY_VERSION,
+  CONTINUE,
   createMessage,
   HELP_RESOURCE_TOOLTIP,
+  INTERCOM_CONSENT_MESSAGE,
 } from "@appsmith/constants/messages";
-import { TOOLTIP_HOVER_ON_DELAY } from "constants/AppConstants";
-import { useCallback } from "react";
-import { useState } from "react";
-import { BottomBarCTAStyles } from "./BottomBar/styles";
-import { Theme } from "constants/DefaultTheme";
+import {
+  Button,
+  Menu,
+  MenuContent,
+  MenuItem,
+  MenuTrigger,
+  Tooltip,
+  MenuSeparator,
+  Text,
+} from "design-system";
+import { getAppsmithConfigs } from "@appsmith/configs";
+import moment from "moment/moment";
+import styled from "styled-components";
+import { getInstanceId } from "@appsmith/selectors/tenantSelectors";
+import { updateIntercomConsent, updateUserDetails } from "actions/userActions";
 
-const HelpPopoverStyle = createGlobalStyle`
-  .bp3-popover.bp3-minimal.navbar-help-popover {
-    margin-top: 0 !important;
-  }
-`;
+const { appVersion, cloudHosting, intercomAppID } = getAppsmithConfigs();
 
-const StyledTrigger = styled.div`
-  cursor: pointer;
+const HelpFooter = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  ${BottomBarCTAStyles}
+  justify-content: space-between;
+  font-size: 8px;
 `;
-
-type TriggerProps = {
-  tooltipsDisabled: boolean;
+const ConsentContainer = styled.div`
+  padding: 10px;
+`;
+const ActionsRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+`;
+type HelpItem = {
+  label: string;
+  link?: string;
+  id?: string;
+  icon: string;
 };
 
-const Trigger = ({ tooltipsDisabled }: TriggerProps) => {
-  const theme = useTheme() as Theme;
+const HELP_MENU_ITEMS: HelpItem[] = [
+  {
+    icon: "file-line",
+    label: "Documentation",
+    link: "https://docs.appsmith.com/",
+  },
+  {
+    icon: "bug-line",
+    label: "Report a bug",
+    link: "https://github.com/appsmithorg/appsmith/issues/new/choose",
+  },
+  {
+    icon: "discord",
+    label: "Join our discord",
+    link: "https://discord.gg/rBTTVJp",
+  },
+];
 
+if (intercomAppID && window.Intercom) {
+  HELP_MENU_ITEMS.push({
+    icon: "chat-help",
+    label: "Chat with us",
+    id: "intercom-trigger",
+  });
+}
+
+function IntercomConsent({
+  showIntercomConsent,
+}: {
+  showIntercomConsent: (val: boolean) => void;
+}) {
+  const user = useSelector(getCurrentUser);
+  const instanceId = useSelector(getInstanceId);
+  const dispatch = useDispatch();
+
+  const sendUserDataToIntercom = () => {
+    updateIntercomProperties(instanceId, user);
+    dispatch(
+      updateUserDetails({
+        intercomConsentGiven: true,
+      }),
+    );
+    dispatch(updateIntercomConsent());
+    showIntercomConsent(false);
+    window.Intercom("show");
+  };
   return (
-    <TooltipComponent
-      content={createMessage(HELP_RESOURCE_TOOLTIP)}
-      disabled={tooltipsDisabled}
-      hoverOpenDelay={TOOLTIP_HOVER_ON_DELAY}
-      modifiers={{
-        preventOverflow: { enabled: true },
-      }}
-      position={"bottom"}
-    >
-      <StyledTrigger>
-        <Icon
-          fillColor={theme.colors.globalSearch.helpIcon}
-          name="question-line"
-          size={IconSize.XXXL}
+    <ConsentContainer>
+      <ActionsRow>
+        <Button
+          isIconButton
+          kind="tertiary"
+          onClick={() => showIntercomConsent(false)}
+          size="sm"
+          startIcon="arrow-left"
         />
-      </StyledTrigger>
-    </TooltipComponent>
+      </ActionsRow>
+      <div className="mb-3" data-testid="t--intercom-consent-text">
+        <Text kind="body-s" renderAs="p">
+          {createMessage(INTERCOM_CONSENT_MESSAGE)}
+        </Text>
+      </div>
+      <Button kind="primary" onClick={sendUserDataToIntercom} size="sm">
+        {createMessage(CONTINUE)}
+      </Button>
+    </ConsentContainer>
   );
-};
+}
 
 function HelpButton() {
   const user = useSelector(getCurrentUser);
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [showIntercomConsent, setShowIntercomConsent] = useState(false);
 
   useEffect(() => {
     bootIntercom(user);
   }, [user?.email]);
 
-  const onOpened = useCallback(() => {
-    AnalyticsUtil.logEvent("OPEN_HELP", { page: "Editor" });
-    setIsHelpOpen(true);
-  }, []);
-
-  const onClose = useCallback(() => {
-    setIsHelpOpen(false);
-  }, []);
-
   return (
-    <Popover
-      minimal
-      modifiers={{
-        offset: {
-          enabled: true,
-          offset: "0, 6",
-        },
+    <Menu
+      onOpenChange={(open) => {
+        if (open) {
+          setShowIntercomConsent(false);
+          AnalyticsUtil.logEvent("OPEN_HELP", { page: "Editor" });
+        }
       }}
-      onClosed={onClose}
-      onOpened={onOpened}
-      popoverClassName="navbar-help-popover"
-      position={Position.BOTTOM_RIGHT}
     >
-      <>
-        <HelpPopoverStyle />
-        <Trigger tooltipsDisabled={isHelpOpen} />
-      </>
-      <div style={{ width: HELP_MODAL_WIDTH }}>
-        <DocumentationSearch hideMinimizeBtn hideSearch hitsPerPage={4} />
-      </div>
-    </Popover>
+      <MenuTrigger>
+        <div>
+          <Tooltip
+            content={createMessage(HELP_RESOURCE_TOOLTIP)}
+            placement="bottomRight"
+          >
+            <Button
+              data-testid="t--help-button"
+              kind="tertiary"
+              size="md"
+              startIcon="question-line"
+            >
+              Help
+            </Button>
+          </Tooltip>
+        </div>
+      </MenuTrigger>
+      <MenuContent collisionPadding={10} style={{ width: HELP_MODAL_WIDTH }}>
+        {showIntercomConsent ? (
+          <IntercomConsent showIntercomConsent={setShowIntercomConsent} />
+        ) : (
+          HELP_MENU_ITEMS.map((item) => (
+            <MenuItem
+              id={item.id}
+              key={item.label}
+              onSelect={(e) => {
+                if (item.link) {
+                  window.open(item.link, "_blank");
+                }
+                if (item.id === "intercom-trigger") {
+                  e?.preventDefault();
+                  if (intercomAppID && window.Intercom) {
+                    if (user?.isIntercomConsentGiven || cloudHosting) {
+                      window.Intercom("show");
+                    } else {
+                      setShowIntercomConsent(true);
+                    }
+                  }
+                }
+              }}
+              startIcon={item.icon}
+            >
+              {item.label}
+            </MenuItem>
+          ))
+        )}
+        {appVersion.id && (
+          <>
+            <MenuSeparator />
+            <MenuItem className="menuitem-nohover">
+              <HelpFooter>
+                <span>
+                  {createMessage(
+                    APPSMITH_DISPLAY_VERSION,
+                    appVersion.edition,
+                    appVersion.id,
+                    cloudHosting,
+                  )}
+                </span>
+                <span>Released {moment(appVersion.releaseDate).fromNow()}</span>
+              </HelpFooter>
+            </MenuItem>
+          </>
+        )}
+      </MenuContent>
+    </Menu>
   );
 }
 

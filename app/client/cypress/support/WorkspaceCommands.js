@@ -25,7 +25,7 @@ Cypress.Commands.add("renameWorkspace", (workspaceName, newWorkspaceName) => {
   cy.get(".t--applications-container")
     .contains(workspaceName)
     .closest(homePage.workspaceCompleteSection)
-    .find(homePage.workspaceNamePopover)
+    .scrollIntoView()
     .find(homePage.optionsIcon)
     .click({ force: true });
   cy.get(homePage.renameWorkspaceInput)
@@ -48,7 +48,6 @@ Cypress.Commands.add("navigateToWorkspaceSettings", (workspaceName) => {
     .should("be.visible");
   cy.get(homePage.workspaceList.concat(workspaceName).concat(")"))
     .closest(homePage.workspaceCompleteSection)
-    .find(homePage.workspaceNamePopover)
     .find(homePage.optionsIcon)
     .click({ force: true });
   cy.xpath(homePage.MemberSettings).click({ force: true });
@@ -68,9 +67,8 @@ Cypress.Commands.add("openWorkspaceOptionsPopup", (workspaceName) => {
 
   cy.get(homePage.workspaceList.concat(workspaceName).concat(")"))
     .closest(homePage.workspaceCompleteSection)
-    .find(homePage.workspaceNamePopover)
-    .first()
     .find(homePage.optionsIcon)
+    .first()
     .click({ force: true });
 });
 
@@ -89,9 +87,7 @@ Cypress.Commands.add("inviteUserForWorkspace", (workspaceName, email, role) => {
     .first()
     .should("be.visible")
     .click({ force: true });
-  cy.xpath(homePage.email)
-    .click({ force: true })
-    .type(email);
+  cy.xpath(homePage.email).click({ force: true }).type(email);
   cy.xpath(homePage.selectRole).click({ force: true });
   cy.wait(500);
   cy.xpath(role).click({ force: true });
@@ -111,19 +107,15 @@ Cypress.Commands.add("CheckShareIcon", (workspaceName, count) => {
   cy.get(
     homePage.workspaceList
       .concat(workspaceName)
-      .concat(") .workspace-share-user-icons"),
+      .concat(") .t--workspace-share-user-icons"),
   ).should("have.length", count);
 });
 
 Cypress.Commands.add("shareApp", (email, role) => {
   cy.stubPostHeaderReq();
-  cy.xpath(homePage.email)
-    .click({ force: true })
-    .type(email);
+  cy.xpath(homePage.email).click({ force: true }).type(email);
   cy.xpath(homePage.selectRole).should("be.visible");
-  cy.xpath("//span[@name='expand-more']")
-    .last()
-    .click();
+  cy.xpath("//span[@name='expand-more']").last().click();
   cy.xpath(role).click({ force: true });
   cy.xpath(homePage.inviteBtn).click({ force: true });
   cy.wait("@mockPostInvite")
@@ -135,9 +127,7 @@ Cypress.Commands.add("shareApp", (email, role) => {
 
 Cypress.Commands.add("shareAndPublic", (email, role) => {
   cy.stubPostHeaderReq();
-  cy.xpath(homePage.email)
-    .click({ force: true })
-    .type(email);
+  cy.xpath(homePage.email).click({ force: true }).type(email);
   cy.xpath(homePage.selectRole).click({ force: true });
   cy.xpath(role).click({ force: true });
   cy.xpath(homePage.inviteBtn).click({ force: true });
@@ -149,21 +139,17 @@ Cypress.Commands.add("shareAndPublic", (email, role) => {
 });
 
 Cypress.Commands.add("enablePublicAccess", (editMode = false) => {
-  cy.get(homePage.enablePublicAccess)
-    .first()
-    .click({ force: true });
+  cy.xpath(homePage.enablePublicAccess).first().click({ force: true });
   cy.wait("@changeAccess").should(
     "have.nested.property",
     "response.body.responseMeta.status",
     200,
   );
-  cy.wait(10000);
+  cy.wait(5000);
   const closeButtonLocator = editMode
     ? homePage.editModeInviteModalCloseBtn
     : homePage.closeBtn;
-  cy.get(closeButtonLocator)
-    .first()
-    .click({ force: true });
+  cy.get(closeButtonLocator).first().click({ force: true });
 });
 
 Cypress.Commands.add("deleteUserFromWorkspace", (workspaceName) => {
@@ -174,7 +160,7 @@ Cypress.Commands.add("deleteUserFromWorkspace", (workspaceName) => {
 
   cy.get(homePage.workspaceList.concat(workspaceName).concat(")"))
     .closest(homePage.workspaceCompleteSection)
-    .find(homePage.workspaceNamePopover)
+    .scrollIntoView()
     .find(homePage.optionsIcon)
     .click({ force: true });
   cy.xpath(homePage.MemberSettings).click({ force: true });
@@ -183,15 +169,10 @@ Cypress.Commands.add("deleteUserFromWorkspace", (workspaceName) => {
     "response.body.responseMeta.status",
     200,
   );
-  cy.get(homePage.DeleteBtn)
-    .last()
-    .click({ force: true });
+  cy.get(homePage.DeleteBtn).last().click({ force: true });
   cy.get(homePage.leaveWorkspaceConfirmModal).should("be.visible");
   cy.get(homePage.leaveWorkspaceConfirmButton).click({ force: true });
-  cy.xpath(homePage.appHome)
-    .first()
-    .should("be.visible")
-    .click();
+  cy.xpath(homePage.appHome).first().should("be.visible").click();
   cy.wait("@applications").should(
     "have.nested.property",
     "response.body.responseMeta.status",
@@ -210,7 +191,7 @@ Cypress.Commands.add(
 
     cy.get(homePage.workspaceList.concat(workspaceName).concat(")"))
       .closest(homePage.workspaceCompleteSection)
-      .find(homePage.workspaceNamePopover)
+      .scrollIntoView()
       .find(homePage.optionsIcon)
       .click({ force: true });
     cy.xpath(homePage.MemberSettings).click({ force: true });
@@ -220,9 +201,7 @@ Cypress.Commands.add(
       200,
     );
     cy.get(homePage.inviteUserMembersPage).click({ force: true });
-    cy.xpath(homePage.email)
-      .click({ force: true })
-      .type(email);
+    cy.xpath(homePage.email).click({ force: true }).type(email);
     cy.xpath(homePage.selectRole).click({ force: true });
     cy.xpath(role).click({ force: true });
     cy.xpath(homePage.inviteBtn).click({ force: true });
@@ -231,10 +210,7 @@ Cypress.Commands.add(
       .should("have.property", "origin", "Cypress");
     cy.contains(email, { matchCase: false });
     cy.get(".bp3-icon-small-cross").click({ force: true });
-    cy.xpath(homePage.appHome)
-      .first()
-      .should("be.visible")
-      .click();
+    cy.xpath(homePage.appHome).first().should("be.visible").click();
     cy.wait("@applications").should(
       "have.nested.property",
       "response.body.responseMeta.status",
@@ -244,10 +220,7 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add("launchApp", () => {
-  cy.get(homePage.appView)
-    .should("be.visible")
-    .first()
-    .click();
+  cy.get(homePage.appView).should("be.visible").first().click();
   cy.get("#loading").should("not.exist");
   cy.wait("@getPagesForViewApp").should(
     "have.nested.property",
@@ -261,7 +234,7 @@ Cypress.Commands.add("AppSetupForRename", () => {
     if (!$appName.hasClass(homePage.editingAppName)) {
       cy.get(homePage.applicationName).click({ force: true });
       cy.get(homePage.portalMenuItem)
-        .contains("Edit Name", { matchCase: false })
+        .contains("Edit name", { matchCase: false })
         .click({ force: true });
     }
   });
@@ -299,9 +272,7 @@ Cypress.Commands.add("CreateAppForWorkspace", (workspaceName, appname) => {
 
 Cypress.Commands.add("CreateAppInFirstListedWorkspace", (appname) => {
   let applicationId;
-  cy.get(homePage.createNew)
-    .first()
-    .click({ force: true });
+  cy.get(homePage.createNew).first().click({ force: true });
   cy.wait("@createNewApplication").then((xhr) => {
     const response = xhr.response;
     expect(response.body.responseMeta.status).to.eq(201);
@@ -313,8 +284,12 @@ Cypress.Commands.add("CreateAppInFirstListedWorkspace", (appname) => {
   //cy.reload();
 
   cy.get("#loading").should("not.exist");
+  cy.get("#sidebar").should("be.visible");
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(2000);
+
+  // If the into modal is open close it
+  cy.skipSignposting();
 
   cy.AppSetupForRename();
   cy.get(homePage.applicationName).type(appname + "{enter}");
@@ -338,10 +313,8 @@ Cypress.Commands.add("renameEntity", (entityName, renamedEntity) => {
   cy.get(`.t--entity-item:contains(${entityName})`).within(() => {
     cy.get(".t--context-menu").click({ force: true });
   });
-  cy.selectAction("Edit Name");
-  cy.get(explorer.editEntity)
-    .last()
-    .type(`${renamedEntity}`, { force: true });
+  cy.selectAction("Edit name");
+  cy.get(explorer.editEntity).last().type(`${renamedEntity}`, { force: true });
 });
 Cypress.Commands.add("leaveWorkspace", (newWorkspaceName) => {
   cy.openWorkspaceOptionsPopup(newWorkspaceName);

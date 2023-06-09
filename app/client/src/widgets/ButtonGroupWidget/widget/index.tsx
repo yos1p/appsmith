@@ -1,26 +1,33 @@
-import { Alignment } from "@blueprintjs/core";
-import { IconName } from "@blueprintjs/icons";
-import {
-  ButtonPlacement,
-  ButtonPlacementTypes,
-  ButtonVariant,
-  ButtonVariantTypes,
-} from "components/constants";
+import type { Alignment } from "@blueprintjs/core";
+import type { IconName } from "@blueprintjs/icons";
+import type { ButtonPlacement, ButtonVariant } from "components/constants";
+import { ButtonPlacementTypes, ButtonVariantTypes } from "components/constants";
 import { EventType } from "constants/AppsmithActionConstants/ActionConstants";
 import { ValidationTypes } from "constants/WidgetValidation";
-import { Stylesheet } from "entities/AppTheming";
+import type { Stylesheet } from "entities/AppTheming";
 import { get } from "lodash";
 import React from "react";
-import { getResponsiveLayoutConfig } from "utils/layoutPropertiesUtils";
-import BaseWidget, { WidgetProps, WidgetState } from "widgets/BaseWidget";
+import type { WidgetProps, WidgetState } from "widgets/BaseWidget";
+import BaseWidget from "widgets/BaseWidget";
 import { MinimumPopupRows } from "widgets/constants";
 import ButtonGroupComponent from "../component";
 import { getStylesheetValue } from "./helpers";
+import { DefaultAutocompleteDefinitions } from "widgets/WidgetUtils";
+import type { AutocompletionDefinitions } from "widgets/constants";
 
 class ButtonGroupWidget extends BaseWidget<
   ButtonGroupWidgetProps,
   WidgetState
 > {
+  static getAutocompleteDefinitions(): AutocompletionDefinitions {
+    return {
+      "!doc":
+        "The Button group widget represents a set of buttons in a group. Group can have simple buttons or menu buttons with drop-down items.",
+      "!url": "https://docs.appsmith.com/widget-reference/button-group",
+      isVisible: DefaultAutocompleteDefinitions.isVisible,
+    };
+  }
+
   static getPropertyPaneContentConfig() {
     return [
       {
@@ -56,7 +63,7 @@ class ButtonGroupWidget extends BaseWidget<
                   children: [
                     {
                       propertyName: "buttonType",
-                      label: "Button Type",
+                      label: "Button type",
                       controlType: "ICON_TABS",
                       fullWidth: true,
                       helpText: "Sets button type",
@@ -93,10 +100,10 @@ class ButtonGroupWidget extends BaseWidget<
                         return buttonType !== "MENU";
                       },
                       dependencies: ["groupButtons"],
-                      helpText: "Menu Items",
+                      helpText: "Menu items",
                       propertyName: "menuItems",
                       controlType: "MENU_ITEMS",
-                      label: "Menu Items",
+                      label: "Menu items",
                       isBindProperty: false,
                       isTriggerProperty: false,
                       panelConfig: {
@@ -165,8 +172,7 @@ class ButtonGroupWidget extends BaseWidget<
                             sectionName: "Events",
                             children: [
                               {
-                                helpText:
-                                  "Triggers an action when the menu item is clicked",
+                                helpText: "when the menu item is clicked",
                                 propertyName: "onClick",
                                 label: "onClick",
                                 controlType: "ACTION_SELECTOR",
@@ -198,14 +204,14 @@ class ButtonGroupWidget extends BaseWidget<
                                 helpText:
                                   "Sets the icon alignment of a menu item",
                                 controlType: "ICON_TABS",
-                                fullWidth: true,
+                                fullWidth: false,
                                 options: [
                                   {
-                                    icon: "VERTICAL_LEFT",
+                                    startIcon: "skip-left-line",
                                     value: "left",
                                   },
                                   {
-                                    icon: "VERTICAL_RIGHT",
+                                    startIcon: "skip-right-line",
                                     value: "right",
                                   },
                                 ],
@@ -222,7 +228,7 @@ class ButtonGroupWidget extends BaseWidget<
                                 propertyName: "backgroundColor",
                                 helpText:
                                   "Sets the background color of a menu item",
-                                label: "Background Color",
+                                label: "Background color",
                                 controlType: "COLOR_PICKER",
                                 isJSConvertible: true,
                                 isBindProperty: true,
@@ -240,7 +246,7 @@ class ButtonGroupWidget extends BaseWidget<
                               {
                                 propertyName: "textColor",
                                 helpText: "Sets the text color of a menu item",
-                                label: "Text Color",
+                                label: "Text color",
                                 controlType: "COLOR_PICKER",
                                 isBindProperty: false,
                                 isTriggerProperty: false,
@@ -292,7 +298,6 @@ class ButtonGroupWidget extends BaseWidget<
                     },
                   ],
                 },
-                ...getResponsiveLayoutConfig(this.getWidgetType()),
                 {
                   sectionName: "Events",
                   hidden: (
@@ -308,7 +313,7 @@ class ButtonGroupWidget extends BaseWidget<
                   },
                   children: [
                     {
-                      helpText: "Triggers an action when the button is clicked",
+                      helpText: "when the button is clicked",
                       propertyName: "onClick",
                       label: "onClick",
                       controlType: "ACTION_SELECTOR",
@@ -338,14 +343,14 @@ class ButtonGroupWidget extends BaseWidget<
                       label: "Position",
                       helpText: "Sets the icon alignment of a button",
                       controlType: "ICON_TABS",
-                      fullWidth: true,
+                      fullWidth: false,
                       options: [
                         {
-                          icon: "VERTICAL_LEFT",
+                          startIcon: "skip-left-line",
                           value: "left",
                         },
                         {
-                          icon: "VERTICAL_RIGHT",
+                          startIcon: "skip-right-line",
                           value: "right",
                         },
                       ],
@@ -397,7 +402,7 @@ class ButtonGroupWidget extends BaseWidget<
                       getStylesheetValue,
                       propertyName: "buttonColor",
                       helpText: "Changes the color of the button",
-                      label: "Button Color",
+                      label: "Button color",
                       controlType: "COLOR_PICKER",
                       isJSConvertible: true,
                       isBindProperty: true,
@@ -436,7 +441,7 @@ class ButtonGroupWidget extends BaseWidget<
           },
           {
             propertyName: "animateLoading",
-            label: "Animate Loading",
+            label: "Animate loading",
             controlType: "SWITCH",
             helpText: "Controls the loading of the widget",
             defaultValue: true,
@@ -457,7 +462,7 @@ class ButtonGroupWidget extends BaseWidget<
         children: [
           {
             propertyName: "buttonVariant",
-            label: "Button Variant",
+            label: "Button variant",
             controlType: "ICON_TABS",
             fullWidth: true,
             helpText: "Sets the variant of the button",
@@ -513,11 +518,11 @@ class ButtonGroupWidget extends BaseWidget<
         ],
       },
       {
-        sectionName: "Border and Shadow",
+        sectionName: "Border and shadow",
         children: [
           {
             propertyName: "borderRadius",
-            label: "Border Radius",
+            label: "Border radius",
             helpText:
               "Rounds the corners of the icon button's outer border edge",
             controlType: "BORDER_RADIUS_OPTIONS",
@@ -528,7 +533,7 @@ class ButtonGroupWidget extends BaseWidget<
           },
           {
             propertyName: "boxShadow",
-            label: "Box Shadow",
+            label: "Box shadow",
             helpText:
               "Enables you to cast a drop shadow from the frame of the widget",
             controlType: "BOX_SHADOW_OPTIONS",

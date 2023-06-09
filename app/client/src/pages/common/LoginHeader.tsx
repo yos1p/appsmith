@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { getCurrentUser } from "selectors/usersSelectors";
 import styled from "styled-components";
 import StyledHeader from "components/designSystems/appsmith/StyledHeader";
-import { AppState } from "@appsmith/reducers";
 import { Colors } from "constants/Colors";
+import type { AppState } from "@appsmith/reducers";
 
 const StyledPageHeader = styled(StyledHeader)`
   width: 100%;

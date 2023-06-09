@@ -1,12 +1,14 @@
-import { call, fork, put, race, select, take } from "redux-saga/effects";
-import {
+import { call, put, race, select, take } from "redux-saga/effects";
+import type {
   ReduxAction,
   ReduxActionWithPromise,
+} from "@appsmith/constants/ReduxActionConstants";
+import {
   ReduxActionTypes,
   ReduxActionErrorTypes,
 } from "@appsmith/constants/ReduxActionConstants";
 import { reset } from "redux-form";
-import UserApi, {
+import type {
   CreateUserRequest,
   CreateUserResponse,
   ForgotPasswordRequest,
@@ -15,9 +17,11 @@ import UserApi, {
   UpdateUserRequest,
   LeaveWorkspaceRequest,
 } from "@appsmith/api/UserApi";
+import UserApi from "@appsmith/api/UserApi";
 import { AUTH_LOGIN_URL, SETUP } from "constants/routes";
 import history from "utils/history";
-import { ApiResponse } from "api/ApiResponses";
+import type { ApiResponse } from "api/ApiResponses";
+import type { ErrorActionPayload } from "sagas/ErrorSagas";
 import {
   validateResponse,
   getResponseErrorMessage,
@@ -38,11 +42,13 @@ import { INVITE_USERS_TO_WORKSPACE_FORM } from "@appsmith/constants/forms";
 import PerformanceTracker, {
   PerformanceTransactionName,
 } from "utils/PerformanceTracker";
-import { ERROR_CODES } from "@appsmith/constants/ApiConstants";
-import { ANONYMOUS_USERNAME, User } from "constants/userConstants";
-import { flushErrorsAndRedirect } from "actions/errorActions";
+import type { User } from "constants/userConstants";
+import { ANONYMOUS_USERNAME } from "constants/userConstants";
+import {
+  flushErrorsAndRedirect,
+  safeCrashAppRequest,
+} from "actions/errorActions";
 import localStorage from "utils/localStorage";
-import { Toaster, Variant } from "design-system-old";
 import log from "loglevel";
 
 import { getCurrentUser } from "selectors/usersSelectors";
@@ -51,23 +57,25 @@ import {
   initPageLevelSocketConnection,
 } from "actions/websocketActions";
 import {
-  getEnableFirstTimeUserOnboarding,
-  getFirstTimeUserOnboardingApplicationId,
+  getEnableStartSignposting,
+  getFirstTimeUserOnboardingApplicationIds,
   getFirstTimeUserOnboardingIntroModalVisibility,
 } from "utils/storage";
-import {
-  initializeAnalyticsAndTrackers,
-  initializeSegmentWithoutTracking,
-} from "utils/AppsmithUtils";
-import { getAppsmithConfigs } from "ce/configs";
+import { initializeAnalyticsAndTrackers } from "utils/AppsmithUtils";
+import { getAppsmithConfigs } from "@appsmith/configs";
 import { getSegmentState } from "selectors/analyticsSelectors";
 import {
   segmentInitUncertain,
   segmentInitSuccess,
 } from "actions/analyticsActions";
-import { SegmentState } from "reducers/uiReducers/analyticsReducer";
-import FeatureFlags from "entities/FeatureFlags";
+import type { SegmentState } from "reducers/uiReducers/analyticsReducer";
+import type FeatureFlags from "entities/FeatureFlags";
 import UsagePulse from "usagePulse";
+import { toast } from "design-system";
+import { isAirgapped } from "@appsmith/utils/airgapHelpers";
+import { USER_PROFILE_PICTURE_UPLOAD_FAILED } from "ce/constants/messages";
+import { UPDATE_USER_DETAILS_FAILED } from "ce/constants/messages";
+import { createMessage } from "design-system-old/build/constants/messages";
 
 export function* createUserSaga(
   action: ReduxActionWithPromise<CreateUserRequest>,
@@ -126,34 +134,6 @@ export function* waitForSegmentInit(skipWithAnonymousId: boolean) {
   }
 }
 
-/*
- * Function to initiate usage tracking
- *  - For anonymous users we need segement id, so if telemetry is off
- *    we're intiating segment without tracking and once we get the id,
- *    analytics object is purged.
- */
-export function* initiateUsageTracking(payload: {
-  isAnonymousUser: boolean;
-  enableTelemetry: boolean;
-}) {
-  const appsmithConfigs = getAppsmithConfigs();
-
-  //To make sure that we're not tracking from previous session.
-  UsagePulse.stopTrackingActivity();
-
-  if (payload.isAnonymousUser) {
-    if (payload.enableTelemetry && appsmithConfigs.segment.enabled) {
-      UsagePulse.userAnonymousId = AnalyticsUtil.getAnonymousId();
-    } else {
-      yield initializeSegmentWithoutTracking();
-      UsagePulse.userAnonymousId = AnalyticsUtil.getAnonymousId();
-      AnalyticsUtil.removeAnalytics();
-    }
-  }
-
-  UsagePulse.startTrackingActivity();
-}
-
 export function* getCurrentUserSaga() {
   try {
     PerformanceTracker.startAsyncTracking(
@@ -181,19 +161,14 @@ export function* getCurrentUserSaga() {
       },
     });
 
-    yield put({
-      type: ReduxActionTypes.SAFE_CRASH_APPSMITH_REQUEST,
-      payload: {
-        code: ERROR_CODES.SERVER_ERROR,
-      },
-    });
+    yield put(safeCrashAppRequest());
   }
 }
 
 export function* runUserSideEffectsSaga() {
   const currentUser: User = yield select(getCurrentUser);
   const { enableTelemetry } = currentUser;
-
+  const isAirgappedInstance = isAirgapped();
   if (enableTelemetry) {
     const promise = initializeAnalyticsAndTrackers();
 
@@ -208,22 +183,19 @@ export function* runUserSideEffectsSaga() {
     }
   }
 
-  if (
-    //@ts-expect-error: response is of type unknown
-    !currentUser.isAnonymous &&
-    currentUser.username !== ANONYMOUS_USERNAME
-  ) {
+  if (!currentUser.isAnonymous && currentUser.username !== ANONYMOUS_USERNAME) {
     enableTelemetry && AnalyticsUtil.identifyUser(currentUser);
   }
 
-  /*
-   * Forking it as we don't want to block application flow
-   */
-  yield fork(initiateUsageTracking, {
-    //@ts-expect-error: response is of type unknown
-    isAnonymousUser: currentUser.isAnonymous,
-    enableTelemetry,
-  });
+  if (!isAirgappedInstance) {
+    // We need to stop and start tracking activity to ensure that the tracking from previous session is not carried forward
+    UsagePulse.stopTrackingActivity();
+    UsagePulse.startTrackingActivity(
+      enableTelemetry && getAppsmithConfigs().segment.enabled,
+      currentUser?.isAnonymous ?? false,
+    );
+  }
+
   yield put(initAppLevelSocketConnection());
   yield put(initPageLevelSocketConnection());
 
@@ -359,7 +331,7 @@ export function* inviteUsers(
       usernames: data.usernames,
       permissionGroupId: data.permissionGroupId,
     });
-    const isValidResponse: boolean = yield validateResponse(response);
+    const isValidResponse: boolean = yield validateResponse(response, false);
     if (!isValidResponse) {
       let errorMessage = `${data.usernames}:  `;
       errorMessage += getResponseErrorMessage(response);
@@ -385,23 +357,19 @@ export function* inviteUsers(
     yield put(reset(INVITE_USERS_TO_WORKSPACE_FORM));
   } catch (error) {
     yield call(reject, { _error: (error as Error).message });
-    yield put({
-      type: ReduxActionErrorTypes.INVITE_USERS_TO_WORKSPACE_ERROR,
-      payload: {
-        error,
-      },
-    });
   }
 }
 
 export function* updateUserDetailsSaga(action: ReduxAction<UpdateUserRequest>) {
   try {
-    const { email, name, role, useCase } = action.payload;
+    const { email, intercomConsentGiven, name, role, useCase } = action.payload;
+
     const response: ApiResponse = yield callAPI(UserApi.updateUser, {
       email,
       name,
       role,
       useCase,
+      intercomConsentGiven,
     });
     const isValidResponse: boolean = yield validateResponse(response);
 
@@ -412,9 +380,16 @@ export function* updateUserDetailsSaga(action: ReduxAction<UpdateUserRequest>) {
       });
     }
   } catch (error) {
+    const payload: ErrorActionPayload = {
+      show: true,
+      error: {
+        message:
+          (error as Error).message ?? createMessage(UPDATE_USER_DETAILS_FAILED),
+      },
+    };
     yield put({
       type: ReduxActionErrorTypes.UPDATE_USER_DETAILS_ERROR,
-      payload: (error as Error).message,
+      payload,
     });
   }
 }
@@ -506,11 +481,27 @@ export function* updatePhoto(
     const response: ApiResponse = yield call(UserApi.uploadPhoto, {
       file: action.payload.file,
     });
+    if (!response.responseMeta.success) {
+      throw response.responseMeta.error;
+    }
     //@ts-expect-error: response is of type unknown
     const photoId = response.data?.profilePhotoAssetId; //get updated photo id of iploaded image
     if (action.payload.callback) action.payload.callback(photoId);
   } catch (error) {
     log.error(error);
+
+    const payload: ErrorActionPayload = {
+      show: true,
+      error: {
+        message:
+          (error as any).message ??
+          createMessage(USER_PROFILE_PICTURE_UPLOAD_FAILED),
+      },
+    };
+    yield put({
+      type: ReduxActionErrorTypes.USER_PROFILE_PICTURE_UPLOAD_FAILED,
+      payload,
+    });
   }
 }
 
@@ -530,21 +521,15 @@ export function* fetchFeatureFlags() {
 }
 
 export function* updateFirstTimeUserOnboardingSage() {
-  const enable: string | null = yield getEnableFirstTimeUserOnboarding();
-
+  const enable: boolean | null = yield call(getEnableStartSignposting);
   if (enable) {
-    const applicationId: string = yield getFirstTimeUserOnboardingApplicationId() ||
-      "";
-    const introModalVisibility:
-      | string
-      | null = yield getFirstTimeUserOnboardingIntroModalVisibility();
+    const applicationIds: string[] =
+      yield getFirstTimeUserOnboardingApplicationIds() || [];
+    const introModalVisibility: string | null =
+      yield getFirstTimeUserOnboardingIntroModalVisibility();
     yield put({
-      type: ReduxActionTypes.SET_ENABLE_FIRST_TIME_USER_ONBOARDING,
-      payload: true,
-    });
-    yield put({
-      type: ReduxActionTypes.SET_FIRST_TIME_USER_ONBOARDING_APPLICATION_ID,
-      payload: applicationId,
+      type: ReduxActionTypes.SET_FIRST_TIME_USER_ONBOARDING_APPLICATION_IDS,
+      payload: applicationIds,
     });
     yield put({
       type: ReduxActionTypes.SET_SHOW_FIRST_TIME_USER_ONBOARDING_MODAL,
@@ -564,9 +549,8 @@ export function* leaveWorkspaceSaga(
       yield put({
         type: ReduxActionTypes.GET_ALL_APPLICATION_INIT,
       });
-      Toaster.show({
-        text: `You have successfully left the workspace`,
-        variant: Variant.success,
+      toast.show(`You have successfully left the workspace`, {
+        kind: "success",
       });
     }
   } catch (error) {

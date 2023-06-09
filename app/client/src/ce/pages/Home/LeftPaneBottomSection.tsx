@@ -3,8 +3,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { MenuItem } from "design-system-old";
 import { ADMIN_SETTINGS, createMessage } from "@appsmith/constants/messages";
-import { getIsFetchingApplications } from "selectors/applicationSelectors";
-import { Colors } from "constants/Colors";
+import { getIsFetchingApplications } from "@appsmith/selectors/applicationSelectors";
 import {
   DropdownOnSelectActions,
   getOnSelectAction,
@@ -18,28 +17,21 @@ import { getTenantPermissions } from "@appsmith/selectors/tenantSelectors";
 
 export const Wrapper = styled.div`
   padding-bottom: ${(props) => props.theme.spaces[3]}px;
-  background-color: ${Colors.WHITE};
+  background-color: var(--ads-v2-color-bg);
   width: 100%;
   margin-top: auto;
+  border-top: 1px solid var(--ads-v2-color-border);
+`;
 
-  & .ads-dialog-trigger {
-    margin-top: ${(props) => props.theme.spaces[1]}px;
-  }
-
-  & .ads-dialog-trigger > div {
-    position: initial;
-    width: 92%;
-    padding: ${(props) =>
-      `${props.theme.spaces[0]}px ${props.theme.spaces[6]}px`};
-  }
+export const MenuWrapper = styled.div`
+  margin-top: 4px;
 `;
 
 export const LeftPaneVersionData = styled.div`
   display: flex;
   justify-content: space-between;
-  color: ${Colors.MIRAGE_2};
+  color: var(--ads-v2-color-fg-emphasis);
   font-size: 8px;
-  width: 92%;
   margin-top: ${(props) => props.theme.spaces[3]}px;
 `;
 

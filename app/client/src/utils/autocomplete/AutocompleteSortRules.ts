@@ -1,11 +1,11 @@
-import { FieldEntityInformation } from "components/editorComponents/CodeEditor/EditorConfig";
+import type { FieldEntityInformation } from "components/editorComponents/CodeEditor/EditorConfig";
 import { DataTreeFunctionSortOrder, PriorityOrder } from "./dataTypeSortRules";
-import {
-  AutocompleteDataType,
+import type {
   Completion,
-  createCompletionHeader,
   DataTreeDefEntityInformation,
 } from "./CodemirrorTernService";
+import { createCompletionHeader } from "./CodemirrorTernService";
+import { AutocompleteDataType } from "./AutocompleteDataType";
 
 interface AutocompleteRule {
   computeScore(completion: Completion): number;
@@ -276,9 +276,9 @@ export class AutocompleteSorter {
     if (!shouldComputeBestMatch) return sortedCompletions;
     return bestMatchEndIndex > 0
       ? [
-          createCompletionHeader("Best Match"),
+          createCompletionHeader("Best match"),
           ...sortedCompletions.slice(0, bestMatchEndIndex),
-          createCompletionHeader("Search Results"),
+          createCompletionHeader("Search results"),
           ...sortedCompletions.slice(bestMatchEndIndex),
         ]
       : sortedCompletions;
