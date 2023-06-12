@@ -205,7 +205,7 @@ jobs:
       # first 11 characters. This can be used to build images for several branches
       - name: Get the version to tag the Docker image
         id: vars
-        run: echo tag=$(echo ${GITHUB_REF:11}) >> $GITHUB_OUTPUT
+        run: echo tag=$(echo ${GITHUB_REF:17}) >> $GITHUB_OUTPUT
 
       - name: Set up Docker buildx CLI
         uses: docker/setup-buildx-action@v2
