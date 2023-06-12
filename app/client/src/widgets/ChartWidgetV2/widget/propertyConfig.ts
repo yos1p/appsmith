@@ -1,5 +1,4 @@
 import { ValidationTypes } from "constants/WidgetValidation";
-import { getResponsiveLayoutConfig } from "utils/layoutPropertiesUtils";
 
 export const contentConfig = [
   {
@@ -84,7 +83,6 @@ export const contentConfig = [
       },
     ],
   },
-  ...getResponsiveLayoutConfig("CHART_WIDGET"),
 ];
 
 export const styleConfig = [];
