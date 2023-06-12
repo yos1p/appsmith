@@ -224,7 +224,7 @@ jobs:
           context: app/client
           push: true
           platforms: linux/arm64,linux/amd64
-          tags: ${{ vars.DOCKER_HUB_ORGANIZATION }}/appsmith-editor:${{steps.vars.outputs.tag}}
+          tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-editor:${{steps.vars.outputs.tag}}
 
       # Build master Docker image and push to Docker Hub
       - name: Push server master image to Docker Hub with commit tag
