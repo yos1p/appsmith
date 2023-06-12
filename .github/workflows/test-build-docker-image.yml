@@ -216,58 +216,25 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      # Build release Docker image and push to Docker Hub
-      - name: Push client release image to Docker Hub
-        if: success() && github.ref == 'refs/heads/release' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-        uses: docker/build-push-action@v4
-        with:
-          context: app/client
-          push: true
-          tags: |
-            ${{ vars.DOCKER_HUB_ORGANIZATION }}/appsmith-editor:${{steps.vars.outputs.tag}}
-
       # Build master Docker image and push to Docker Hub
       - name: Push client master image to Docker Hub with commit tag
-        if: success() && startsWith(github.ref, 'refs/heads/convo/') && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        if: success()
         uses: docker/build-push-action@v4
         with:
           context: app/client
           push: true
           platforms: linux/arm64,linux/amd64
-          tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-editor:nightly
-
-      # Build release Docker image and push to Docker Hub
-      - name: Push server release image to Docker Hub
-        if: success() && github.ref == 'refs/heads/release'
-        uses: docker/build-push-action@v4
-        with:
-          context: app/server
-          push: true
-          build-args: |
-            APPSMITH_SEGMENT_CE_KEY=${{ secrets.APPSMITH_SEGMENT_CE_KEY_RELEASE }}
-          tags: |
-            ${{ vars.DOCKER_HUB_ORGANIZATION }}/appsmith-server:${{steps.vars.outputs.tag}}
+          tags: ${{ vars.DOCKER_HUB_ORGANIZATION }}/appsmith-editor:${{steps.vars.outputs.tag}}
 
       # Build master Docker image and push to Docker Hub
       - name: Push server master image to Docker Hub with commit tag
-        if: success() && startsWith(github.ref, 'refs/heads/convo/')
+        if: success()
         uses: docker/build-push-action@v4
         with:
           context: app/server
           platforms: linux/arm64,linux/amd64
           push: true
-          build-args: |
-            APPSMITH_SEGMENT_CE_KEY=${{ secrets.APPSMITH_SEGMENT_CE_KEY }}
-          tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-server:nightly
-      # Build release Docker image and push to Docker Hub
-      - name: Push RTS release image to Docker Hub
-        if: success() && github.ref == 'refs/heads/release'
-        uses: docker/build-push-action@v4
-        with:
-          context: app/rts
-          push: true
-          tags: |
-            ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-rts:${{steps.vars.outputs.tag}}
+          tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-server:${{steps.vars.outputs.tag}}
 
       # Build master Docker image and push to Docker Hub
       - name: Push RTS master image to Docker Hub with commit tag
@@ -277,4 +244,4 @@ jobs:
           context: app/rts
           platforms: linux/arm64,linux/amd64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-rts:nightly
+          tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/appsmith-rts:${{steps.vars.outputs.tag}}
