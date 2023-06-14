@@ -4,6 +4,8 @@ import parser from "fast-xml-parser";
 import forge from "node-forge";
 import { defaultLibraries } from "./index";
 import { JSLibraries, libraryReservedIdentifiers } from "./index";
+import jspdf from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const defaultLibImplementations = {
   lodash: _,
@@ -12,6 +14,8 @@ const defaultLibImplementations = {
   // We are removing some functionalities of node-forge because they wont
   // work in the worker thread
   forge: /*#__PURE*/ _.omit(forge, ["tls", "http", "xhr", "socket", "task"]),
+  jspdf: jspdf,
+  autoTable: autoTable,
 };
 
 export function resetJSLibraries() {

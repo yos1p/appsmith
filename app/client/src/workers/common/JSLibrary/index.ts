@@ -1,5 +1,6 @@
 import lodashPackageJson from "lodash/package.json";
 import momentPackageJson from "moment-timezone/package.json";
+import jsPdfJson from "jspdf/package.json";
 
 export type TJSLibrary = {
   version?: string;
@@ -33,6 +34,18 @@ export const defaultLibraries: TJSLibrary[] = [
     version: "1.3.0",
     docsURL: "https://github.com/digitalbazaar/forge",
     name: "forge",
+  },
+  {
+    accessor: ["jspdf"],
+    version: jsPdfJson.version,
+    docsURL: `https://artskydj.github.io/jsPDF/docs/jsPDF.html`,
+    name: "jspdf",
+  },
+  {
+    accessor: ["autoTable"],
+    version: "3.5.29",
+    docsURL: `https://github.com/simonbengtsson/jsPDF-AutoTable`,
+    name: "autoTable",
   },
 ];
 

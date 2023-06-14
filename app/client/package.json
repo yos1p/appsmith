@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "analyze": "yarn cra-bundle-analyzer",
-    "start": "yarn workspace @shared/ast build && BROWSER=none EXTEND_ESLINT=true REACT_APP_ENVIRONMENT=DEVELOPMENT REACT_APP_CLIENT_LOG_LEVEL=debug craco --max-old-space-size=4096 start",
+    "start": "yarn workspace @shared/ast build && BROWSER=none EXTEND_ESLINT=true REACT_APP_ENVIRONMENT=DEVELOPMENT REACT_APP_CLIENT_LOG_LEVEL=debug REACT_APP_APPSMITH_INSTANCE_NAME=Convo.UI craco --max-old-space-size=4096 start",
     "build": "./build.sh",
     "build-airgap": "node download-assets.js && ./build.sh",
     "build-local": "craco --max-old-space-size=4096 build --config craco.build.config.js",
@@ -116,6 +116,8 @@
     "js-regex-pl": "^1.0.1",
     "js-sha256": "^0.9.0",
     "jshint": "^2.13.4",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.29",
     "klona": "^2.0.5",
     "libphonenumber-js": "^1.9.44",
     "linkedom": "^0.14.20",
