@@ -44,8 +44,8 @@ export class EntityExplorer {
   private _moreOptionsPopover =
     "//*[local-name()='g' and @id='Icon/Outline/more-vertical']";
   private _pageClone = ".single-select >div:contains('Clone')";
-  private getPageLocator = (pageName: string) =>
-    `.t--entity-name:contains(${pageName})`;
+  private _pageNameDiv = (pageName: string) =>
+    `.t--entity.page:contains('${pageName}')`;
   private _visibleTextSpan = (spanText: string) =>
     "//span[text()='" + spanText + "']";
   _createNewPopup = ".bp3-overlay-content";
@@ -274,23 +274,37 @@ export class EntityExplorer {
     this.agHelper.Sleep(500);
   }
 
-  public DragDropWidgetNVerify(widgetType: string, x = 200, y = 200) {
+  public DragDropWidgetNVerify(
+    widgetType: string,
+    x = 200,
+    y = 200,
+    dropTargetId = "",
+  ) {
     this.NavigateToSwitcher("Widgets");
     this.agHelper.Sleep();
     cy.get(this.locator._widgetPageIcon(widgetType))
       .first()
       .trigger("dragstart", { force: true })
       .trigger("mousemove", x, y, { force: true });
-    cy.get(this.locator._dropHere)
+    cy.get(dropTargetId ? dropTargetId : this.locator._dropHere)
       .first()
       .trigger("mousemove", x, y, { eventConstructor: "MouseEvent" })
-      .trigger("mousemove", x, y, { eventConstructor: "MouseEvent" })
+      .trigger("mousemove", x, y, { eventConstructor: "MouseEvent" });
+    this.agHelper.Sleep(200);
+    cy.get(dropTargetId ? dropTargetId : this.locator._dropHere)
+      .first()
       .trigger("mouseup", x, y, { eventConstructor: "MouseEvent" });
     this.agHelper.AssertAutoSave(); //settling time for widget on canvas!
     if (widgetType === "modalwidget") {
       cy.get(".t--modal-widget").should("exist");
     } else {
-      cy.get(this.locator._widgetInCanvas(widgetType)).should("exist");
+      if (dropTargetId) {
+        cy.get(
+          `${dropTargetId} ${this.locator._widgetInCanvas(widgetType)}`,
+        ).should("exist");
+      } else {
+        cy.get(this.locator._widgetInCanvas(widgetType)).should("exist");
+      }
     }
     this.agHelper.Sleep(200); //waiting a bit for widget properties to open
   }
@@ -346,5 +360,11 @@ export class EntityExplorer {
     );
     this.AssertEntityPresenceInExplorer(renameVal);
     this.agHelper.Sleep(); //allowing time for name change to reflect in EntityExplorer
+  }
+
+  public VerifyIsCurrentPage(pageName: string) {
+    this.agHelper
+      .GetElement(this._pageNameDiv(pageName))
+      .should("have.class", "activePage");
   }
 }

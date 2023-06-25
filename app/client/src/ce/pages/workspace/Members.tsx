@@ -37,6 +37,9 @@ import {
   PERMISSION_TYPE,
 } from "@appsmith/utils/permissionHelpers";
 import { getInitials } from "utils/AppsmithUtils";
+import { CustomRolesRamp } from "./WorkspaceInviteUsersForm";
+import { showProductRamps } from "utils/ProductRamps";
+import { RAMP_NAME } from "utils/ProductRamps/RampsControlList";
 
 const { cloudHosting } = getAppsmithConfigs();
 
@@ -363,7 +366,7 @@ export default function MemberSettings(props: PageProps) {
               roleChangingUserInfo &&
               roleChangingUserInfo.username === data.username
             }
-            listHeight={300}
+            listHeight={400}
             onSelect={(_value: string, option: any) => {
               dispatch(
                 changeWorkspaceUserRole(workspaceId, option.key, data.username),
@@ -387,6 +390,11 @@ export default function MemberSettings(props: PageProps) {
                 </div>
               </Option>
             ))}
+            {showProductRamps(RAMP_NAME.CUSTOM_ROLES) && (
+              <Option disabled>
+                <CustomRolesRamp />
+              </Option>
+            )}
           </Select>
         );
       },
@@ -522,6 +530,11 @@ export default function MemberSettings(props: PageProps) {
                           </div>
                         </Option>
                       ))}
+                      {showProductRamps(RAMP_NAME.CUSTOM_ROLES) && (
+                        <Option disabled>
+                          <CustomRolesRamp />
+                        </Option>
+                      )}
                     </Select>
                   )}
                   <DeleteIcon

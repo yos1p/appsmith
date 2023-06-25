@@ -275,33 +275,45 @@ Cypress.Commands.add("Signup", (uname, pword) => {
 });
 
 Cypress.Commands.add("LoginFromAPI", (uname, pword) => {
-  cy.location().then((loc) => {
-    let baseURL = Cypress.config().baseUrl;
-    baseURL = baseURL.endsWith("/") ? baseURL.slice(0, -1) : baseURL;
+  let baseURL = Cypress.config().baseUrl;
+  baseURL = baseURL.endsWith("/") ? baseURL.slice(0, -1) : baseURL;
 
-    cy.visit({
-      method: "POST",
-      url: "api/v1/login",
-      headers: {
-        origin: baseURL,
-      },
-      followRedirect: true,
-      body: {
-        username: uname,
-        password: pword,
-      },
-    })
-      .then(() => cy.location())
-      .then((loc) => {
-        expect(loc.href).to.equal(loc.origin + "/applications");
-        cy.wait("@getMe");
-        cy.wait("@applications").should(
-          "have.nested.property",
-          "response.body.responseMeta.status",
-          200,
-        );
-        cy.wait("@getReleaseItems");
-      });
+  // Clear cookies to avoid stale cookies on cypress CI
+  cy.clearCookie("SESSION");
+
+  cy.visit({
+    method: "POST",
+    url: "api/v1/login",
+    headers: {
+      origin: baseURL,
+    },
+    followRedirect: true,
+    body: {
+      username: uname,
+      password: pword,
+    },
+  });
+
+  // Check if cookie is present
+  cy.getCookie("SESSION").then((cookie) => {
+    expect(cookie).to.not.be.null;
+    cy.log(cookie.value);
+
+    cy.location().should((loc) => {
+      expect(loc.href).to.eq(loc.origin + "/applications");
+    });
+
+    if (CURRENT_REPO === REPO.EE) {
+      cy.wait(2000);
+    } else {
+      cy.wait("@getMe");
+      cy.wait("@applications").should(
+        "have.nested.property",
+        "response.body.responseMeta.status",
+        200,
+      );
+      cy.wait("@getReleaseItems");
+    }
   });
 });
 
@@ -563,8 +575,7 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add("PublishtheApp", (validateSavedState = true) => {
-  cy.server();
-  cy.route("POST", "/api/v1/applications/publish/*").as("publishApp");
+  cy.intercept("POST", "/api/v1/applications/publish/*").as("publishApp");
   // Wait before publish
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(2000);
@@ -714,8 +725,8 @@ Cypress.Commands.add("NavigateToWidgetsInExplorer", () => {
 
 Cypress.Commands.add("NavigateToJSEditor", () => {
   cy.get(explorer.createNew).click({ force: true });
-  cy.get(`[data-testId="t--search-file-operation"]`).type("New JS object");
-  cy.get("span:contains('New JS object')").eq(0).click({ force: true });
+  cy.get(`[data-testId="t--search-file-operation"]`).type("New JS Object");
+  cy.get("span:contains('New JS Object')").eq(0).click({ force: true });
 });
 
 Cypress.Commands.add("importCurl", () => {
@@ -841,10 +852,10 @@ Cypress.Commands.add("closePropertyPane", () => {
 
 Cypress.Commands.add(
   "onClickActions",
-  (forSuccess, forFailure, actionType, actionValue) => {
+  (forSuccess, forFailure, actionType, actionValue, idx = 0) => {
     propPane.SelectActionByTitleAndValue(actionType, actionValue);
 
-    cy.get(propPane._actionCallbacks).click();
+    cy.get(propPane._actionCallbacks).last().click();
 
     // add a success callback
     cy.get(propPane._actionAddCallback("success")).click().wait(500);
