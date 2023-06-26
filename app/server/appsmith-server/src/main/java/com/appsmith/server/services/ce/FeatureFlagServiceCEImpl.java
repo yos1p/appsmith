@@ -49,12 +49,6 @@ public class FeatureFlagServiceCEImpl implements FeatureFlagServiceCE {
     public Mono<Map<String, Boolean>> getAllFeatureFlagsForUser() {
         Mono<User> currentUser = sessionUserService.getCurrentUser().cache();
 
-//        Mono<Map<String, Boolean>> features = currentUser.map(user -> {
-//            if (user == null || user.isAnonymous()) {
-//                return Map.of("AUTO_LAYOUT", true);
-//            }
-//        });
-
         Flux<Tuple2<String, User>> featureUserTuple = Flux.fromIterable(ff4j.getFeatures().keySet())
                 .flatMap(featureName -> Mono.just(featureName).zipWith(currentUser));
 
