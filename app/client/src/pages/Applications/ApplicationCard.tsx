@@ -61,7 +61,7 @@ import { CONNECTED_TO_GIT, createMessage } from "@appsmith/constants/messages";
 import { builderURL, viewerURL } from "RouteBuilder";
 import history from "utils/history";
 import urlBuilder from "entities/URLRedirect/URLAssembly";
-import { getCurrentUser } from "selectors/usersSelectors";
+import { getCurrentUser as getCurrentUserSelector } from "selectors/usersSelectors";
 import { toast } from "design-system";
 import { getAppsmithConfigs } from "@appsmith/configs";
 import { addItemsInContextMenu } from "@appsmith/utils";
@@ -449,7 +449,7 @@ export function ApplicationCard(props: ApplicationCardProps) {
   const hasDeletePermission = hasDeleteApplicationPermission(
     props.application?.userPermissions,
   );
-  const user = useSelector(getCurrentUser);
+  const user = useSelector(getCurrentUserSelector);
   const hasManageWorkspacePermissions = user?.isSuperUser;
 
   const updateColor = (color: string) => {

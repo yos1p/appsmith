@@ -19,7 +19,7 @@ import {
 import { builderURL } from "RouteBuilder";
 import { getCanvasWidgetsStructure } from "selectors/entitiesSelector";
 import equal from "fast-deep-equal/es6";
-import { getAppsmithConfigs } from "ce/configs";
+import { getAppsmithConfigs } from "@appsmith/configs";
 
 const Section = styled.section`
   height: 100%;
