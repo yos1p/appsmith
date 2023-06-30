@@ -330,10 +330,6 @@ public class UserWorkspaceServiceCEImpl implements UserWorkspaceServiceCE {
                                 Map<String, UserData> userDataMap = tuple1.getT3();
                                 workspaceMemberInfoDTOList.forEach(userAndPermissionGroupDTO -> {
                                     User user = userMap.get(userAndPermissionGroupDTO.getUserId());
-                                    // TODO: Need a cleanup for invalid workspace members
-                                    if (user == null) {
-                                        return;
-                                    }
                                     UserData userData = userDataMap.get(userAndPermissionGroupDTO.getUserId());
                                     userAndPermissionGroupDTO.setName(Optional.ofNullable(user.getName()).orElse(user.computeFirstName()));
                                     userAndPermissionGroupDTO.setUsername(user.getUsername());
