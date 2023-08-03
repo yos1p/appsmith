@@ -11,5 +11,5 @@ export const addItemsInContextMenu = (
 };
 
 export const useHtmlPageTitle = () => {
-  return "Appsmith";
+  return "Convo.UI";
 };
