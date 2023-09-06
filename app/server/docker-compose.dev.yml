@@ -32,12 +32,14 @@ services:
       APPSMITH_ENCRYPTION_PASSWORD: "iYcrbwGeGwLy"
       APPSMITH_ENCRYPTION_SALT: "iYcrbwGeGwLy"
       APPSMITH_GIT_ROOT: "/data/git-storage"
+
+      APPSMITH_OAUTH2_KEYCLOAK_ISSUER_URI: "https://auth.gonow.cx/realms/hrms"
+      APPSMITH_OAUTH2_KEYCLOAK_CLIENT_ID: "appsmith"
+      APPSMITH_OAUTH2_KEYCLOAK_CLIENT_SECRET: "JG8LEAnd5TOXWy5vuQ2a03xCI4LIUVmf"
+      APPSMITH_OAUTH2_KEYCLOAK_CLIENT_NAME: "Appsmith"
     depends_on:
-      mongo:
-        restart: true
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - mongo
+      - redis
     ports:
       - "8080:8080"
     networks:
@@ -47,22 +49,13 @@ services:
       - ./envs:/data/envs
     restart: unless-stopped
   mongo:
-    image: 'bitnami/mongodb:4.2'
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/appsmith --quiet
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 60s
+    image: percona/percona-server-mongodb:6.0-multi
     environment:
-      MONGODB_REPLICA_SET_MODE: primary
       MONGO_INITDB_DATABASE: appsmith
-      MONGODB_REPLICA_SET_KEY: "iYcrbwGe328ujgsakldjfksldGwLy"
-      MONGODB_ROOT_PASSWORD: "MySecretPassword1234"
-      MONGODB_ADVERTISED_HOSTNAME: "mongo"
-    platform: "linux/amd64"
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: "MySecretPassword1234"
     volumes:
-      - ./container-volumes/mongo:/bitnami/mongodb
+      - ./container-volumes/mongo:/data/db
     networks:
       - appsmith
     restart: unless-stopped
