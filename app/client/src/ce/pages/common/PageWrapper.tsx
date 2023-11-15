@@ -1,4 +1,3 @@
-import { getAppsmithConfigs } from "@appsmith/configs";
 import type { ReactNode } from "react";
 import React from "react";
 import { Helmet } from "react-helmet";
@@ -58,7 +57,7 @@ export type PageWrapperProps = {
 
 export function PageWrapper(props: PageWrapperProps) {
   const { isFixed = false, isSavable = false } = props;
-  const { instanceName } = getAppsmithConfigs();
+  const instanceName = process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
   return (
     <Wrapper isFixed={isFixed}>
       <Helmet>

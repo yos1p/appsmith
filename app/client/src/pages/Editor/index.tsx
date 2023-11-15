@@ -39,7 +39,6 @@ import { APP_MODE } from "entities/App";
 import { GIT_BRANCH_QUERY_KEY } from "constants/routes";
 import TemplatesModal from "pages/Templates/TemplatesModal";
 import ReconnectDatasourceModal from "./gitSync/ReconnectDatasourceModal";
-import { getAppsmithConfigs } from "@appsmith/configs";
 import { Spinner } from "design-system";
 
 type EditorProps = {
@@ -171,7 +170,7 @@ class Editor extends Component<Props> {
       );
     }
 
-    const { instanceName } = getAppsmithConfigs();
+    const instanceName = process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
     return (
       <ThemeProvider theme={theme}>
         <div>

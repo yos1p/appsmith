@@ -21,7 +21,6 @@ import { useIsMobileDevice } from "utils/hooks/useDeviceDetect";
 import MobileSideBar from "./MobileSidebar";
 import { getTemplateNotificationSeenAction } from "actions/templateActions";
 import { getTenantConfig } from "@appsmith/selectors/tenantSelectors";
-import { getAppsmithConfigs } from "@appsmith/configs";
 import { Button } from "design-system";
 import { getSelectedAppTheme } from "selectors/appThemingSelectors";
 import { getCurrentApplication } from "selectors/editorSelectors";
@@ -180,8 +179,7 @@ export function PageHeader(props: PageHeaderProps) {
   const showTabs = useMemo(() => {
     return tabs.some((tab) => tab.matcher(location.pathname));
   }, [featureFlags, location.pathname]);
-
-  const { instanceName } = getAppsmithConfigs();
+  const instanceName = process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
 
   return (
     <StyledPageHeader

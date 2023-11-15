@@ -19,7 +19,6 @@ import {
 import { builderURL } from "RouteBuilder";
 import { getCanvasWidgetsStructure } from "selectors/entitiesSelector";
 import equal from "fast-deep-equal/es6";
-import { getAppsmithConfigs } from "@appsmith/configs";
 
 const Section = styled.section`
   height: 100%;
@@ -39,8 +38,7 @@ function AppViewerPageContainer(props: AppViewerPageContainerProps) {
   const isFetchingPage = useSelector(getIsFetchingPage);
   const currentApplication = useSelector(getCurrentApplication);
   const { match } = props;
-
-  const { instanceName } = getAppsmithConfigs();
+  const instanceName = process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
   // get appsmith editr link
   const appsmithEditorLink = useMemo(() => {
     if (

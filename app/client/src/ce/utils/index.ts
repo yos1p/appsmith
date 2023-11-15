@@ -11,5 +11,5 @@ export const addItemsInContextMenu = (
 };
 
 export const useHtmlPageTitle = () => {
-  return "Convo.UI";
+  return process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
 };

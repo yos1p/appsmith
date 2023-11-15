@@ -1,4 +1,3 @@
-import { getAppsmithConfigs } from "@appsmith/configs";
 import React from "react";
 
 type ContainerProps = {
@@ -11,7 +10,7 @@ type ContainerProps = {
 
 function Container(props: ContainerProps) {
   const { children, footer, subtitle, title } = props;
-  const { instanceName } = getAppsmithConfigs();
+  const instanceName = process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
 
   return (
     <div className="flex flex-col items-center gap-4 my-auto min-w-min">

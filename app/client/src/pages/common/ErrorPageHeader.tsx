@@ -14,7 +14,6 @@ import { flushErrorsAndRedirect, flushErrors } from "actions/errorActions";
 import { getSafeCrash } from "selectors/errorSelectors";
 import { Indices } from "constants/Layers";
 import { getTenantConfig } from "@appsmith/selectors/tenantSelectors";
-import { getAppsmithConfigs } from "@appsmith/configs";
 import { getSelectedAppTheme } from "selectors/appThemingSelectors";
 import { getCurrentApplication } from "selectors/editorSelectors";
 import { NAVIGATION_SETTINGS } from "constants/AppConstants";
@@ -68,7 +67,7 @@ export function ErrorPageHeader(props: ErrorPageHeaderProps) {
     "inherit",
   );
 
-  const { instanceName } = getAppsmithConfigs();
+  const instanceName = process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
   return (
     <StyledPageHeader>
       <HeaderSection>

@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "analyze": "yarn cra-bundle-analyzer",
-    "start": "yarn workspace @shared/ast build && BROWSER=none EXTEND_ESLINT=true REACT_APP_ENVIRONMENT=DEVELOPMENT REACT_APP_CLIENT_LOG_LEVEL=debug REACT_APP_APPSMITH_INSTANCE_NAME=Convo.UI craco --max-old-space-size=4096 start",
+    "start": "yarn workspace @shared/ast build && BROWSER=none EXTEND_ESLINT=true REACT_APP_ENVIRONMENT=DEVELOPMENT REACT_APP_CLIENT_LOG_LEVEL=debug REACT_APP_APPSMITH_INSTANCE_NAME=HRMS craco --max-old-space-size=4096 start",
     "build": "./build.sh",
     "build-airgap": "node download-assets.js && ./build.sh",
     "build-local": "craco --max-old-space-size=4096 build --config craco.build.config.js",
