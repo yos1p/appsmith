@@ -1,8 +1,7 @@
 import React from "react";
-import { KeyCloakOAuthURL } from "@appsmith/constants/ApiConstants";
 import { Redirect, useLocation } from "react-router-dom";
 import { connect, useSelector } from "react-redux";
-import type { DecoratedFormProps } from "redux-form";
+import type { InjectedFormProps, DecoratedFormProps } from "redux-form";
 import { reduxForm, formValueSelector, isDirty } from "redux-form";
 import {
   LOGIN_FORM_NAME,
@@ -12,8 +11,14 @@ import {
 import { FORGOT_PASSWORD_URL, SETUP, SIGN_UP_URL } from "constants/routes";
 import {
   LOGIN_PAGE_TITLE,
+  LOGIN_PAGE_EMAIL_INPUT_LABEL,
+  LOGIN_PAGE_PASSWORD_INPUT_LABEL,
+  LOGIN_PAGE_PASSWORD_INPUT_PLACEHOLDER,
+  LOGIN_PAGE_EMAIL_INPUT_PLACEHOLDER,
   FORM_VALIDATION_EMPTY_PASSWORD,
   FORM_VALIDATION_INVALID_EMAIL,
+  LOGIN_PAGE_LOGIN_BUTTON_TEXT,
+  LOGIN_PAGE_FORGOT_PASSWORD_TEXT,
   LOGIN_PAGE_SIGN_UP_LINK_TEXT,
   LOGIN_PAGE_INVALID_CREDS_ERROR,
   LOGIN_PAGE_INVALID_CREDS_FORGOT_PASSWORD_LINK,
@@ -21,10 +26,14 @@ import {
   createMessage,
   LOGIN_PAGE_SUBTITLE,
 } from "@appsmith/constants/messages";
+import { FormGroup } from "design-system-old";
 import { Button, Link, Callout } from "design-system";
+import FormTextField from "components/utils/ReduxFormTextField";
 import { isEmail, isEmptyString } from "utils/formhelpers";
 import type { LoginFormValues } from "pages/UserAuth/helpers";
 
+import { SpacedSubmitForm, FormActions } from "pages/UserAuth/StyledComponents";
+import { LOGIN_SUBMIT_PATH } from "@appsmith/constants/ApiConstants";
 import { getIsSafeRedirectURL } from "utils/helpers";
 import { getCurrentUser } from "selectors/usersSelectors";
 import Container from "pages/UserAuth/Container";
@@ -53,6 +62,10 @@ const validate = (values: LoginFormValues, props: ValidateProps) => {
   return errors;
 };
 
+type LoginFormProps = {
+  emailValue: string;
+} & InjectedFormProps<LoginFormValues, { emailValue: string }>;
+
 type ValidateProps = {
   isPasswordFieldDirty?: boolean;
 } & DecoratedFormProps<
@@ -60,7 +73,9 @@ type ValidateProps = {
   { emailValue: string; isPasswordFieldDirty?: boolean }
 >;
 
-export function Login() {
+export function Login(props: LoginFormProps) {
+  const { emailValue: email, error, valid } = props;
+  const isFormValid = valid && email && !isEmptyString(email);
   const location = useLocation();
   const isFormLoginEnabled = useSelector(getIsFormLoginEnabled);
   const queryParams = new URLSearchParams(location.search);
@@ -78,11 +93,18 @@ export function Login() {
     errorMessage = queryParams.get("message") || queryParams.get("error") || "";
     showError = true;
   }
+  let loginURL = "/api/v1/" + LOGIN_SUBMIT_PATH;
   let signupURL = SIGN_UP_URL;
   const redirectUrl = queryParams.get("redirectUrl");
   if (redirectUrl != null && getIsSafeRedirectURL(redirectUrl)) {
     const encodedRedirectUrl = encodeURIComponent(redirectUrl);
+    loginURL += `?redirectUrl=${encodedRedirectUrl}`;
     signupURL += `?redirectUrl=${encodedRedirectUrl}`;
+  }
+
+  let forgotPasswordURL = `${FORGOT_PASSWORD_URL}`;
+  if (props.emailValue && !isEmptyString(props.emailValue)) {
+    forgotPasswordURL += `?email=${props.emailValue}`;
   }
 
   const footerSection = isFormLoginEnabled && (
@@ -128,9 +150,53 @@ export function Login() {
             : createMessage(LOGIN_PAGE_INVALID_CREDS_ERROR)}
         </Callout>
       )}
-      <Button href={KeyCloakOAuthURL} renderAs="a" startIcon="key">
-        Single Sign-On
-      </Button>
+      {isFormLoginEnabled && (
+        <>
+          <SpacedSubmitForm action={loginURL} method="POST">
+            <FormGroup
+              intent={error ? "danger" : "none"}
+              label={createMessage(LOGIN_PAGE_EMAIL_INPUT_LABEL)}
+            >
+              <FormTextField
+                autoFocus
+                name={LOGIN_FORM_EMAIL_FIELD_NAME}
+                placeholder={createMessage(LOGIN_PAGE_EMAIL_INPUT_PLACEHOLDER)}
+                type="email"
+              />
+            </FormGroup>
+            <FormGroup
+              intent={error ? "danger" : "none"}
+              label={createMessage(LOGIN_PAGE_PASSWORD_INPUT_LABEL)}
+            >
+              <FormTextField
+                name={LOGIN_FORM_PASSWORD_FIELD_NAME}
+                placeholder={createMessage(
+                  LOGIN_PAGE_PASSWORD_INPUT_PLACEHOLDER,
+                )}
+                type="password"
+              />
+            </FormGroup>
+
+            <FormActions>
+              <Button
+                isDisabled={!isFormValid}
+                kind="primary"
+                size="md"
+                type="submit"
+              >
+                {createMessage(LOGIN_PAGE_LOGIN_BUTTON_TEXT)}
+              </Button>
+            </FormActions>
+          </SpacedSubmitForm>
+          <Link
+            className="justify-center"
+            target="_self"
+            to={forgotPasswordURL}
+          >
+            {createMessage(LOGIN_PAGE_FORGOT_PASSWORD_TEXT)}
+          </Link>
+        </>
+      )}
     </Container>
   );
 }

@@ -20,6 +20,8 @@ import {
   ALREADY_HAVE_AN_ACCOUNT,
   createMessage,
   SIGNUP_PAGE_SUBTITLE,
+  SIGNUP_PAGE_NAME_INPUT_LABEL,
+  SIGNUP_PAGE_NAME_INPUT_PLACEHOLDER,
 } from "@appsmith/constants/messages";
 import FormTextField from "components/utils/ReduxFormTextField";
 import ThirdPartyAuth from "@appsmith/pages/UserAuth/ThirdPartyAuth";
@@ -184,6 +186,17 @@ export function SignUp(props: SignUpFormProps) {
           method="POST"
           onSubmit={(e) => handleSubmit(e)}
         >
+          <FormGroup
+            intent={error ? "danger" : "none"}
+            label={createMessage(SIGNUP_PAGE_NAME_INPUT_LABEL)}
+          >
+            <FormTextField
+              autoFocus
+              name="name"
+              placeholder={createMessage(SIGNUP_PAGE_NAME_INPUT_PLACEHOLDER)}
+              type="text"
+            />
+          </FormGroup>
           <FormGroup
             intent={error ? "danger" : "none"}
             label={createMessage(SIGNUP_PAGE_EMAIL_INPUT_LABEL)}

@@ -56,6 +56,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: "MySecretPassword1234"
     volumes:
       - ./container-volumes/mongo:/data/db
+      - ./container-volumes/backups:/backups
     networks:
       - appsmith
     restart: unless-stopped

@@ -43,16 +43,14 @@ services:
       - ./container-volumes/git-storage:/data/git-storage
     restart: unless-stopped
   mongo:
-    image: 'bitnami/mongodb:4.2'
+    image: percona/percona-server-mongodb:6.0-multi
     environment:
-      MONGODB_REPLICA_SET_MODE: primary
       MONGO_INITDB_DATABASE: appsmith
-      MONGODB_REPLICA_SET_KEY: "iYcrbwGe328ujgsakldjfksldGwLy"
-      MONGODB_ROOT_PASSWORD: "MySecretPassword1234"
-      MONGODB_ADVERTISED_HOSTNAME: "mongo"
-    platform: "linux/amd64"
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: "MySecretPassword1234"
     volumes:
-      - ./container-volumes/mongo:/bitnami/mongodb
+      - ./container-volumes/mongo:/data/db
+      - ./container-volumes/backups:/backups
     networks:
       - appsmith
     restart: unless-stopped
