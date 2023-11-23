@@ -33,4 +33,10 @@ cat "$app_template" \
   | sed -e 's|\${\(APPSMITH_[A-Z0-9_]*\)}||g' \
   | tee /etc/nginx/conf.d/default.conf
 
+# Get the value of APP_TITLE from environment variables
+APP_TITLE_VALUE=${APP_TITLE:-System}
+
+# Use sed to replace the placeholder with the actual value in env-config.js
+sed -i "s|window._env_.APP_TITLE = \"default\"|window._env_.APP_TITLE = \"$APP_TITLE_VALUE\"|g" /var/www/appsmith/public/env-config.js
+
 exec nginx -g 'daemon off;'

@@ -115,7 +115,7 @@ export const getConfigsFromEnvVars = (): INJECTED_CONFIGS => {
       .APPSMITH_DISABLE_IFRAME_WIDGET_SANDBOX
       ? process.env.APPSMITH_DISABLE_IFRAME_WIDGET_SANDBOX.length > 0
       : false,
-    instanceName: process.env.REACT_APP_APPSMITH_INSTANCE_NAME || "Convo.UI",
+    instanceName: window._env_.APP_TITLE || "System",
     pricingUrl: process.env.REACT_APP_PRICING_URL || "",
     customerPortalUrl: process.env.REACT_APP_CUSTOMER_PORTAL_URL || "",
   };

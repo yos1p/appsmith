@@ -1,6 +1,8 @@
 
 FROM nginx:1.20-alpine
 
+RUN apk add --no-cache sed
+
 COPY ./build /var/www/appsmith
 
 EXPOSE 80

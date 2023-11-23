@@ -38,7 +38,7 @@ function AppViewerPageContainer(props: AppViewerPageContainerProps) {
   const isFetchingPage = useSelector(getIsFetchingPage);
   const currentApplication = useSelector(getCurrentApplication);
   const { match } = props;
-  const instanceName = process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
+  const instanceName = window._env_.APP_TITLE;
   // get appsmith editr link
   const appsmithEditorLink = useMemo(() => {
     if (

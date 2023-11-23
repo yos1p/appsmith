@@ -67,7 +67,7 @@ export function ErrorPageHeader(props: ErrorPageHeaderProps) {
     "inherit",
   );
 
-  const instanceName = process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
+  const instanceName = window._env_.APP_TITLE;
   return (
     <StyledPageHeader>
       <HeaderSection>

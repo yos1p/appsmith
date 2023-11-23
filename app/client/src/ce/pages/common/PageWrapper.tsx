@@ -57,7 +57,7 @@ export type PageWrapperProps = {
 
 export function PageWrapper(props: PageWrapperProps) {
   const { isFixed = false, isSavable = false } = props;
-  const instanceName = process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
+  const instanceName = window._env_.APP_TITLE;
   return (
     <Wrapper isFixed={isFixed}>
       <Helmet>

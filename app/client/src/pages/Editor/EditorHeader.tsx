@@ -294,7 +294,7 @@ export function EditorHeader(props: EditorHeaderProps) {
     (user) => user.username !== props.currentUser?.username,
   );
 
-  const instanceName = process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
+  const instanceName = window._env_.APP_TITLE;
 
   return (
     <ThemeProvider theme={theme}>

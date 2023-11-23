@@ -10,7 +10,7 @@ type ContainerProps = {
 
 function Container(props: ContainerProps) {
   const { children, footer, subtitle, title } = props;
-  const instanceName = process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
+  const instanceName = window._env_.APP_TITLE;
 
   return (
     <div className="flex flex-col items-center gap-4 my-auto min-w-min">

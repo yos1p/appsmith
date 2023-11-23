@@ -11,5 +11,5 @@ export const addItemsInContextMenu = (
 };
 
 export const useHtmlPageTitle = () => {
-  return process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
+  return window._env_.APP_TITLE;
 };

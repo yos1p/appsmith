@@ -179,7 +179,7 @@ export function PageHeader(props: PageHeaderProps) {
   const showTabs = useMemo(() => {
     return tabs.some((tab) => tab.matcher(location.pathname));
   }, [featureFlags, location.pathname]);
-  const instanceName = process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
+  const instanceName = window._env_.APP_TITLE;
 
   return (
     <StyledPageHeader

@@ -170,7 +170,7 @@ class Editor extends Component<Props> {
       );
     }
 
-    const instanceName = process.env.REACT_APP_APPSMITH_INSTANCE_NAME;
+    const instanceName = window._env_.APP_TITLE;
     return (
       <ThemeProvider theme={theme}>
         <div>
