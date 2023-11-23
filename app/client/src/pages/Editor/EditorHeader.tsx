@@ -93,6 +93,8 @@ import { getAppsmithConfigs } from "@appsmith/configs";
 import { getIsAppSettingsPaneWithNavigationTabOpen } from "selectors/appSettingsPaneSelectors";
 import { TOOLTIP_HOVER_ON_DELAY } from "constants/AppConstants";
 
+declare let window: any;
+
 const { cloudHosting } = getAppsmithConfigs();
 
 const HeaderWrapper = styled.div`

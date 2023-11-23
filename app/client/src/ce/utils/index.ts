@@ -1,5 +1,7 @@
 import type { MenuItemProps } from "design-system-old";
 
+declare let window: any;
+
 export const addItemsInContextMenu = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   args: boolean[],

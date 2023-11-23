@@ -3,6 +3,8 @@ import { Integrations } from "@sentry/tracing";
 import * as Sentry from "@sentry/react";
 import { createBrowserHistory } from "history";
 
+declare let window: any;
+
 export interface INJECTED_CONFIGS {
   instanceName: string;
   sentry: {

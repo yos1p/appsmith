@@ -19,6 +19,8 @@ import { getCurrentApplication } from "selectors/editorSelectors";
 import { NAVIGATION_SETTINGS } from "constants/AppConstants";
 import { get } from "lodash";
 
+declare let window: any;
+
 const StyledPageHeader = styled(StyledHeader)`
   box-shadow: none;
   justify-content: normal;

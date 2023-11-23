@@ -20,6 +20,8 @@ import { builderURL } from "RouteBuilder";
 import { getCanvasWidgetsStructure } from "selectors/entitiesSelector";
 import equal from "fast-deep-equal/es6";
 
+declare let window: any;
+
 const Section = styled.section`
   height: 100%;
   width: 100%;

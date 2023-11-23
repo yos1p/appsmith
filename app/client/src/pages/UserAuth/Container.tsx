@@ -1,5 +1,7 @@
 import React from "react";
 
+declare let window: any;
+
 type ContainerProps = {
   title: string;
   subtitle?: React.ReactNode;

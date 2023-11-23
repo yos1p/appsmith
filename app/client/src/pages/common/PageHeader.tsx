@@ -27,6 +27,8 @@ import { getCurrentApplication } from "selectors/editorSelectors";
 import { get } from "lodash";
 import { NAVIGATION_SETTINGS } from "constants/AppConstants";
 
+declare let window: any;
+
 const StyledPageHeader = styled(StyledHeader)<{
   hideShadow?: boolean;
   isMobile?: boolean;

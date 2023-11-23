@@ -41,6 +41,8 @@ import TemplatesModal from "pages/Templates/TemplatesModal";
 import ReconnectDatasourceModal from "./gitSync/ReconnectDatasourceModal";
 import { Spinner } from "design-system";
 
+declare let window: any;
+
 type EditorProps = {
   currentApplicationId?: string;
   currentApplicationName?: string;

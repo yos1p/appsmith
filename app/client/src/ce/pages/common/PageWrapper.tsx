@@ -3,6 +3,8 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import styled from "styled-components";
 
+declare let window: any;
+
 export const Wrapper = styled.section<{ isFixed?: boolean }>`
   ${(props) =>
     props.isFixed
