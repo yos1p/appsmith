@@ -236,6 +236,41 @@ class ButtonWidget extends BaseWidget<ButtonWidgetProps, ButtonWidgetState> {
         ],
       },
       {
+        sectionName: "Text",
+        children: [
+          {
+            propertyName: "fontSize",
+            label: "Font size",
+            helpText: "Controls the size of the font used",
+            controlType: "DROP_DOWN",
+            defaultValue: "1rem",
+            options: [
+              {
+                label: "S",
+                value: "0.875rem",
+                subText: "0.875rem",
+              },
+              {
+                label: "M",
+                value: "1rem",
+                subText: "1rem",
+              },
+              {
+                label: "L",
+                value: "1.25rem",
+                subText: "1.25rem",
+              },
+            ],
+            isJSConvertible: false,
+            isBindProperty: false,
+            isTriggerProperty: false,
+            validation: {
+              type: ValidationTypes.TEXT,
+            },
+          },
+        ],
+      },
+      {
         sectionName: "Icon",
         children: [
           {
@@ -457,6 +492,7 @@ class ButtonWidget extends BaseWidget<ButtonWidgetProps, ButtonWidgetState> {
         buttonColor={this.props.buttonColor}
         buttonVariant={this.props.buttonVariant}
         clickWithRecaptcha={this.clickWithRecaptchaBound}
+        fontSize={this.props.fontSize}
         googleRecaptchaKey={this.props.googleRecaptchaKey}
         handleRecaptchaV2Loading={this.handleRecaptchaV2Loading}
         iconAlign={this.props.iconAlign}

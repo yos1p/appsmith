@@ -32,7 +32,8 @@
     "sourceMap": true,
     "baseUrl": "./src",
     "noFallthroughCasesInSwitch": true,
-    "importsNotUsedAsValues": "error"
+    "ignoreDeprecations": "5.0",
+    "verbatimModuleSyntax": true
   },
   "include": ["./src/**/*", "./packages"],
   "exclude": ["./packages/rts", "**/*.stories.tsx"]

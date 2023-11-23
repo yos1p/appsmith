@@ -135,11 +135,12 @@ const buttonBaseStyle = css<ThemeProp & ButtonStyleProps>`
   border-radius: ${({ borderRadius }) => borderRadius};
   box-shadow: ${({ boxShadow }) => `${boxShadow ?? "none"}`} !important;
 
-  ${({ placement }) =>
+  ${({ fontSize, placement }) =>
     placement
       ? `
     justify-content: ${getCustomJustifyContent(placement)};
     & > span.bp3-button-text {
+      font-size: ${fontSize} !important;
       flex: unset !important;
     }
   `
@@ -163,6 +164,7 @@ export const StyledButton = styled((props) => (
 export type ButtonStyleProps = {
   buttonColor?: string;
   buttonVariant?: ButtonVariant;
+  fontSize?: string;
   boxShadow?: string;
   boxShadowColor?: string;
   borderRadius?: string;
@@ -181,6 +183,7 @@ export function BaseButton(props: IButtonProps & ButtonStyleProps) {
     buttonVariant,
     className,
     disabled,
+    fontSize,
     icon,
     iconAlign,
     iconName,
@@ -213,6 +216,7 @@ export function BaseButton(props: IButtonProps & ButtonStyleProps) {
         data-test-variant={buttonVariant}
         disabled={disabled}
         fill
+        fontSize={fontSize}
         icon={isRightAlign ? icon : iconName || icon}
         loading={loading}
         onClick={onClick}
@@ -228,6 +232,7 @@ BaseButton.defaultProps = {
   buttonColor: Colors.GREEN,
   buttonVariant: ButtonVariantTypes.PRIMARY,
   disabled: false,
+  fontSize: "0.875rem",
   text: "Button Text",
   minimal: true,
 };
@@ -263,6 +268,7 @@ interface ButtonComponentProps extends ComponentProps {
   iconAlign?: Alignment;
   placement?: ButtonPlacement;
   className?: string;
+  fontSize?: string;
 }
 
 type RecaptchaV2ComponentPropType = {
@@ -446,6 +452,7 @@ function ButtonComponent(props: ButtonComponentProps & RecaptchaProps) {
         buttonColor={props.buttonColor}
         buttonVariant={props.buttonVariant}
         disabled={props.isDisabled}
+        fontSize={props.fontSize}
         icon={props.icon}
         iconAlign={props.iconAlign}
         iconName={props.iconName}
