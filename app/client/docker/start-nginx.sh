@@ -36,10 +36,7 @@ cat "$app_template" \
 # Get the value of APP_TITLE from environment variables
 APP_TITLE_VALUE=${APP_TITLE:-System}
 
-# Create empty file if env-config.js does not exist
-touch /var/www/appsmith/public/env-config.js
-
 # Use sed to replace the placeholder with the actual value in env-config.js
-sed -i "s|window._env_.APP_TITLE = \"default\"|window._env_.APP_TITLE = \"$APP_TITLE_VALUE\"|g" /var/www/appsmith/public/env-config.js
+sed -i "s|window._env_.APP_TITLE = \"default\"|window._env_.APP_TITLE = \"$APP_TITLE_VALUE\"|g" /var/www/appsmith/env-config.js
 
 exec nginx -g 'daemon off;'
