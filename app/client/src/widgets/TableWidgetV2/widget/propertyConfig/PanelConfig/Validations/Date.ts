@@ -13,6 +13,7 @@ export default [
     controlType: "DATE_PICKER",
     placeholderText: "1",
     isBindProperty: true,
+    isJSConvertible: true,
     isTriggerProperty: false,
     hidden: (props: TableWidgetProps, propertyPath: string) => {
       const path = getColumnPath(propertyPath);
@@ -27,6 +28,7 @@ export default [
     controlType: "DATE_PICKER",
     placeholderText: "100",
     isBindProperty: true,
+    isJSConvertible: true,
     isTriggerProperty: false,
     hidden: (props: TableWidgetProps, propertyPath: string) => {
       const path = getColumnPath(propertyPath);
